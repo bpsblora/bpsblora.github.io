@@ -1,0 +1,1290 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="shortcut icon" type="image/jpg" href="favicon.ico"/>
+
+
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+        <!-- Leaflet -->
+        <link href="https://leafletjs-cdn.s3.amazonaws.com/content/leaflet/master/leaflet.css" rel="stylesheet" type="text/css" />
+
+        <!-- Leaflet Routing Machine -->
+        <link rel="stylesheet" href="css/leaflet-routing-machine.css" />
+
+        <!-- Style -->
+        <link rel="stylesheet" href="css/style.css">
+
+
+
+        <title>Jatikuat</title>
+    </head>
+    <body>
+        <aside class="sidebar">
+            <div class="toggle">
+                <a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
+                    <span></span>
+                </a>
+            </div>
+            <div class="side-inner">
+
+                <div class="profile">
+                    <img src="https://imgur.com/lbAkUbz.png" alt="Image" class="img-fluid">
+                    <h3 class="name">Jatikuat</h3>
+                    <span class="country">Kerja Teliti Cakupan Akurat</span>
+                </div>
+
+                <div class="counter d-flex justify-content-center">
+                    <!-- <div class="row justify-content-center"> -->
+                        <div class="col">
+                            <strong class="numberkec">892</strong>
+                            <p class="number-label">Kecamatan</p>
+                        </div>
+                        <div class="col">
+                            <strong class="numberdesa">22.5k</strong>
+                            <p class="number-label">Desa</p>
+                        </div>
+                        <div class="col">
+                            <strong class="numbersls">150</strong>
+                            <p class="number-label">SLS</p>
+                        </div>
+                    <!-- </div> -->
+                </div>
+                
+                <div class="nav-menu">
+                    <ul>
+                        <li class="active"><a href="#"><span class="icon-home mr-3"></span>Peta Lokasi</a></li>
+                        <li><a href="#"><span class="icon-search2 mr-3"></span>Live Location (coming soon)</a></li>
+
+                    </ul>
+                </div>
+            </div>
+            
+        </aside>
+        <main>
+            <div class="site-section">
+                <div class="container-fluid p-0">
+                    <div class="row justify-content-center m-0">
+                        <div class="col-md-12 p-0">
+                            <div class="row">
+
+                                <!-- Map Section -->
+                                <div id="map"></div>
+                                
+
+
+
+                                <div class="dropdown-container p-0">
+                                    <!-- Button to toggle collapse -->
+                                    <button class="btn btn-xs btn-info w-100 m-0 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#dropdownContent" aria-expanded="false" aria-controls="dropdownContent">
+                                        <i class="bi bi-filter me-2"></i>Menu Filter
+                                    </button>
+
+                                    <!-- Collapsible div content -->
+                                    <div id="dropdownContent" class="collapse">
+                                        <div class="row p-1">
+                                            <div class="col-12 mt-1 px-1">
+                                            <label class="small fw-bold">Pilih Kecamatan:</label>
+                                            <select id="kecamatan" class="form-select form-select-xs">
+                                                <option value="">Semua Kecamatan</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-1 px-1">
+                                            <label class="small fw-bold">Pilih Desa:</label>
+                                            <select id="desa" class="form-select form-select-xs">
+                                                <option value="">Semua Desa</option>
+                                            </select>
+                                        </div>
+                                        <!-- Pilihan metode pemilihan wilayah -->
+                                        <div class="col-12 mt-1 px-1">
+                                            <label class="small fw-bold">Pilih Filter SLS/BS:</label>
+                                            <div class="form-check form-check-xs">
+                                                <input class="form-check-input form-check-xs" type="radio" name="filterMethod" id="filterSLS" value="sls" checked>
+                                                <label class="form-check-label small" for="filterSLS">Berdasarkan SLS</label>
+                                            </div>
+                                            <div class="form-check form-check-xs">
+                                                <input class="form-check-input form-check-xs" type="radio" name="filterMethod" id="filterBlokSensus" value="blokSensus">
+                                                <label class="form-check-label small" for="filterBlokSensus">Berdasarkan Blok Sensus</label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Dropdown untuk SLS -->
+                                        <div class="col-12 mt-1 px-1" id="slsContainer">
+                                            
+                                            <select id="sls" class="form-select form-select-xs">
+                                                <option value="">Semua SLS</option>
+                                            </select>
+                                        </div>
+
+                                            
+                                        <div class="col-12 mt-1 px-1" id="blokSensusContainer" style="display: none;">
+                                            <select id="blokSensus" class="form-select form-select-xs">
+                                                <option value="">Semua Blok Sensus</option>
+                                            </select>
+                                        </div>
+
+                                            <!-- Hidden checkboxes initially -->
+                                            <div class="col-12 mt-1 px-1" id="checkboxContainer" style="display: none;">
+                                                <div class="form-check form-check-xs m-0">
+                                                    <input class="form-check-input form-check-xs" type="checkbox" value="" id="checkbox1">
+                                                    <label class="form-check-label" for="checkbox1">
+                                                        Batas Kecamatan Terpilih
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-xs m-0">
+                                                    <input class="form-check-input form-check-xs" type="checkbox" value="" id="checkbox2">
+                                                    <label class="form-check-label" for="checkbox2">
+                                                        Batas Desa Terpilih
+                                                    </label>
+                                                </div>
+                                                
+                                                <div class="form-check form-check-xs m-0">
+                                                    <input class="form-check-input form-check-xs" type="checkbox" value="" id="checkbox3">
+                                                    <label class="form-check-label" for="checkbox3">
+                                                        Tampilkan SLS dalam Blok Sensus
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-check form-check-xs m-0">
+                                                    <input class="form-check-input form-check-xs" type="checkbox" value="" id="checkbox4">
+                                                    <label class="form-check-label" for="checkbox4">
+                                                        Tampilkan semua Label
+                                                    </label>
+                                                </div>
+
+                                                
+                                            </div>
+
+                                            <div class="col-12 mt-1 px-1">
+                                                <button id="filterButton" class="btn btn-xs btn-warning w-100">Filter Pilihan</button>
+                                            </div>
+
+                                            <div class="col-12 mt-1 px-1">
+                                                <button id="showUserLocation" onclick='goToOurLocation()' class="btn btn-xs btn-warning w-100">Tampilkan Lokasi Anda</button>
+                                            </div>
+
+                                            <div class="col-12 mt-1 px-1">
+                                                <!-- Divider -->
+                                                <hr class="mt-2 mb-1">
+                                            </div>
+                                            <p class="small fw-bold">Cari Koordinat (latitude, longitude) </p>
+
+                                            <!-- Elemen Search -->
+                                            <div class="col-12 mt-1 px-1">
+                                                <div class="input-group input-group-sm">
+                                                    <span class="input-group-text" id="basic-addon1">
+                                                        <i class="bi bi-search"></i>
+                                                    </span>
+                                                    <input id="searchInput" type="text" class="form-control input-xs" placeholder="Cari koordinat..." aria-label="Cari koordinat" aria-describedby="basic-addon1">
+                                                    <button id="searchButton" class="btn btn-warning btn-xs" type="button">Cari</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                
+
+                              
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        
+
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+                
+
+        <!-- Leaflet -->        
+        <script src="https://leafletjs-cdn.s3.amazonaws.com/content/leaflet/master/leaflet-src.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
+        <script type="text/javascript" src="js/leaflet-routing-machine.js"></script>
+        <script type="text/javascript" src="js/Leaflet.Icon.Glyph.js"></script>
+        
+
+        <!-- Turf -->        
+        <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
+
+        <script type="text/javascript" src="js/peta/final_sls_202313316.js"></script>
+        <script type="text/javascript" src="js/peta/final_bs_202313316.js"></script>
+        <script type="text/javascript" src="js/peta/final_desa_202313316.js"></script>
+        <script type="text/javascript" src="js/peta/final_kec_202313316.js"></script>
+
+        <script type="text/javascript">
+            //Filter SLS atau Blok Sensus
+            var bsslstoggle = 'sls';
+            document.addEventListener("DOMContentLoaded", function () {
+                const filterSLS = document.getElementById("filterSLS");
+                const filterBlokSensus = document.getElementById("filterBlokSensus");
+                const slsContainer = document.getElementById("slsContainer");
+                const blokSensusContainer = document.getElementById("blokSensusContainer");
+
+                function toggleDropdown() {
+                    const checkbox1 = document.getElementById('checkbox1').parentElement;
+                    const checkbox2 = document.getElementById('checkbox2').parentElement;
+                    const checkbox3 = document.getElementById('checkbox3').parentElement;
+                    const checkbox4 = document.getElementById('checkbox4').parentElement;
+
+                    if (filterSLS.checked) {
+                        slsContainer.style.display = "block";
+                        blokSensusContainer.style.display = "none";
+                        bsslstoggle = 'sls';
+
+                        checkbox1.style.display = "none";
+                        checkbox2.style.display = "none";
+                        checkbox3.style.display = "none";
+                        checkbox4.style.display = "none";
+                    } else {
+                        slsContainer.style.display = "none";
+                        blokSensusContainer.style.display = "block";
+                        bsslstoggle = 'bs';
+
+                        checkbox1.style.display = "none";
+                        checkbox2.style.display = "none";
+                        checkbox3.style.display = "none";
+                        checkbox4.style.display = "none";
+                    }
+                }
+                
+                filterSLS.addEventListener("change", toggleDropdown);
+                filterBlokSensus.addEventListener("change", toggleDropdown);
+            });
+
+
+            $(function() {
+                'use strict';
+                $('.js-menu-toggle').click(function(e) {
+                    var $this = $(this);
+                    if ( $('body').hasClass('show-sidebar') ) {
+                        $('body').removeClass('show-sidebar');
+                        $this.removeClass('active');
+                    } else {
+                        $('body').addClass('show-sidebar'); 
+                        $this.addClass('active');
+                    }
+                    e.preventDefault();
+                });
+
+                // click outisde offcanvas
+                $(document).mouseup(function(e) {
+                    var container = $(".sidebar");
+                    if (!container.is(e.target) && container.has(e.target).length === 0) {
+                        if ( $('body').hasClass('show-sidebar') ) {
+                            $('body').removeClass('show-sidebar');
+                            $('body').find('.js-menu-toggle').removeClass('active');
+                        }
+                    }
+                }); 
+            });
+
+
+            
+
+            document.querySelector('.numberkec').textContent = batas_kec.features.filter(function(feature) {
+                return feature.type === "Feature";
+            }).length;
+            document.querySelector('.numberdesa').textContent = batas_desa.features.filter(function(feature) {
+                return feature.type === "Feature";
+            }).length;
+            document.querySelector('.numbersls').textContent = batas_sls.features.filter(function(feature) {
+                return feature.type === "Feature";
+            }).length;
+
+
+            // BASEMAP
+            var overlayMaps
+            var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            });
+            var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            });
+
+            var googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            });
+            var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            });
+
+
+            // Initialize Leaflet Map
+            var map = L.map('map', {
+                    center: [-6.9697, 111.4189],
+                    zoom: 11,
+                    maxZoom: 20,
+                    minZoom: 6,
+                    zoomControl: false,
+                    attributionControl: true
+            }); 
+            map.attributionControl.addAttribution(" BPS Kabupaten Blora");
+
+            var baseMaps = {
+                // "Overlay": petaOverlay
+                // "Overlay": petaOverlay,
+                "Satelit": googleSat,
+                "Terain": googleTerrain,
+                "Street": googleStreets,
+                "Hibrid": googleHybrid
+            };
+            L.control.zoom({
+                    position: 'bottomleft'
+            }).addTo(map);
+            L.control.layers(baseMaps, overlayMaps, {
+                position: 'bottomleft'
+            }).addTo(map);
+
+            // Add OpenStreetMap tiles
+             var tiles = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                        maxZoom: 20,
+                        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                }).addTo(map);
+
+
+
+            // Fungsi untuk Menampilkan Lokasi
+            let accuracyCircle;
+            function onLocationFound(e) {
+                const radius = e.accuracy;
+
+                // Membatasi angka radius hingga dua angka desimal dan mengganti titik dengan koma
+                const formattedRadius = radius.toFixed(2).replace('.', ',');
+
+                // Tambahkan marker dengan popup
+                L.marker(e.latlng).addTo(map)
+                    .bindPopup("Anda di sekitar <strong>" + formattedRadius + "</strong> meter dari titik ini").openPopup();
+
+                // Hapus lingkaran sebelumnya jika ada
+                if (accuracyCircle) {
+                    map.removeLayer(accuracyCircle);
+                }
+
+                // Tambahkan lingkaran baru
+                accuracyCircle = L.circle(e.latlng, {
+                    radius: radius,
+                    color: 'blue',
+                    fillColor: '#add8e6',
+                    fillOpacity: 0.5
+                }).addTo(map);
+            }
+
+         
+
+            // Fungsi untuk Menemukan Lokasi Pengguna
+            function goToOurLocation() {
+                map.locate({ setView: true, maxZoom: 18 });
+                map.on('locationfound', onLocationFound);
+
+                // Pantau lokasi pengguna secara terus-menerus
+                // if (navigator.geolocation) {
+                //     navigator.geolocation.watchPosition(updateUserLocation, handleLocationError, {
+                //         enableHighAccuracy: true, // Gunakan lokasi paling akurat
+                //         maximumAge: 0,          // Hindari data lokasi yang di-cache
+                //         timeout: 10000,         // Timeout dalam milidetik
+                //     });
+                // } else {
+                //     alert('Geolocation tidak didukung oleh browser Anda.');
+                // }
+            }
+
+
+            // Variabel untuk menyimpan marker terakhir
+            var lastMarker = null;
+            var markerongeojsonsls = null;
+
+            
+
+            // Fungsi untuk memproses input koordinat
+            document.getElementById('searchButton').addEventListener('click', function () {
+                var input = document.getElementById('searchInput').value.trim();
+                var coords = input.split(',');
+
+                // Validasi input
+                if (coords.length === 2) {
+                    var lat = parseFloat(coords[0]);
+                    var lon = parseFloat(coords[1]);
+
+                    if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                        
+                        ////MENGHAPUS SEMUA ELEMEN YANG MUNCUL PADA MAP DARI FITUR FILTER
+                        // Jika marker sebelumnya ada, hapus marker tersebut
+                        if (lastMarker) {
+                            map.removeLayer(lastMarker);
+                        }
+
+                        // Jika GeoJSON sebelumnya ada, hapus layer tersebut
+                        if (markerongeojsonsls) {
+                            map.removeLayer(markerongeojsonsls);
+                        }
+
+                        document.getElementById('checkbox1').checked = false;
+                        document.getElementById('checkbox2').checked = false;
+                        document.getElementById('checkbox3').checked = false;
+                        document.getElementById('checkbox4').checked = false;
+                        if (accuracyCircle) {
+                            map.removeLayer(accuracyCircle);
+                        }
+                        if (routingPath) {
+                            routingPath.remove(); // Hapus routing lama jika ada
+                            routingControl = null; 
+                        }
+                        selectedKdkec = document.getElementById('kecamatan').value;
+                        selectedKddesa = document.getElementById('desa').value;
+                        selectedRT = document.getElementById('sls').value;
+                        updateCheckboxVisibility();
+                        // Hapus layer GeoJSON sebelumnya
+                        if (geojsonLayerKec) {
+                            map.removeLayer(geojsonLayerKec);
+                        }
+                        if (geojsonLayerDesa) {
+                            map.removeLayer(geojsonLayerDesa);
+                        }
+                        if (geojsonLayer) {
+                            map.removeLayer(geojsonLayer);
+                        }
+
+
+
+                        // Membuat ikon kustom
+                        var customIcon = L.icon({
+                            iconUrl: 'images/landmark.png',  // Ganti dengan URL ikon yang diinginkan
+                            iconSize: [40, 40],  // Ukuran ikon (dalam pixel)
+                            iconAnchor: [20, 40],  // Titik jangkar ikon, biasanya setengah dari ukuran ikon
+                            popupAnchor: [0, -40]  // Menentukan jarak popup relatif terhadap ikon
+                        });
+
+                        // Tambahkan marker baru ke peta
+                        lastMarker = L.marker([lat, lon], { icon: customIcon }).addTo(map);
+                        lastMarker.bindPopup(`Koordinat: ${lat}, ${lon}`).openPopup();
+
+                        // Memuat GeoJSON yang berisi batas RT (batas_sls)
+                        var filteredFeatures = [];
+
+                        // Periksa apakah marker berada di dalam batas RT
+                        L.geoJSON(batas_sls).eachLayer(function (layer) {
+                            // Periksa jika layer adalah Polygon atau MultiPolygon
+                            if (layer instanceof L.Polygon || layer instanceof L.MultiPolygon) {
+                                var geoJsonPolygon = layer.toGeoJSON(); // Mengkonversi ke GeoJSON
+                                var point = turf.point([lon, lat]); // Membuat titik dari koordinat
+
+                                // Gunakan turf.js untuk mengecek apakah titik berada dalam polygon
+                                var isInside = turf.booleanPointInPolygon(point, geoJsonPolygon);
+
+                                if (isInside) {
+                                    // Menambahkan data yang relevan ke filteredFeatures
+                                    filteredFeatures.push(geoJsonPolygon);
+
+                                    // Tambahkan popup dengan informasi RT, Desa, dan Kecamatan
+                                    lastMarker.bindPopup(`
+                                        <div>
+                                            <h5>Informasi Koordinat yang Dicari</h5>
+                                            <p>Koordinat: <strong>${lat}, ${lon}</strong></p>
+                                            <p>Nama RT: <strong>${layer.feature.properties.nmsls}</strong></p>
+                                            <p>Nama Desa: <strong>${layer.feature.properties.nmdesa}</strong></p>
+                                            <p>Nama Kecamatan: <strong>${layer.feature.properties.nmkec}</strong></p>
+                                        
+                                            
+
+                                            
+                                            <a href="https://www.google.com/maps/dir/?api=1&destination=${lat} , ${lon} +
+                                            " target="_blank" class="mt-1 btn btn-info btn-xs w-100">
+                                            <strong>Navigasi Gmaps↪️</strong>
+                                            </a>
+                                        </div>
+                                    `).openPopup();
+                                }
+                            }
+                        });
+
+                        // Tambahkan GeoJSON yang relevan ke peta
+                        if (filteredFeatures.length > 0) {
+                            markerongeojsonsls = L.geoJSON(
+                                {
+                                    type: 'FeatureCollection',
+                                    features: filteredFeatures,
+                                },
+                                {
+                                    style: {
+                                        color: 'red',
+                                        weight: 2,
+                                        opacity: 0.5, // Transparansi garis
+                                        fillOpacity: 0.2, // Transparansi area
+                                        fillColor: 'red',
+                                    },
+                                    // Menambahkan popup dan event listener untuk setiap fitur
+                                    onEachFeature: function (feature, layer) {
+                                        if (feature.properties && feature.properties.nmsls) {
+                                            
+
+                                            // Menambahkan popup dengan informasi SLS dan tombol navigasi
+                                            layer.bindPopup(
+                                                '<div>' +
+                                                    '<h5>Informasi SLS</h5>' +
+                                                    '<p>Kecamatan: <strong>' + feature.properties.nmkec + '</strong></p>' +
+                                                    '<p>Desa: <strong>' + feature.properties.nmdesa + '</strong></p>' +
+                                                    '<p>SLS: <strong>' + feature.properties.nmsls + '</strong></p>' +
+                                                '</div>'
+                                            );
+                                        }
+                                    },
+                                }
+                            ).addTo(map);
+
+                            // Zoom ke fitur yang difilter
+                            map.fitBounds(markerongeojsonsls.getBounds());
+                        }
+
+                        // Pindahkan peta ke lokasi marker
+                        map.setView([lat, lon], 15);
+                    } else {
+                        alert('Koordinat tidak valid! Pastikan dalam format latitude,longitude.');
+                    }
+                } else {
+                    alert('Masukkan koordinat dalam format latitude,longitude (contoh: -6.200000,106.816666).');
+                }
+            });
+
+            
+            // Variabel tujuan
+            let routingPath;
+            var selectedLatitude = null;
+            var selectedLongitude = null;
+            
+            // Fungsi untuk Menampilkan Rute
+            function showRoute() {
+                if (!navigator.geolocation) {
+                    return alert('Geolocation tidak didukung oleh browser Anda.');
+                }
+
+                navigator.geolocation.getCurrentPosition(
+                    ({ coords: { latitude, longitude } }) => {
+                        // Hapus routingPath sebelumnya jika ada
+                        if (routingPath) {
+                            map.removeControl(routingPath);
+                        }
+
+                        // Atur tampilan peta ke lokasi saat ini
+                        map.setView([latitude, longitude], 13);
+
+                        // Tambahkan routing baru
+                        routingPath = L.Routing.control({
+                            waypoints: [
+                                L.latLng(latitude, longitude), // Lokasi pengguna
+                                L.latLng(selectedLatitude, selectedLongitude) // Lokasi tujuan
+                            ],
+                            routeWhileDragging: true,
+
+                            lineOptions: {
+                                styles: [
+                                    { color: '#ffffff', opacity: 0.8, weight: 7 }, // Outline 
+                                    { color: '#0f53ff', opacity: 0.9, weight: 5 }  // Garis utama 
+                                ]
+                            },
+
+                            showAlternatives: true, // Menampilkan rute alternatif
+                            altLineOptions: { // Konfigurasi visual rute alternatif
+                                styles: [
+                                    { color: '#6a83d7', opacity: 0.7, weight: 6 }, // Outline
+                                    { color: '#bccefb', opacity: 0.8, weight: 4 } // Garis Utama
+                                ]
+                            },
+                            position: 'bottomright', // Posisi kontrol di pojok kanan bawah
+                            router: L.Routing.osrmv1({
+                                serviceUrl: 'https://router.project-osrm.org/route/v1',
+                                language: 'id' // Mengatur bahasa Indonesia
+                            }),
+                            formatter: new L.Routing.Formatter({
+                                units: 'metric', // Satuan jarak (kilometer dan meter)
+                            }),
+                            createMarker(i, waypoint) {
+                                const customIcon = L.divIcon({
+                                    className: 'custom-glyph-icon',
+                                    html: `<div style="
+                                        background-color: ${i === 0 ? '#3498db' : '#e74c3c'};
+                                        color: white;
+                                        border-radius: 50%;
+                                        width: 30px;
+                                        height: 30px;
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        ">
+                                        ${i === 0 ? 'A' : i === 1 ? 'B' : ''}
+                                    </div>`,
+                                    iconSize: [30, 30],
+                                    iconAnchor: [15, 15],
+                                    popupAnchor: [0, -15]
+                                });
+
+                                return L.marker(waypoint.latLng, {
+                                    draggable: true,
+                                    icon: customIcon
+                                }).bindPopup(i === 0 ? 'Titik awal' : 'Titik tujuan');
+                            }
+                        }).addTo(map);
+
+                        // Tambahkan event untuk menampilkan popup dengan jarak
+                        routingPath.on('routesfound', function (e) {
+                            const routes = e.routes;
+
+                            // Iterasi melalui semua rute (utama dan alternatif)
+                            routes.forEach((route, index) => {
+                                const summary = route.summary;
+                                const distanceKm = (summary.totalDistance / 1000).toFixed(2);
+
+                                // Cari titik tengah dari rute
+                                const midPoint = route.coordinates[Math.floor(route.coordinates.length / 2)];
+
+                                // Tambahkan popup untuk masing-masing rute
+                                L.popup()
+                                    .setLatLng(midPoint)
+                                    .setContent(`<strong>Rute ${index + 1}:</strong><br>Jarak: ${distanceKm} km`)
+                                    .addTo(map); // Tambahkan popup ke peta tanpa menutup popup lain
+                            });
+                        });
+
+                        // Buat tombol toggle untuk collapsible
+                        createRoutingToggle();
+                    },
+                    (error) => alert(`Gagal mendapatkan lokasi Anda. Error: ${error.message}`)
+                );
+            }
+
+            // Fungsi untuk membuat tombol toggle
+            function createRoutingToggle() {
+                // Cari atau buat div tombol di dalam map
+                let toggleButton = document.getElementById('routing-toggle');
+                if (!toggleButton) {
+                    // Buat tombol dengan kelas Bootstrap
+                    toggleButton = document.createElement('button');
+                    toggleButton.id = 'routing-toggle';
+                    toggleButton.innerHTML = 'Sembunyikan Rute';
+                    toggleButton.className = 'btn btn-danger btn-xs'; // Kelas Bootstrap untuk tombol kecil dan berwarna biru
+                    toggleButton.style.cssText = `
+                        position: absolute;
+                        bottom: 20px;
+                        right: 10px;
+                        z-index: 1000;
+                    `;
+
+                    // Tambahkan tombol ke elemen map
+                    document.getElementById('map').appendChild(toggleButton);
+                }
+
+                // Tambahkan event listener untuk toggle
+                toggleButton.addEventListener('click', () => {
+                    const container = document.querySelector('.leaflet-routing-container');
+                    if (container) {
+                        const isHidden = container.style.display === 'none';
+                        container.style.display = isHidden ? 'block' : 'none';
+                        toggleButton.innerHTML = isHidden ? 'Sembunyikan Rute' : 'Tampilkan Rute';
+                        toggleButton.className = isHidden ? 'btn btn-danger btn-xs' : 'btn btn-info btn-xs'; // Ubah warna tombol
+                    }
+                });
+            }
+
+            // Fungsi untuk memuat dropdown kecamatan
+            function loadKecamatanDropdown() {
+                const kecamatanList = [];
+
+                // Ambil data kecamatan dari GeoJSON
+                batas_sls.features.forEach(feature => {
+                    const idkec = `3316${feature.properties.kdkec}`;
+                    const nmkec = feature.properties.nmkec;
+                    const combined = `${feature.properties.kdkec} - ${nmkec}`;
+
+                    if (!kecamatanList.includes(combined)) {
+                        kecamatanList.push(combined);
+                    }
+                });
+
+                // Urutkan dan tambahkan ke dropdown
+                kecamatanList.sort();
+                const kecamatanSelect = document.getElementById('kecamatan');
+                kecamatanList.forEach(kecamatan => {
+                    const [kdkec] = kecamatan.split(' - ');
+                    const option = new Option(kecamatan, kdkec);
+                    kecamatanSelect.add(option);
+                });
+            }
+
+            // Fungsi untuk memuat dropdown desa
+            function loadDesaDropdown(kdkec) {
+                const desaList = [];
+
+                // Ambil data desa berdasarkan kecamatan
+                batas_sls.features.forEach(feature => {
+                    if (feature.properties.kdkec === kdkec) {
+                        const iddesa = `3316${feature.properties.kdkec}${feature.properties.kddesa}`;
+                        const nmdesa = feature.properties.nmdesa;
+                        const combined = `${feature.properties.kddesa} - ${nmdesa}`;
+
+                        if (!desaList.includes(combined)) {
+                            desaList.push(combined);
+                        }
+                    }
+                });
+
+                // Urutkan dan tambahkan ke dropdown
+                desaList.sort();
+                const desaSelect = document.getElementById('desa');
+                desaSelect.innerHTML = '<option value="">Semua Desa</option>';
+                desaList.forEach(desa => {
+                    const [kddesa] = desa.split(' - ');
+                    const option = new Option(desa, kddesa);
+                    desaSelect.add(option);
+                });
+            }
+
+            // Fungsi untuk memuat dropdown BS
+            function loadBSDropdown(kdkec, kddesa) {
+                const bsList = [];
+
+                // Ambil data BS berdasarkan kecamatan dan desa
+                batas_bs.features.forEach(feature => {
+                    if (feature.properties.kdkec === kdkec && feature.properties.kddesa === kddesa) {
+                        const bs = `${feature.properties.kdbs}`;
+                        if (!bsList.includes(bs)) {
+                            bsList.push(bs);
+                        }
+                    }
+                });
+
+                // Urutkan dan tambahkan ke dropdown
+                bsList.sort();
+                const bsSelect = document.getElementById('blokSensus');
+                bsSelect.innerHTML = '<option value="">Semua Blok Sensus</option>';
+                bsList.forEach(bs => {
+                    const [kdbs] = bs;
+                    const option = new Option(bs);
+                    bsSelect.add(option);
+                });
+            }
+
+            // Fungsi untuk memuat dropdown RT
+            function loadRTDropdown(kdkec, kddesa) {
+                const rtList = [];
+
+                // Ambil data RT berdasarkan kecamatan dan desa
+                batas_sls.features.forEach(feature => {
+                    if (feature.properties.kdkec === kdkec && feature.properties.kddesa === kddesa) {
+                        const sls = `${feature.properties.kdsls} - ${feature.properties.nmsls}`;
+                        if (!rtList.includes(sls)) {
+                            rtList.push(sls);
+                        }
+                    }
+                });
+
+                // Urutkan dan tambahkan ke dropdown
+                rtList.sort();
+                const rtSelect = document.getElementById('sls');
+                rtSelect.innerHTML = '<option value="">Semua RT</option>';
+                rtList.forEach(rt => {
+                    const [kdsls] = rt.split(' - ');
+                    const option = new Option(rt, kdsls);
+                    rtSelect.add(option);
+                });
+            }
+
+
+            var selectedKdkec ;
+            var selectedKddesa ;
+            var selectedBS ;
+            var selectedRT ;
+
+            
+            
+            // Fungsi untuk memperbarui visibilitas checkbox
+            function updateCheckboxVisibility() {
+                
+
+                // Menampilkan checkbox setelah filter dipilih
+                const checkboxContainer = document.getElementById('checkboxContainer');
+                checkboxContainer.style.display = 'block';
+
+                // Menyembunyikan semua checkbox terlebih dahulu
+                const checkbox1 = document.getElementById('checkbox1').parentElement;
+                const checkbox2 = document.getElementById('checkbox2').parentElement;
+                const checkbox3 = document.getElementById('checkbox3').parentElement;
+                const checkbox4 = document.getElementById('checkbox4').parentElement;
+                
+                checkbox1.style.display = 'none';
+                checkbox2.style.display = 'none';
+                checkbox3.style.display = 'none';
+                checkbox4.style.display = 'none';
+
+                // Menampilkan container checkbox jika ada dropdown yang dipilih
+                if (selectedKdkec || selectedKddesa || selectedRT || selectedBS) {
+                    checkboxContainer.style.display = 'block';
+                } else {
+                    checkboxContainer.style.display = 'none';
+                    return; // Keluar dari fungsi jika tidak ada pilihan yang dipilih
+                }
+
+                // Checkbox 4 selalu muncul
+                checkbox4.style.display = 'block';
+
+                // Jika Kecamatan terpilih, munculkan Checkbox 1
+                if (selectedKdkec) {
+                    checkbox1.style.display = 'block';
+                }
+
+                // Jika Desa terpilih, munculkan Checkbox 1 & 2
+                if (selectedKddesa) {
+                    checkbox1.style.display = 'block';
+                }
+
+                // Jika SLS dipilih (baik dari dropdown atau radio)
+                if (bsslstoggle === 'sls') {
+                    checkbox1.style.display = 'block';
+                    checkbox2.style.display = 'block';
+                }
+
+                if (bsslstoggle === 'bs') {
+                    checkbox1.style.display = 'block';
+                    checkbox2.style.display = 'block';
+                    checkbox3.style.display = 'block';
+                }
+            }
+
+
+            // Event listener untuk dropdown kecamatan
+            document.getElementById('kecamatan').addEventListener('change', function () {
+
+
+                const selectedKdkec = this.value;
+                const desaSelect = document.getElementById('desa');
+                const rtSelect = document.getElementById('sls');
+                if (selectedKdkec) {
+                    loadDesaDropdown(selectedKdkec);
+                    loadRTDropdown(selectedKddesa);
+                } else {
+                    desaSelect.innerHTML = '<option value="">Pilih kecamatan</option>';
+                    rtSelect.innerHTML = '<option value="">Pilih desa</option>';
+                }
+            });
+
+
+            // Event listener untuk dropdown desa
+            document.getElementById('desa').addEventListener('change', function () {
+                document.getElementById('checkbox1').checked = false;
+                const selectedKdkec = document.getElementById('kecamatan').value;
+                const selectedKddesa = this.value;
+                const rtSelect = document.getElementById('sls');
+                const bsSelect = document.getElementById('blokSensus');
+                if (selectedKdkec && selectedKddesa) {
+                    loadRTDropdown(selectedKdkec, selectedKddesa);
+                    loadBSDropdown(selectedKdkec, selectedKddesa);
+                } else {
+                    rtSelect.innerHTML = '<option value="">Pilih desa</option>';
+                    bsSelect.innerHTML = '<option value="">Pilih desa</option>';
+                }
+            });
+
+
+
+
+            var geojsonLayerDesa;
+            var geojsonLayer;
+            var geojsonLayerslsbs;
+
+            function getGeoJSONCentroid(feature) {
+                // Menghitung centroid menggunakan Turf.js
+                const centroid = turf.centroid(feature);
+
+                // Mengembalikan latitude dan longitude dari centroid
+                return {
+                    latitude: centroid.geometry.coordinates[1],
+                    longitude: centroid.geometry.coordinates[0]
+                };
+            }
+
+            // Event listener untuk tombol filter
+            document.getElementById('filterButton').addEventListener('click', function () {
+                document.getElementById('checkbox1').checked = false;
+                document.getElementById('checkbox2').checked = false;
+                document.getElementById('checkbox3').checked = false;
+                document.getElementById('checkbox4').checked = false;
+                
+                
+                ////MENGHAPUS SEMUA ELEMEN YANG MUNCUL PADA MAP DARI FITUR CARI
+                // Jika marker sebelumnya ada, hapus marker tersebut
+                if (lastMarker) {
+                    map.removeLayer(lastMarker);
+                }
+
+                // Jika GeoJSON sebelumnya ada, hapus layer tersebut
+                if (markerongeojsonsls) {
+                    map.removeLayer(markerongeojsonsls);
+                }
+                if (accuracyCircle) {
+                    map.removeLayer(accuracyCircle);
+                }
+                if (routingPath) {
+                    routingPath.remove(); // Hapus routing lama jika ada
+                    routingControl = null; 
+                }
+
+                
+                selectedKdkec = document.getElementById('kecamatan').value;
+                selectedKddesa = document.getElementById('desa').value;
+                selectedBS = document.getElementById('blokSensus').value;
+                selectedRT = document.getElementById('sls').value;
+
+                updateCheckboxVisibility();
+
+                // Hapus layer GeoJSON sebelumnya
+                if (geojsonLayerKec) {
+                    map.removeLayer(geojsonLayerKec);
+                }
+                if (geojsonLayerDesa) {
+                    map.removeLayer(geojsonLayerDesa);
+                }
+                if (geojsonLayer) {
+                    map.removeLayer(geojsonLayer);
+                }
+                if (geojsonLayerslsbs) {
+                    map.removeLayer(geojsonLayerslsbs);
+                }
+
+                // Filter data GeoJSON
+
+                const dataSource = bsslstoggle === 'sls' ? batas_sls : batas_bs;
+                const filteredFeatures = dataSource.features.filter(feature => {
+                    const matchKecamatan = !selectedKdkec || feature.properties.kdkec === selectedKdkec;
+                    const matchDesa = !selectedKddesa || feature.properties.kddesa === selectedKddesa;
+                    
+                    // Pilih filter berdasarkan metode yang dipilih (SLS atau BS)
+                    const matchDetail = bsslstoggle === 'sls' 
+                        ? (!selectedRT || feature.properties.kdsls === selectedRT) 
+                        : (!selectedBS || feature.properties.kdbs === selectedBS);
+
+                    return matchKecamatan && matchDesa && matchDetail;
+                });
+
+                // Tambahkan hasil filter ke peta
+                geojsonLayer = L.geoJSON(
+                    {
+                        type: 'FeatureCollection',
+                        features: filteredFeatures,
+                    },
+                    {
+                        // Menambahkan popup dan event listener untuk setiap fitur
+                        onEachFeature: function (feature, layer) {
+                            if (feature.properties) {
+                                // Ambil properti yang sesuai dengan pilihan SLS atau BS
+                                const namaWilayah = bsslstoggle === 'sls' ? feature.properties.nmsls : feature.properties.kdbs;
+                                const labelWilayah = bsslstoggle === 'sls' ? 'SLS' : 'Blok Sensus';
+
+                                // Hitung titik tengah menggunakan fungsi getGeoJSONCentroid
+                                const { latitude, longitude } = getGeoJSONCentroid(feature);
+
+                                // Event saat fitur di-klik
+                                layer.on('click', function () {
+                                    selectedLatitude = latitude;
+                                    selectedLongitude = longitude;
+                                    console.log('Selected Coordinates:', selectedLatitude, selectedLongitude);
+                                });
+
+                                // Tambahkan popup dengan informasi wilayah yang sesuai
+                                layer.bindPopup(
+                                    `<div>
+                                        <h5>Informasi ${labelWilayah}</h5>
+                                        <p>Kecamatan: <strong>${feature.properties.nmkec}</strong></p>
+                                        <p>Desa: <strong>${feature.properties.nmdesa}</strong></p>
+                                        <p>${labelWilayah}: <strong>${namaWilayah}</strong></p>
+
+                                        <button id="openstreetmap-btn" onclick="showRoute()" class="mt-1 btn btn-warning btn-xs w-100">
+                                            <strong>Dapatkan Rute</strong>
+                                        </button>
+
+                                        <a href="https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}" target="_blank" class="mt-1 btn btn-info btn-xs w-100">
+                                            <strong>Navigasi Gmaps↪️</strong>
+                                        </a>
+                                    </div>`
+                                );
+                            }
+                        }
+                    }
+                ).addTo(map);
+                
+                // Atur warna dan gaya sesuai dengan pilihan SLS atau BS
+                geojsonLayer.setStyle({
+                    color: bsslstoggle === 'sls' ? 'red' : 'yellow',
+                    weight: 2,
+                    opacity: 0.5, // Transparansi
+                    fillOpacity: 0.2, // Transparansi area
+                    fillColor: bsslstoggle === 'sls' ? 'red' : 'yellow'
+                });
+
+                // Zoom ke fitur yang difilter jika ada
+                if (filteredFeatures.length > 0) {
+                    map.fitBounds(geojsonLayer.getBounds());
+                }
+               
+            });
+            
+
+
+            
+
+            // Panggil fungsi untuk memuat dropdown kecamatan saat halaman dimuat
+            loadKecamatanDropdown();
+
+
+            // Ambil semua elemen checkbox
+            var checkbox1 = document.getElementById('checkbox1');
+            var geojsonLayerKec;
+
+
+            function filterGeoJSONKec(geojsonData, selectedKdkec) {
+                const filteredFeatures = geojsonData.features.filter(feature => {
+                    // Filter berdasarkan kode kecamatan
+                    return feature.properties.kdkec === selectedKdkec;
+                });
+                return {
+                    type: "FeatureCollection",
+                    features: filteredFeatures
+                };
+            }
+            function filterGeoJSONDesa(geojsonData, selectedKdkec, selectedKddesa) {
+                const filteredFeatures = geojsonData.features.filter(feature => {
+                    // Filter berdasarkan kode kecamatan
+                    return feature.properties.kdkec === selectedKdkec && feature.properties.kddesa === selectedKddesa;
+                });
+                return {
+                    type: "FeatureCollection",
+                    features: filteredFeatures
+                };
+            }
+
+
+            // Event listener untuk checkboxes
+            checkbox1.addEventListener('change', (event) => {
+                var isChecked = event.target.checked; // Apakah checkbox dicentang
+
+                if (isChecked) {
+                    if (geojsonLayer) {
+                        map.removeLayer(geojsonLayer);
+                    }
+                    // Filter GeoJSON berdasarkan selectedKdkec
+                    const filteredGeoJSON = filterGeoJSONKec(batas_kec, selectedKdkec);
+                    // Tambahkan GeoJSON yang sudah difilter ke peta
+                    geojsonLayerKec = L.geoJSON(filteredGeoJSON, {
+                        style: {
+                            color: 'blue',
+                            weight: 2,
+                            opacity: 0.5,
+                            fillOpacity: 0.2,
+                            fillColor: 'blue'
+                        },
+                         onEachFeature: function(feature, layer) {
+                            if (feature.properties && feature.properties.nmkec) {
+                                layer.bindPopup(
+                                    '<div>' +
+                                        '<h5>Informasi Kecamatan</h5>' +
+                                        '<p>Kecamatan: <strong>' + feature.properties.nmkec + '</strong></p>' +
+                                    '</div>'
+                                );
+                            }
+                        }
+                    }).addTo(map);
+                    geojsonLayer.addTo(map);
+
+                } else {
+                    if (geojsonLayerKec) {
+                        map.removeLayer(geojsonLayerKec);
+                    }
+                }
+            });
+
+            checkbox2.addEventListener('change', (event) => {
+                var isChecked = event.target.checked; // Apakah checkbox dicentang
+
+                if (isChecked) {
+                    if (geojsonLayer) {
+                        map.removeLayer(geojsonLayer);
+                    }
+
+                    // Filter GeoJSON berdasarkan selectedKdkec
+                    const filteredGeoJSON = filterGeoJSONDesa(batas_desa, selectedKdkec ,selectedKddesa);
+                    // Tambahkan GeoJSON yang sudah difilter ke peta
+                    geojsonLayerDesa = L.geoJSON(filteredGeoJSON, {
+                        style: {
+                            color: 'orange',
+                            weight: 2,
+                            opacity: 0.5,
+                            fillOpacity: 0.2,
+                            fillColor: 'orange'
+                        },
+                        onEachFeature: function(feature, layer) {
+                            if (feature.properties && feature.properties.nmdesa) {
+                                layer.bindPopup(
+                                    '<div>' +
+                                        '<h5>Informasi Desa</h5>' +
+                                        '<p>Kecamatan: <strong>' + feature.properties.nmkec + '</strong></p>' +
+                                        '<p>Kecamatan: <strong>' + feature.properties.nmdesa + '</strong></p>' +
+                                    '</div>'
+                                );
+                            }
+                        }
+                    }).addTo(map);
+                    geojsonLayer.addTo(map);
+
+                } else {
+                    if (geojsonLayerDesa) {
+                        map.removeLayer(geojsonLayerDesa);
+                    }
+                }
+            });
+
+            checkbox3.addEventListener('change', (event) => {
+                var isChecked = event.target.checked; // Apakah checkbox dicentang
+
+                if (isChecked) {
+                    var selectedBSFeature = batas_bs.features.find(feature => 
+                        feature.properties.kdbs === selectedBS &&
+                        feature.properties.kdkec === selectedKdkec &&
+                        feature.properties.kddesa === selectedKddesa
+                    );
+
+                    var kdslsString = selectedBSFeature.properties.kdsls; 
+                    var kdslsArray = kdslsString.split(',').map(sls => sls.trim());
+
+                    var matchingSLS = batas_sls.features.filter(feature => 
+                        kdslsArray.includes(feature.properties.kdsls.trim()) &&
+                        feature.properties.kdkec === selectedKdkec &&
+                        feature.properties.kddesa === selectedKddesa
+                    );
+
+                    console.log(kdslsArray);
+                    console.log(matchingSLS);
+                 
+                    geojsonLayerslsbs = L.geoJSON(
+                        {
+                            type: 'FeatureCollection',
+                            features: matchingSLS, // Fitur yang sudah difilter
+                        },
+                        {
+                            onEachFeature: function (feature, layer) {
+                                if (feature.properties) {
+                                    // Tentukan label berdasarkan mode bsslstoggle
+                                    const namaWilayah = feature.properties.nmsls;    
+                                    const labelWilayah = 'SLS';
+
+                                    // Hitung titik tengah GeoJSON
+                                    const { latitude, longitude } = getGeoJSONCentroid(feature);
+
+                                    // Event saat fitur diklik
+                                    layer.on('click', function () {
+                                        selectedLatitude = latitude;
+                                        selectedLongitude = longitude;
+                                        console.log('Selected Coordinates:', selectedLatitude, selectedLongitude);
+                                    });
+
+                                    // Tambahkan popup dengan informasi wilayah
+                                    layer.bindPopup(
+                                        `<div>
+                                            <h5>Informasi ${labelWilayah}</h5>
+                                            <p>Kecamatan: <strong>${feature.properties.nmkec}</strong></p>
+                                            <p>Desa: <strong>${feature.properties.nmdesa}</strong></p>
+                                            <p>${labelWilayah}: <strong>${namaWilayah}</strong></p>
+
+                                            <button id="openstreetmap-btn" onclick="showRoute()" class="mt-1 btn btn-warning btn-xs w-100">
+                                                <strong>Dapatkan Rute</strong>
+                                            </button>
+
+                                            <a href="https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}" target="_blank" class="mt-1 btn btn-info btn-xs w-100">
+                                                <strong>Navigasi Gmaps↪️</strong>
+                                            </a>
+                                        </div>`
+                                    );
+                                }
+                            }
+                        }
+                    ).addTo(map);
+                    
+                    // 4. Atur warna dan gaya sesuai pilihan SLS atau BS
+                    geojsonLayerslsbs.setStyle({
+                        color: 'red',
+                        weight: 3,
+                        opacity: 1, // Transparansi garis
+                        fillOpacity: 0, // Transparansi area
+                        fillColor: 'red'
+                    });   
+
+
+                } else if (geojsonLayerslsbs) {
+                        map.removeLayer(geojsonLayerslsbs);
+                    
+
+                }
+            });
+
+
+            // Event listener untuk checkbox4
+            checkbox4.addEventListener('change', (event) => {
+                if (event.target.checked) {
+                    // Jika checkbox dicentang, tambahkan tooltip ke semua layer
+                    geojsonLayer.eachLayer(layer => {
+                        if (!layer.getTooltip()) {
+                            // Pilih properti yang sesuai (SLS atau BS)
+                            const namaWilayah = bsslstoggle === 'sls' ? layer.feature.properties.nmsls : layer.feature.properties.kdbs+' - '+layer.feature.properties.nmsls;
+
+                            layer.bindTooltip(
+                                namaWilayah, // Menampilkan nama sesuai pilihan
+                                { 
+                                    permanent: true, 
+                                    direction: 'center', 
+                                    className: 'custom-tooltip',
+                                    interactive: true // Tooltip tetap muncul saat di-hover
+                                }
+                            );
+                        }
+                    });
+                } else {
+                    // Jika checkbox tidak dicentang, hapus semua tooltip
+                    geojsonLayer.eachLayer(layer => {
+                        if (layer.getTooltip()) {
+                            layer.unbindTooltip(); // Hapus tooltip dari layer
+                        }
+                    });
+                }
+            });
+        
+        </script>
+    </body>
+</html>
+
+
+
+

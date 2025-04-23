@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+		<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
+
+		<link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
+
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+		<link rel="stylesheet" href="fonts/icomoon/style.css">
+
+		<link rel="stylesheet" href="css/owl.carousel.min.css">
+
+		<!-- Bootstrap CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+		
+		<!-- Style -->
+		<link rel="stylesheet" href="css/style.css">
+
+		<title>Jatikuat</title>
+	</head>
+	<body>
+		<aside class="sidebar">
+			<div class="toggle">
+				<a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
+							<span></span>
+						</a>
+			</div>
+			<div class="side-inner">
+
+				<div class="profile">
+					<img src="https://imgur.com/lbAkUbz.png" alt="Image" class="img-fluid">
+					<h3 class="name">Jatikuat</h3>
+					<span class="country">Kerja Teliti Cakupan Akurat</span>
+				</div>
+
+				<div class="counter d-flex justify-content-center">
+					<!-- <div class="row justify-content-center"> -->
+						<div class="col">
+							<strong class="number">892</strong>
+							<span class="number-label">data</span>
+						</div>
+						<div class="col">
+							<strong class="number">22.5k</strong>
+							<span class="number-label">data</span>
+						</div>
+						<div class="col">
+							<strong class="number">150</strong>
+							<span class="number-label">data</span>
+						</div>
+					<!-- </div> -->
+				</div>
+				
+				<div class="nav-menu">
+					<ul>
+						<li class="active"><a href="#"><span class="icon-home mr-3"></span>Peta Tematik</a></li>
+						<li><a href="#"><span class="icon-search2 mr-3"></span>Live Location</a></li>
+						<li><a href="#"><span class="icon-notifications mr-3"></span>Notifications</a></li>
+						<li><a href="#"><span class="icon-location-arrow mr-3"></span>Direct</a></li>
+						<li><a href="#"><span class="icon-pie-chart mr-3"></span>Stats</a></li>
+						<li><a href="#"><span class="icon-sign-out mr-3"></span>Sign out</a></li>
+					</ul>
+				</div>
+			</div>
+			
+		</aside>
+		<main>
+			<div class="site-section">
+				<div class="container-fluid p-0">
+					<div class="row justify-content-center m-0">
+						<div class="col-md-12 p-0">
+							<div class="row">
+
+								<!-- Map Section -->
+								<div id="map"></div>
+								
+
+
+                                <div class="dropdown-container">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <select id="kecamatan" class="form-select">
+                                                <option value="">Semua Kecamatan</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <select id="desa" class="form-select">
+                                                <option value="">Semua Desa</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <select id="sls" class="form-select">
+                                                <option value="">Semua SLS</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <button id="filterButton" class="btn btn-primary w-100">Filter</button>
+                                        </div>
+                                        
+                                        <!-- Hidden checkboxes initially -->
+                                        <!-- <div class="col-12 mt-3" id="checkboxContainer" style="display: none;">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="checkbox1">
+                                                <label class="form-check-label" for="checkbox1">
+                                                    Batas Kecamatan Terpilih
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="checkbox2">
+                                                <label class="form-check-label" for="checkbox2">
+                                                    Batas Desa Terpilih
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="checkbox3">
+                                                <label class="form-check-label" for="checkbox3">
+                                                    Batas SLS Terpilih
+                                                </label>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		
+		
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+		<script src="js/jquery-3.3.1.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+		<script src="js/main.js"></script>
+		
+		<script type="text/javascript" src="js/peta/final_sls_202313316.js"></script>
+		<script type="text/javascript" src="js/peta/final_desa_202313316.js"></script>
+		
+
+		<script type="text/javascript">
+			$(function() {
+				'use strict';
+				$('.js-menu-toggle').click(function(e) {
+					var $this = $(this);
+					if ( $('body').hasClass('show-sidebar') ) {
+						$('body').removeClass('show-sidebar');
+						$this.removeClass('active');
+					} else {
+						$('body').addClass('show-sidebar'); 
+						$this.addClass('active');
+					}
+					e.preventDefault();
+				});
+
+				// click outisde offcanvas
+				$(document).mouseup(function(e) {
+					var container = $(".sidebar");
+					if (!container.is(e.target) && container.has(e.target).length === 0) {
+						if ( $('body').hasClass('show-sidebar') ) {
+							$('body').removeClass('show-sidebar');
+							$('body').find('.js-menu-toggle').removeClass('active');
+						}
+					}
+				}); 
+			});
+
+
+
+
+
+
+			// Initialize Leaflet Map
+			var map = L.map('map', {
+					center: [-6.9697, 111.4189],
+					zoom: 11,
+					maxZoom: 20,
+					minZoom: 6,
+					zoomControl: false
+			}); 
+
+			L.control.zoom({
+					position: 'bottomright'
+			}).addTo(map);
+
+			// Add OpenStreetMap tiles
+			 var tiles = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+						maxZoom: 20,
+						subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+				}).addTo(map);
+
+			// Add marker to the map
+			L.marker([-6.9697, 111.4189]).addTo(map)
+				.bindPopup('Jakarta')
+				.openPopup();
+
+			// L.geoJson(batas_sls).addTo(map);
+
+
+
+
+
+
+
+
+
+			// Fungsi untuk memuat dropdown kecamatan
+			function loadKecamatanDropdown() {
+				const kecamatanList = [];
+
+				// Ambil data kecamatan dari GeoJSON
+				batas_sls.features.forEach(feature => {
+					const idkec = `3316${feature.properties.kdkec}`;
+					const nmkec = feature.properties.nmkec;
+					const combined = `${feature.properties.kdkec} - ${nmkec}`;
+
+					if (!kecamatanList.includes(combined)) {
+						kecamatanList.push(combined);
+					}
+				});
+
+				// Urutkan dan tambahkan ke dropdown
+				kecamatanList.sort();
+				const kecamatanSelect = document.getElementById('kecamatan');
+				kecamatanList.forEach(kecamatan => {
+					const [kdkec] = kecamatan.split(' - ');
+					const option = new Option(kecamatan, kdkec);
+					kecamatanSelect.add(option);
+				});
+			}
+
+			// Fungsi untuk memuat dropdown desa
+			function loadDesaDropdown(kdkec) {
+				const desaList = [];
+
+				// Ambil data desa berdasarkan kecamatan
+				batas_sls.features.forEach(feature => {
+					if (feature.properties.kdkec === kdkec) {
+						const iddesa = `3316${feature.properties.kdkec}${feature.properties.kddesa}`;
+						const nmdesa = feature.properties.nmdesa;
+						const combined = `${feature.properties.kddesa} - ${nmdesa}`;
+
+						if (!desaList.includes(combined)) {
+							desaList.push(combined);
+						}
+					}
+				});
+
+				// Urutkan dan tambahkan ke dropdown
+				desaList.sort();
+				const desaSelect = document.getElementById('desa');
+				desaSelect.innerHTML = '<option value="">Semua Desa</option>';
+				desaList.forEach(desa => {
+					const [kddesa] = desa.split(' - ');
+					const option = new Option(desa, kddesa);
+					desaSelect.add(option);
+				});
+			}
+
+			// Fungsi untuk memuat dropdown RT
+			function loadRTDropdown(kdkec, kddesa) {
+				const rtList = [];
+
+				// Ambil data RT berdasarkan kecamatan dan desa
+				batas_sls.features.forEach(feature => {
+					if (feature.properties.kdkec === kdkec && feature.properties.kddesa === kddesa) {
+						const sls = `${feature.properties.kdsls} - ${feature.properties.nmsls}`;
+						if (!rtList.includes(sls)) {
+							rtList.push(sls);
+						}
+					}
+				});
+
+				// Urutkan dan tambahkan ke dropdown
+				rtList.sort();
+				const rtSelect = document.getElementById('sls');
+				rtSelect.innerHTML = '<option value="">Semua RT</option>';
+				rtList.forEach(rt => {
+					const [kdsls] = rt.split(' - ');
+					const option = new Option(rt, kdsls);
+					rtSelect.add(option);
+				});
+			}
+
+
+
+            // // Fungsi untuk memperbarui visibilitas checkbox
+            // function updateCheckboxVisibility() {
+            //     const selectedKdkec = document.getElementById('kecamatan').value;
+            //     const selectedKddesa = document.getElementById('desa').value;
+            //     const selectedRT = document.getElementById('sls').value;
+
+            //     // Menampilkan checkbox setelah filter dipilih
+            //     const checkboxContainer = document.getElementById('checkboxContainer');
+            //     checkboxContainer.style.display = 'block';
+
+            //     // Menyembunyikan semua checkbox terlebih dahulu
+            //     document.getElementById('checkbox1').parentElement.style.display = 'none';
+            //     document.getElementById('checkbox2').parentElement.style.display = 'none';
+            //     document.getElementById('checkbox3').parentElement.style.display = 'none';
+
+            //     // Kondisi berdasarkan pilihan
+            //     if (selectedRT) {
+            //         // Jika SLS terpilih, tampilkan semua opsi
+            //         document.getElementById('checkbox1').parentElement.style.display = 'block';
+            //         document.getElementById('checkbox2').parentElement.style.display = 'block';
+            //         document.getElementById('checkbox3').parentElement.style.display = 'block';
+            //     } else if (selectedKddesa) {
+            //         // Jika Desa terpilih, tampilkan Opsi 1 dan 2
+            //         document.getElementById('checkbox1').parentElement.style.display = 'block';
+            //         document.getElementById('checkbox2').parentElement.style.display = 'block';
+            //     } else if (selectedKdkec) {
+            //         // Jika Kecamatan terpilih, tampilkan Opsi 1 saja
+            //         document.getElementById('checkbox1').parentElement.style.display = 'block';
+            //     }
+            // }
+
+
+			// Event listener untuk dropdown kecamatan
+			document.getElementById('kecamatan').addEventListener('change', function () {
+				const selectedKdkec = this.value;
+				const desaSelect = document.getElementById('desa');
+				if (selectedKdkec) {
+					loadDesaDropdown(selectedKdkec);
+				} else {
+					desaSelect.innerHTML = '<option value="">Pilih kecamatan</option>';
+				}
+			});
+
+			// Event listener untuk dropdown desa
+			document.getElementById('desa').addEventListener('change', function () {
+				const selectedKdkec = document.getElementById('kecamatan').value;
+				const selectedKddesa = this.value;
+				const rtSelect = document.getElementById('sls');
+				if (selectedKdkec && selectedKddesa) {
+					loadRTDropdown(selectedKdkec, selectedKddesa);
+				} else {
+					rtSelect.innerHTML = '<option value="">Pilih desa</option>';
+				}
+			});
+
+
+
+
+			// Event listener untuk tombol filter
+			document.getElementById('filterButton').addEventListener('click', function () {
+                const selectedKdkec = document.getElementById('kecamatan').value;
+                const selectedKddesa = document.getElementById('desa').value;
+                const selectedRT = document.getElementById('sls').value;
+
+                // Hapus layer GeoJSON sebelumnya
+                if (window.geojsonLayer) {
+                    map.removeLayer(window.geojsonLayer);
+                }
+
+                // Filter data GeoJSON
+                const filteredFeatures = batas_sls.features.filter(feature => {
+                    const matchKecamatan = !selectedKdkec || feature.properties.kdkec === selectedKdkec;
+                    const matchDesa = !selectedKddesa || feature.properties.kddesa === selectedKddesa;
+                    const matchRT = !selectedRT || feature.properties.kdsls === selectedRT;
+                    return matchKecamatan && matchDesa && matchRT;
+                });
+
+                // Tambahkan hasil filter ke peta
+                window.geojsonLayer = L.geoJSON({ type: 'FeatureCollection', features: filteredFeatures }).addTo(map);
+
+                // Zoom ke fitur yang difilter jika ada
+                if (filteredFeatures.length > 0) {
+                    map.fitBounds(window.geojsonLayer.getBounds());
+                }
+
+                // Menampilkan checkboxes setelah tombol filter diklik
+                // updateCheckboxVisibility();
+            });
+
+			// Panggil fungsi untuk memuat dropdown kecamatan saat halaman dimuat
+			loadKecamatanDropdown();
+
+		
+		</script>
+	</body>
+</html>

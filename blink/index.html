@@ -1,0 +1,953 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Blink ~ BPS Blora dalam Link</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <link rel="shortcut icon" type="image/jpg" href="favicon.ico"/>
+
+        <style type="text/css">
+
+            .container_jumbotron{
+                border-bottom: 1px solid #828282;
+            }
+            img{
+                height:150px;
+                width:100%;
+            }
+
+            div [class^="col-"]{
+                padding-left:5px;
+                padding-right:5px;
+            }
+            .card{
+                transition:0.5s;
+                cursor:pointer;
+            }
+
+            .card-title i{  
+                font-size:15px;
+                transition:1s;
+                cursor:pointer;
+                color:#ffa710
+            }
+            .card-title i:hover{
+                transform: scale(1.25) rotate(100deg); 
+                color:#18d4ca;
+            }
+            .card:hover{
+                transform: scale(1.05);
+                box-shadow: 10px 10px 15px rgba(0,0,0,0.3);
+            }
+
+
+            .card::before, .card::after {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                transform: scale3d(0, 0, 1);
+                transition: transform .3s ease-out 0s;
+                background: rgba(255, 255, 255, 0.1);
+                content: '';
+                pointer-events: none;
+            }
+            .card::before {
+                transform-origin: left top;
+            }
+            .card::after {
+                transform-origin: right bottom;
+            }
+            .card:hover::before, .card:hover::after, .card:focus::before, .card:focus::after {
+                    transform: scale3d(1, 1, 1);
+                }
+            .animate-character
+                {
+                    text-transform: uppercase;
+                    background-image: linear-gradient(
+                        -225deg,
+                        #08D9D6 0%,
+                        #252A34 29%,
+                        #ff1361 67%,
+                        #EAEAEA 100%
+                    );
+                    background-size: auto auto;
+                    background-clip: border-box;
+                    background-size: 200% auto;
+                    color: #fff;
+                    background-clip: text;
+                    text-fill-color: transparent;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    animation: textclip 2s linear infinite;
+                    display: inline-block;
+                    font-size: 50px;
+                }
+
+                @keyframes textclip {
+                    to {
+                        background-position: 200% center;
+                    }
+                }
+                .fantasy {
+                    font-family: fantasy;
+                }
+
+                .border1 { 
+                    border-top: 8px solid #ffb3ba;
+                    border-left: 0px;
+                    border-right: 0px;
+                    border-bottom: 0px;
+                }
+                .border2 { 
+                    border-top: 8px solid #ffdfba;
+                    border-left: 0px;
+                    border-right: 0px;
+                    border-bottom: 0px;
+                }
+                .border3 { 
+                    border-top: 8px solid #baffc9;
+                    border-left: 0px;
+                    border-right: 0px;
+                    border-bottom: 0px;
+                }
+                .border4 { 
+                    border-top: 8px solid #bae1ff;
+                    border-left: 0px;
+                    border-right: 0px;
+                    border-bottom: 0px;
+                }
+
+                .a-general {
+                    color: #4d4d4d;
+                }
+                .b-sosial {
+                    color: #d97400;
+                }
+                .c-produksi {
+                    color: #108e44;
+                }
+                .d-neraca {
+                    color: #691970;
+                }
+                .e-distribusi {
+                    color: #0c2e70;
+                }
+                .f-ipds {
+                    color: #990000;
+                }
+                .g-sektoral {
+                    color: #c79f00;
+                }
+
+
+
+
+
+                 .filter-btn {
+                    transition: background-color 0.5s, color 0.5s, background-image 0.5s;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                }
+
+                .filter-btn:hover {
+                    background-color: #fff;
+                    color: #1f807a;
+                    border: 2px solid #1f807a;
+                }
+
+                .active-btn {
+                    background-color: #1f807a;
+                    color: #fff;
+                    
+                }
+
+                
+
+
+
+
+                .btn-magenta{
+                    background-color: #1f807a;
+                    color: #fff;
+                }
+                .border-magenta{
+                    border: 2px solid #1f807a;
+                }
+
+
+
+
+
+                .container_hamburger {
+                  display: flex;
+                  justify-content: flex-end;
+                  align-items: flex-end;
+                  position: fixed;
+                  bottom: 20px;
+                  right: 20px;
+                }
+
+                .hamburger {
+                  position: fixed;
+                  bottom: 20px;
+                  right: 20px;
+                  width: 50px;
+                  height: 50px;
+                  border-radius: 50%;
+                  background-color: #333;
+                  border: none;
+                  outline: none;
+                  transition: opacity 0.3s ease;
+                }
+
+                .menu_hamburger {
+                  opacity: 0;
+                  display: none;
+                  position: fixed;
+                  bottom: 80px;
+                  right: 20px;
+                  background-color: #fff;
+                  border-radius: 5px;
+                  transition: opacity 0.3s ease;
+                }
+
+                .menu-btn {
+                  display: block;
+                  width: 100%;
+                  border: none;
+                  outline: none;
+                  cursor: pointer;
+                }
+
+                .menu-btn i {
+                  margin-right: 10px;
+                  color: #fff
+                }
+
+                .menu-btn:hover {
+                    background-color: #fff7c7;
+                    border: 1px solid #ffc107;
+                    color: #000000;
+
+
+                }
+
+
+                /*---   TYPEWRITER   ---*/
+			
+    			.containertypewritter {
+    				height: 2vh;
+    			    align-items: center;
+    			    box-sizing: border-box;
+    			    background: var(--bg-color);
+    			}
+    
+    			.typewriter {
+    			    font-family: Arial, Helvetica, sans-serif;
+    			    font-size: 14px;
+    			    color: #fff;
+    			    font-weight: bold;
+    			    position: relative;
+    			    margin: 0;
+    			    transform: translateY(-50%);
+    			}
+    
+    			.typewriter span {
+    			    color: var(--text-color);
+    			    padding: 0px;
+    			    border-right: solid var(--text-color) 10px; 
+    			    animation: cursor 1s ease-in-out infinite;
+    			}
+    
+    			@keyframes cursor {
+    			    from { border-color: var(--text-color); }
+    			    to { border-color: transparent; }
+    			}
+    
+    			@media (max-width: 576px) {
+    			    .typewriter { font-size: 14px; }
+    			}
+    			@media (max-width: 768px) {
+    			    .typewriter { font-size: 14px; }
+    			}
+    
+    			.oversize {
+    			    max-width: 120px;
+    			    max-height: 70px;
+    			}
+
+
+        </style>
+    </head>
+
+
+    <body>
+        <main>
+
+
+            <section class="px-0 pb-2 container container_jumbotron sticky-top bg-white">
+                <div class="row py-1 d-flex bg-dark bg-opacity-10">
+                    <div class="col-lg-6 col-md-8 px-3 w-100">
+                        <span class="fw-light">
+                            <span class="animate-character fantasy">B'link</span>
+                            <span class="h5"> ~  BPS Blora dalam link</span>
+                        </span>
+                        <div class="containertypewritter">
+                            <p class="typewriter text-secondary">
+                                <span data-text="ASN, Bangga Melayani Bangsa, BPS, Mencatat Indonesia !"></span>
+                            </p>
+                        </div>
+                        <p class=" text-muted">
+                            <strong>BLINK</strong> merupakan Sistem Informasi yang berisi kumpulan sistem informasi dan aplikasi yang digunakan oleh BPS Kabupaten Blora untuk mempermudah dalam melakukan tugas dan tanggung jawab sebagai "Penyedia Data Statistik Berkualitas untuk Indonesia Maju".
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 pt-3 px-1">
+                    <div class="input-group p-0">
+                        <input id="searchInput" type="text" class="form-control border-magenta" placeholder="cari link disini..." style="font-weight: bold;"> 
+                        <div class="input-group-append">
+                            <button class="btn btn-magenta border-magenta rounded-0" type="button">
+                                <i class="fa fa-search text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--FILTER MENU ON PRGRESS-->
+                <!--<div class="row slick-filter filters d-flex justify-content-center py-2 mt-0 g-3">-->
+                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="umum">Umum</button>-->
+                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="keuangan">Keuangan</button>-->
+                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="sdm">SDM</button>-->
+                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="teknis">Teknis & MK</button>-->
+                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="pelayanan">Pelayanan</button>-->
+                <!--</div>-->
+
+
+            </section>
+
+            <div class="container py-3" style="width:100%;">
+
+                
+
+
+                <!-- ROW UMUM  -->
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_umum category-content" data-category="umum">
+                    <p class="h3 mb-0 mt-0 text-dark">
+                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                        <lord-icon
+                            src="https://cdn.lordicon.com/yqiuuheo.json"
+                            trigger="loop"
+                            delay="1000"
+                            style="width:80px;height:80px; vertical-align: middle;">
+                        </lord-icon>
+                        <strong style="vertical-align: middle;">&nbsp;Umum</strong>
+                    </p>
+
+                     <div class="row p-2 menu_umum">        
+                        <!-- Card Administrasi disini -->
+                    </div>
+                </div>      
+               
+
+
+                <!-- ROW KEUANGAN  -->
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_keuangan category-content" data-category="keuangan">
+                    <p class="h3 mb-0 mt-0 text-dark">
+                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                        <lord-icon
+                            src="https://cdn.lordicon.com/qnwzeeae.json"
+                            trigger="loop"
+                            delay="1000"
+                            style="width:80px;height:80px; vertical-align: middle;">
+                        </lord-icon>
+                        <strong style="vertical-align: middle;">&nbsp;Keuangan</strong>
+                    </p>
+
+                    <div class="row p-2 menu_keuangan">        
+                        <!-- Card Keuangan disini -->
+                    </div>
+                </div>      
+                
+
+
+
+                <!-- ROW SDM -->
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_sdm category-content" data-category="sdm">
+                    <p class="h3 mb-0 mt-0 text-dark">
+                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                        <lord-icon
+                            src="https://cdn.lordicon.com/eodavnff.json"
+                            trigger="loop"
+                            delay="1000"
+                            style="width:80px;height:80px; vertical-align: middle;">
+                        </lord-icon>
+                        <strong style="vertical-align: middle;">&nbsp;Sumber Daya Manusia</strong>
+                    </p>
+
+                    <div class="row p-2 menu_sdm">        
+                        <!-- Card SDM disini -->
+                    </div>
+                </div>      
+                
+
+
+                <!-- ROW TEKNIS -->
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_teknis category-content" data-category="teknis">
+                    <p class="h3 mb-0 mt-0 text-dark">
+                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                        <lord-icon
+                            src="https://cdn.lordicon.com/kjtalhau.json"
+                            trigger="loop"
+                            delay="1000"
+                            style="width:80px;height:80px; vertical-align: middle;">
+                        </lord-icon>
+                        <strong style="vertical-align: middle;">&nbsp;Teknis & Manajemen Kerja</strong>
+                    </p>
+
+                    <div class="row p-2 menu_teknis">        
+                        <!-- Card SDM disini -->
+                    </div>
+                </div>      
+                
+
+
+                <!-- ROW Pelayanan -->
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_pelayanan category-content" data-category="pelayanan">
+                    <p class="h3 mb-0 mt-0 text-dark">
+                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                        <lord-icon
+                            src="https://cdn.lordicon.com/ndzqltsx.json"
+                            trigger="loop"
+                            delay="1000"
+                            style="width:80px;height:80px; vertical-align: middle;">
+                        </lord-icon>
+                        <strong style="vertical-align: middle;">&nbsp;Pelayanan Statistik & Kehumasan</strong>
+                    </p>
+
+                    <div class="row p-2 menu_pelayanan">        
+                        <!-- Card Pelayanan disini -->
+                    </div>
+                </div>      
+                <div class="container_hamburger">
+                <button class="hamburger" onclick="toggleMenu()"><i class="fa fa-gear fa-spin text-warning" style="font-size:24px"></i></button>
+                <div class="menu_hamburger">
+                    <a class="btn btn-warning menu-btn" href="https://forms.gle/rWG5RQVnPFb2GE9fA" role="button" target="_blank">Usulkan Link</a>
+                </div>
+              </div>
+
+            </div>
+            
+        </main>
+
+
+            
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script type="text/javascript" src="umum.js"></script>
+    <script type="text/javascript" src="keuangan.js"></script>
+    <script type="text/javascript" src="sdm.js"></script>
+    <script type="text/javascript" src="teknis.js"></script>
+    <script type="text/javascript" src="pelayanan.js"></script>
+
+    
+
+    <script type="text/javascript">
+
+
+        var span = document.querySelector(".typewriter span");
+			var textArr = span.getAttribute("data-text").split(", "); 
+			var maxTextIndex = textArr.length; 
+
+			var sPerChar = 0.08; 
+			var sBetweenWord = 0.8;
+			var textIndex = 0; 
+
+			typing(textIndex, textArr[textIndex]); 
+
+			function typing(textIndex, text) {
+			    var charIndex = 0; 
+			    var maxCharIndex = text.length - 1; 
+
+			    var typeInterval = setInterval(function () {
+			        span.innerHTML += text[charIndex]; 
+			        if(text == "ASN"){
+                        span.style.color = "#2B96C1"; 
+                    } else if(text == "Bangga Melayani Bangsa"){
+                        span.style.color = "#2B96C1";
+                    } else if(text == "BPS"){
+                        span.style.color = "#70BB41"; 
+                    } else if(text == " Mencatat Indonesia !"){
+                        span.style.color = "#DD8A3C";
+                    }
+			        if (charIndex == maxCharIndex) {
+			            clearInterval(typeInterval);
+			            setTimeout(function() { deleting(textIndex, text) }, sBetweenWord * 800); 
+			            
+			        } else {
+			            charIndex += 1; 
+			        }
+			    }, sPerChar * 800); 
+			}
+
+			function deleting(textIndex, text) {
+			    var minCharIndex = 0; 
+			    var charIndex = text.length - 1; 
+
+			    var typeInterval = setInterval(function () {
+			        span.innerHTML = text.substr(0, charIndex); 
+		        	span.classList.remove("text-warning");
+			        if (charIndex == minCharIndex) {
+			            clearInterval(typeInterval);
+			            textIndex + 1 == maxTextIndex ? textIndex = 0 : textIndex += 1; 
+			            setTimeout(function() { typing(textIndex, textArr[textIndex]) }, sBetweenWord * 800); 
+			        } else {
+			            charIndex -= 1; 
+			        }
+			    }, sPerChar * 800); 
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+        function toggleMenu() {
+            const menu = document.querySelector('.menu_hamburger');
+            const hamburger = document.querySelector('.hamburger');
+          
+            if (menu.style.opacity === '1') {
+                menu.style.opacity = '0';
+                setTimeout(() => { menu.style.display = 'none'; }, 300);
+            } else {
+                menu.style.display = 'block';
+                setTimeout(() => { menu.style.opacity = '1'; }, 10); // Delay to ensure display:block is applied before transitioning opacity
+            }
+        }
+
+
+        // FILTER CARD
+        $(document).ready(function () {
+            
+            // Handle filter button click
+            $(".filter-btn").click(function () {
+                var category = $(this).data("category");
+
+                // Toggle active class on the clicked button
+                $(this).toggleClass("active-btn");
+
+                // Show/hide content based on the selected categories
+                if ($(this).hasClass("active-btn")) {
+                    $(".category-content[data-category='" + category + "']").show();
+                } else {
+                    $(".category-content[data-category='" + category + "']").hide();
+                }
+
+                // If no buttons are active, hide all content
+                if ($(".filter-btn.active-btn").length === 0) {
+                    $(".category-content").hide();
+                }
+            });
+        });
+
+        
+        
+        // SEARCH CARD
+        var searchInput = document.getElementById("searchInput");
+        searchInput.addEventListener("input", searchCards);
+
+        function searchCards() {
+            var searchTerm = searchInput.value.toLowerCase();
+            var cards = document.querySelectorAll(".card");
+            cards.forEach(function(card) {
+                var cardText = card.textContent || card.innerText;
+
+                if (cardText.toLowerCase().includes(searchTerm)) {
+                    card.parentElement.style.display = "block";
+
+                } else {
+                    card.parentElement.style.display = "none";
+                    
+                }
+            });
+
+            var containers = document.querySelectorAll('.category-content');
+
+            containers.forEach(function(container) {
+                var cards = container.querySelectorAll('.card');
+
+                var visibleCardCount = 0;
+                cards.forEach(function(card) {
+                    if (window.getComputedStyle(card.parentElement).display != 'none') {
+                        visibleCardCount++;
+                    }
+                });
+                // Menampilkan jumlah card yang tampil di console
+                if (visibleCardCount == 0) {
+                    container.style.display = "none";
+                } else if (visibleCardCount != 0) {
+                    container.style.display = "block";
+                }
+            });
+
+        }
+
+
+
+
+        var isVPN = "";
+        $( document ).ready(function() {
+            umum_json.sort((a, b) => {
+              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
+              const namaB = b.nama.toUpperCase();
+
+              if (namaA < namaB) {
+                return -1;
+              }
+              if (namaA > namaB) {
+                return 1;
+            }
+              return 0; // Names are equal
+            });
+            for (var i = 0; i <= umum_json.length-1; i++) { 
+                isVPN = "";
+                if (umum_json[i].hasOwnProperty("isVPN") && umum_json[i]["isVPN"].length > 2) {
+                    isVPN = "vpn";
+                }
+                $(".menu_umum").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
+                            '<div class="card card-block pb-2 m-1 border1">'+
+                                '<img src="'+umum_json[i].ikon+'" class="img-fluid" loading="lazy">'+
+                                
+
+                                
+                                '<div class="container">'+
+                                    '<div class="row">'+
+                                        '<div class="col-12">'+
+                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start">'+
+                                                umum_json[i].nama+
+                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
+                                                
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+
+
+                                // '<p class="text-muted">'+umum_json[i].desc+'</p>'+ 
+                                '<a href="'+umum_json[i].url+'" class="stretched-link" target="_blank"></a>'+
+                            '</div>'+
+                        '</div>');
+            }  
+        });  
+
+        $( document ).ready(function() {
+            keuangan_json.sort((a, b) => {
+              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
+              const namaB = b.nama.toUpperCase();
+
+              if (namaA < namaB) {
+                return -1;
+              }
+              if (namaA > namaB) {
+                return 1;
+            }
+              return 0; // Names are equal
+            });
+            for (var i = 0; i <= keuangan_json.length-1; i++) {
+                isVPN = "";
+                if (keuangan_json[i].hasOwnProperty("isVPN") && keuangan_json[i]["isVPN"].length > 2) {
+                    isVPN = "vpn";
+                }
+                
+                $(".menu_keuangan").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
+                            '<div class="card card-block pb-2 m-1 border2">'+
+                                '<img src="'+keuangan_json[i].ikon+'" class="img-fluid loading="lazy"">'+
+                                
+                                '<div class="container">'+
+                                    '<div class="row">'+
+                                        '<div class="col-12">'+
+                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start">'+
+                                                keuangan_json[i].nama+
+                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
+                                                
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+
+                                '<a href="'+keuangan_json[i].url+'" class="stretched-link" target="_blank"></a>'+
+                            '</div>'+
+                        '</div>');
+            }  
+        });  
+
+        $( document ).ready(function() {
+            sdm_json.sort((a, b) => {
+              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
+              const namaB = b.nama.toUpperCase();
+
+              if (namaA < namaB) {
+                return -1;
+              }
+              if (namaA > namaB) {
+                return 1;
+            }
+              return 0; // Names are equal
+            });
+            for (var i = 0; i <= sdm_json.length-1; i++) {
+                isVPN = "";
+                if (sdm_json[i].hasOwnProperty("isVPN") && sdm_json[i]["isVPN"].length > 2) {
+                    isVPN = "vpn";
+                }
+                
+                $(".menu_sdm").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
+                            '<div class="card card-block pb-2 m-1 border2">'+
+                                '<img src="'+sdm_json[i].ikon+'" class="img-fluid loading="lazy"">'+
+                                
+                                '<div class="container">'+
+                                    '<div class="row">'+
+                                        '<div class="col-12">'+
+                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start">'+
+                                                sdm_json[i].nama+
+                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
+                                                
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+
+                                '<a href="'+sdm_json[i].url+'" class="stretched-link" target="_blank"></a>'+
+                            '</div>'+
+                        '</div>');
+            }  
+        });  
+
+
+
+
+
+        $( document ).ready(function() {
+            teknis_json.sort((a, b) => {
+              const timA = a.tim.toUpperCase(); // Ignore case during sorting
+              const timB = b.tim.toUpperCase();
+
+              if (timA < timB) {
+                return -1;
+              }
+              if (timA > timB) {
+                return 1;
+              }
+              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
+              const namaB = b.nama.toUpperCase();
+
+              if (namaA < namaB) {
+                return -1;
+              }
+              if (namaA > namaB) {
+                return 1;
+              }
+              return 0; // Both "tim" and "nama" are equal
+            });
+            for (var i = 0; i <= teknis_json.length-1; i++) {
+                isVPN = "";
+                if (teknis_json[i].hasOwnProperty("isVPN") && teknis_json[i]["isVPN"].length > 2) {
+                    isVPN = "vpn";
+                }
+                
+                $(".menu_teknis").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
+                            '<div class="card card-block pb-2 m-1 border3">'+
+                                '<img src="'+teknis_json[i].ikon+'" class="img-fluid loading="lazy"">'+
+                                
+                                '<div class="container">'+
+                                    '<div class="row">'+
+                                        '<div class="col-12">'+
+                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start '+teknis_json[i].tim+'">'+
+                                                teknis_json[i].nama+
+                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
+                                                
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+
+                                '<a href="'+teknis_json[i].url+'" class="stretched-link" target="_blank"></a>'+
+                            '</div>'+
+                        '</div>');
+            }  
+        });  
+
+
+
+        $( document ).ready(function() {
+            pelayanan_json.sort((a, b) => {
+              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
+              const namaB = b.nama.toUpperCase();
+
+              if (namaA < namaB) {
+                return -1;
+              }
+              if (namaA > namaB) {
+                return 1;
+            }
+              return 0; // Names are equal
+            });
+            for (var i = 0; i <= pelayanan_json.length-1; i++) {
+                isVPN = "";
+                if (pelayanan_json[i].hasOwnProperty("isVPN") && pelayanan_json[i]["isVPN"].length > 2) {
+                    isVPN = "vpn";
+                }
+                
+                $(".menu_pelayanan").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
+                            '<div class="card card-block pb-2 m-1 border3">'+
+                                '<img src="'+pelayanan_json[i].ikon+'" class="img-fluid loading="lazy"">'+
+                                
+                                '<div class="container">'+
+                                    '<div class="row">'+
+                                        '<div class="col-12">'+
+                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start">'+
+                                                pelayanan_json[i].nama+
+                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
+                                                
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+
+                                '<a href="'+pelayanan_json[i].url+'" class="stretched-link" target="_blank"></a>'+
+                            '</div>'+
+                        '</div>');
+            }  
+        }); 
+
+
+        
+
+
+        particlesJS('particles-js', {
+        particles: {
+            number: {
+                value: 100,
+                density: {
+                    enable: true,
+                    value_area: 800
+                }
+            },
+            color: {
+                value: '#737373' // Change the color as per your design
+            },
+            shape: {
+                type: 'circle',
+                stroke: {
+                    width: 0,
+                    color: '#737373'
+                },
+                polygon: {
+                    nb_sides: 5
+                }
+            },
+            opacity: {
+                value: 0.7,
+                random: false,
+                anim: {
+                    enable: false,
+                    speed: 1,
+                    opacity_min: 0.1,
+                    sync: false
+                }
+            },
+            size: {
+                value: 4,
+                random: true,
+                anim: {
+                    enable: false,
+                    speed: 40,
+                    size_min: 0.1,
+                    sync: false
+                }
+            },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: '#a3a3a3', // Change the color as per your design
+                opacity: 0.4,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 6,
+                direction: 'none',
+                random: false,
+                straight: false,
+                out_mode: 'out',
+                bounce: false,
+                attract: {
+                    enable: false,
+                    rotateX: 600,
+                    rotateY: 1200
+                }
+            }
+        },
+        interactivity: {
+            detect_on: 'canvas',
+            events: {
+                onhover: {
+                    enable: true,
+                    mode: 'repulse'
+                },
+                onclick: {
+                    enable: true,
+                    mode: 'push'
+                },
+                resize: true
+            },
+            modes: {
+                grab: {
+                    distance: 400,
+                    line_linked: {
+                        opacity: 1
+                    }
+                },
+                bubble: {
+                    distance: 400,
+                    size: 40,
+                    duration: 2,
+                    opacity: 8,
+                    speed: 3
+                },
+                repulse: {
+                    distance: 200,
+                    duration: 0.4
+                },
+                push: {
+                    particles_nb: 4
+                },
+                remove: {
+                    particles_nb: 2
+                }
+            }
+        },
+        retina_detect: true
+    });
+    </script>
+    </body>
+    </html>
