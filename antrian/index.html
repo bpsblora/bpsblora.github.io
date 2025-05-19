@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistem Antrian BPS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f4f4;
+    }
+
+    header {
+      padding: 20px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .main-content {
+      width: 100%;
+      max-width: 1200px;
+      margin: 10px auto;
+    }
+
+    @media (min-width: 992px) {
+      .main-content {
+        width: 75%;
+      }
+    }
+
+    .service-btn {
+      width: 100%;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      background-color: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: background-color 0.3s, color 0.3s;
+      color: #000; /* default warna teks hitam */
+    }
+
+    .service-btn i {
+      font-size: 1.5rem;
+      margin-right: 15px;
+    }
+
+    .service-btn:hover {
+      background-color: #ed7425 !important; /* Bootstrap's info color */
+      color: white;
+    }
+
+    .service-active {
+      background-color: #ed7425 !important; /* Bootstrap info */
+      color: white !important;
+    }
+
+    /* Warna teks dan latar saat hover */
+    .service-btn:hover,
+    .service-btn:focus,
+    .service-btn:active {
+      background-color: #ed7425 !important; /* info */
+      color: #fff !important;
+    }
+
+    /* Warna teks dan latar saat aktif (terpilih) */
+    .service-btn.service-active {
+      background-color: #ed7425 !important; /* info */
+      color: #fff !important;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #ffffff;
+      border-top: 1px solid #ddd;
+    }
+
+    .image-preview {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body class="bg-white">
+
+  <!-- Baris 1: Header -->
+  <header class="text-center p-1">
+    <img src="https://pst.bps.go.id/img/content/motto.jpg" alt="Logo BPS" style="height: 70px;" class="mb-1">
+    <h2 class="m-0">SISTEM ANTRIAN PELAYANAN STATISTIK TERPADU<br><small>BPS Kabupaten Blora</small></h2>
+  </header>
+
+  <!-- Baris 2: Isi Konten -->
+  <div class="main-content">
+    <div class="row">
+      <div class="col-12">
+        <div id="output" class="alert alert-success text-center d-none fw-bold fs-4 p-0"></div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-6 d-flex justify-content-center align-items-start px-4 pb-1">
+        <img src="https://imgur.com/myZKwAd.png" alt="Ilustrasi Layanan" class="image-preview">
+      </div>
+
+      <!-- Kolom 2: Tombol-tombol -->
+      <div class="col-md-6 px-4">
+
+        <button class="btn service-btn fw-bold m-0" data-layanan="PERPUSTAKAAN" data-kode="P">
+          <i class="bi bi-search"></i> PERPUSTAKAAN
+        </button>
+        <button class="btn service-btn fw-bold m-0" data-layanan="KONSULTASI STATISTIK" data-kode="K">
+          <i class="bi bi-bar-chart-line"></i> KONSULTASI STATISTIK
+        </button>
+        <button class="btn service-btn fw-bold m-0" data-layanan="PEMBELIAN PRODUK STATISTIK" data-kode="B">
+          <i class="bi bi-cart"></i> PEMBELIAN PRODUK STATISTIK
+        </button>
+        <button class="btn service-btn fw-bold m-0" data-layanan="REKOMENDASI STATISTIK" data-kode="R">
+          <i class="bi bi-journal-check"></i> REKOMENDASI STATISTIK
+        </button>
+
+        <!-- Tombol Submit (awal tersembunyi) -->
+        <button id="submitBtn" class="btn btn-warning fw-bold w-100 d-none mt-3">
+           Lanjutkan <i class="bi bi-caret-right-square-fill"></i>
+        </button>
+
+        
+
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Baris 3: Footer -->
+  <footer>
+    <div style="color: rgb(0,0,0, 0.65); font-size:8pt; margin-top:7px; margin-bottom: 7px;" align="center">
+                Copyright © 2025 | BPS Kabupaten Blora<br>     
+                  <a href="" target="blank">Privacy Policy  #</a>
+                  <a href="" target="blank">Terms of Service</a></div>
+  </footer>
+  <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'></script>
+
+  <script>
+
+    function toTitleCase(str) {
+      return str.toLowerCase().split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+    }
+
+    const buttons = document.querySelectorAll('.service-btn');
+    const submitBtn = document.getElementById('submitBtn');
+    const output = document.getElementById('output');
+    let layananTerpilih = null;
+    let kodeTerpilih = null;
+
+    // Reset harian
+    function resetJikaHariBerganti() {
+      const today = new Date().toDateString();
+      const lastSavedDate = localStorage.getItem('tanggal');
+
+      if (today !== lastSavedDate) {
+        localStorage.setItem('tanggal', today);
+        localStorage.setItem('antrian_global', 0);  // reset nomor global setiap hari
+      }
+    }
+
+    // Saat tombol layanan diklik
+    buttons.forEach(button => {
+      button.addEventListener('click', function () {
+        buttons.forEach(btn => btn.classList.remove('service-active'));
+        this.classList.add('service-active');
+
+        layananTerpilih = this.dataset.layanan;
+        kodeTerpilih = this.dataset.kode;
+
+        submitBtn.classList.remove('d-none');
+        output.classList.add('d-none');
+      });
+    });
+
+    // Saat tombol "Lanjutkan" diklik
+    submitBtn.addEventListener('click', () => {
+      if (!kodeTerpilih) return;
+
+      resetJikaHariBerganti();
+
+      let nomorGlobal = parseInt(localStorage.getItem('antrian_global') || "0") + 1;
+      localStorage.setItem('antrian_global', nomorGlobal);
+
+      const nomorFormat = kodeTerpilih + String(nomorGlobal).padStart(3, '0');
+
+      output.innerHTML = `
+        Nomor Antrian Layanan <strong>${toTitleCase(layananTerpilih)}</strong><br>
+        <span class="fw-bold" style="font-size: 3rem;">${nomorFormat}</span>
+      `;
+      output.classList.remove('d-none');
+    });
+
+    window.onload = resetJikaHariBerganti;
+
+
+
+  </script>
+
+  
+</body>
+</html>
