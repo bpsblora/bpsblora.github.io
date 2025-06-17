@@ -90,7 +90,7 @@ teknis_json = [
 				"nama": "JatiKuat",
 				"desc": "",
 				"ikon": "https://imgur.com/PgAtgVI.png",
-			  	"url": "https://webapps.bps.go.id/blorakab/jatikuat/",
+			  	"url": "http://s.bps.go.id/jatikuat",
 			  	"tim": "a-general",
 			  	"isVPN": ""
 			},
