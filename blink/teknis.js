@@ -253,7 +253,7 @@ teknis_json = [
 				"nama": "Hasil Landmark Satria",
 				"desc": "",
 				"ikon": "https://imgur.com/ei2oHJV.png",
-			  	"url": "https://docs.google.com/spreadsheets/d/1nob5GM87elBGqbVr8xBhSN1cdmcnVt1h/edit?gid=1538432115#gid=1538432115",
+			  	"url": "https://docs.google.com/spreadsheets/d/17SUmvzr98Lt1lpJEYy6NXjk8clomhzw3Q-ifn41owsw/edit?usp=sharing",
 			  	"tim": "f-ipds",
 			  	"isVPN": ""
 			},
