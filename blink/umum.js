@@ -129,7 +129,7 @@ umum_json = [
 				"nama": "Bukti Dukung KIPAPP",
 				"desc": "",
 				"ikon": "https://imgur.com/GC7wzj2.png",
-			  	"url": "https://drive.google.com/drive/folders/14-cVKxpPTIGWJF3VsuoiIx2AmpDq56qi?usp=drive_link",
+			  	"url": "https://drive.google.com/drive/folders/126Jb4V9cTaDZ_M6oGjZ0Zy90EUB8PkEK?usp=drive_link",
 			  	"isVPN": ""
 			},
 			{
