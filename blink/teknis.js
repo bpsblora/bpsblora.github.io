@@ -257,6 +257,14 @@ teknis_json = [
 			  	"tim": "f-ipds",
 			  	"isVPN": ""
 			},
+			{
+				"nama": "Data Pendukung SBR",
+				"desc": "",
+				"ikon": ".png",
+			  	"url": "https://drive.google.com/drive/folders/1Uk0QkwunSMojHx7ta6MdIvUjxJKEDosi?usp=drive_link",
+			  	"tim": "f-ipds",
+			  	"isVPN": ""
+			},
 //////////////////
 //    6 SEKTORAL
 //////////////////	
