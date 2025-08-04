@@ -245,7 +245,7 @@ teknis_json = [
 				"nama": "SBR 2025",
 				"desc": "",
 				"ikon": "https://imgur.com/cIczHz5.png",
-			  	"url": "https://docs.google.com/spreadsheets/d/1k1pYiAUwgNO63nCyNOvMs7eGXRcuqi7l/edit?gid=2023128985#gid=2023128985",
+			  	"url": "https://docs.google.com/spreadsheets/d/1uRSi7G3NZACMRa-LrkKMsqUfnCa_4-wvcH8wj143WzI/edit?gid=0#gid=0",
 			  	"tim": "f-ipds",
 			  	"isVPN": ""
 			},
