@@ -59,7 +59,7 @@
                         </div>
                         <div class="col">
                             <strong class="numbersls">150</strong>
-                            <p class="number-label">RT</p>
+                            <p class="number-label">SLS</p>
                         </div>
                     <!-- </div> -->
                 </div>
@@ -110,10 +110,10 @@
                                         </div>
                                         <!-- Pilihan metode pemilihan wilayah -->
                                         <div class="col-12 mt-1 px-1">
-                                            <label class="small fw-bold">Pilih Filter RT/BS:</label>
+                                            <label class="small fw-bold">Pilih Filter SLS/BS:</label>
                                             <div class="form-check form-check-xs">
                                                 <input class="form-check-input form-check-xs" type="radio" name="filterMethod" id="filterSLS" value="sls" checked>
-                                                <label class="form-check-label small" for="filterSLS">Berdasarkan RT</label>
+                                                <label class="form-check-label small" for="filterSLS">Berdasarkan SLS</label>
                                             </div>
                                             <div class="form-check form-check-xs">
                                                 <input class="form-check-input form-check-xs" type="radio" name="filterMethod" id="filterBlokSensus" value="blokSensus">
@@ -125,7 +125,7 @@
                                         <div class="col-12 mt-1 px-1" id="slsContainer">
                                             
                                             <select id="sls" class="form-select form-select-xs">
-                                                <option value="">Semua RT</option>
+                                                <option value="">Semua SLS</option>
                                             </select>
                                         </div>
 
@@ -154,7 +154,7 @@
                                                 <div class="form-check form-check-xs m-0">
                                                     <input class="form-check-input form-check-xs" type="checkbox" value="" id="checkbox3">
                                                     <label class="form-check-label" for="checkbox3">
-                                                        Tampilkan RT dalam Blok Sensus
+                                                        Tampilkan SLS dalam Blok Sensus
                                                     </label>
                                                 </div>
 
@@ -162,6 +162,12 @@
                                                     <input class="form-check-input form-check-xs" type="checkbox" value="" id="checkbox4">
                                                     <label class="form-check-label" for="checkbox4">
                                                         Tampilkan semua Label
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-xs m-0">
+                                                    <input class="form-check-input form-check-xs" type="checkbox" value="" id="checkbox5">
+                                                    <label class="form-check-label" for="checkbox5">
+                                                        Tampilkan geotagging wilkerstat
                                                     </label>
                                                 </div>
 
@@ -232,6 +238,7 @@
         <script type="text/javascript" src="js/peta/final_bs_202313316.js"></script>
         <script type="text/javascript" src="js/peta/final_desa_202313316.js"></script>
         <script type="text/javascript" src="js/peta/final_kec_202313316.js"></script>
+        <script type="text/javascript" src="geojson/16_landmark_3316.js"></script>
 
         <script type="text/javascript">
             //Filter SLS atau Blok Sensus
@@ -247,6 +254,7 @@
                     const checkbox2 = document.getElementById('checkbox2').parentElement;
                     const checkbox3 = document.getElementById('checkbox3').parentElement;
                     const checkbox4 = document.getElementById('checkbox4').parentElement;
+                    const checkbox5 = document.getElementById('checkbox5').parentElement;
 
                     if (filterSLS.checked) {
                         slsContainer.style.display = "block";
@@ -257,6 +265,7 @@
                         checkbox2.style.display = "none";
                         checkbox3.style.display = "none";
                         checkbox4.style.display = "none";
+                        checkbox5.style.display = "none";
                     } else {
                         slsContainer.style.display = "none";
                         blokSensusContainer.style.display = "block";
@@ -266,6 +275,7 @@
                         checkbox2.style.display = "none";
                         checkbox3.style.display = "none";
                         checkbox4.style.display = "none";
+                        checkbox5.style.display = "none";
                     }
                 }
                 
@@ -448,6 +458,7 @@
                         document.getElementById('checkbox2').checked = false;
                         document.getElementById('checkbox3').checked = false;
                         document.getElementById('checkbox4').checked = false;
+                        document.getElementById('checkbox5').checked = false;
                         if (accuracyCircle) {
                             map.removeLayer(accuracyCircle);
                         }
@@ -533,9 +544,9 @@
                                 {
                                     style: {
                                         color: 'red',
-                                        weight: 3,
+                                        weight: 2,
                                         opacity: 0.5, // Transparansi garis
-                                        fillOpacity: 0.1, // Transparansi area
+                                        fillOpacity: 0.2, // Transparansi area
                                         fillColor: 'red',
                                     },
                                     // Menambahkan popup dan event listener untuk setiap fitur
@@ -836,11 +847,13 @@
                 const checkbox2 = document.getElementById('checkbox2').parentElement;
                 const checkbox3 = document.getElementById('checkbox3').parentElement;
                 const checkbox4 = document.getElementById('checkbox4').parentElement;
+                const checkbox5 = document.getElementById('checkbox5').parentElement;
                 
                 checkbox1.style.display = 'none';
                 checkbox2.style.display = 'none';
                 checkbox3.style.display = 'none';
                 checkbox4.style.display = 'none';
+                checkbox5.style.display = 'none';
 
                 // Menampilkan container checkbox jika ada dropdown yang dipilih
                 if (selectedKdkec || selectedKddesa || selectedRT || selectedBS) {
@@ -852,6 +865,9 @@
 
                 // Checkbox 4 selalu muncul
                 checkbox4.style.display = 'block';
+
+                // Checkbox 4 selalu muncul
+                checkbox5.style.display = 'block';
 
                 // Jika Kecamatan terpilih, munculkan Checkbox 1
                 if (selectedKdkec) {
@@ -934,6 +950,7 @@
                 document.getElementById('checkbox2').checked = false;
                 document.getElementById('checkbox3').checked = false;
                 document.getElementById('checkbox4').checked = false;
+                document.getElementById('checkbox5').checked = false;
                 
                 
                 ////MENGHAPUS SEMUA ELEMEN YANG MUNCUL PADA MAP DARI FITUR CARI
@@ -1040,9 +1057,9 @@
                 // Atur warna dan gaya sesuai dengan pilihan SLS atau BS
                 geojsonLayer.setStyle({
                     color: bsslstoggle === 'sls' ? 'red' : 'yellow',
-                    weight: 3,
+                    weight: 2,
                     opacity: 0.5, // Transparansi
-                    fillOpacity: 0.1, // Transparansi area
+                    fillOpacity: 0.2, // Transparansi area
                     fillColor: bsslstoggle === 'sls' ? 'red' : 'yellow'
                 });
 
@@ -1102,9 +1119,9 @@
                     geojsonLayerKec = L.geoJSON(filteredGeoJSON, {
                         style: {
                             color: 'blue',
-                            weight: 3,
+                            weight: 2,
                             opacity: 0.5,
-                            fillOpacity: 0.1,
+                            fillOpacity: 0.2,
                             fillColor: 'blue'
                         },
                          onEachFeature: function(feature, layer) {
@@ -1141,9 +1158,9 @@
                     geojsonLayerDesa = L.geoJSON(filteredGeoJSON, {
                         style: {
                             color: 'orange',
-                            weight: 3,
+                            weight: 2,
                             opacity: 0.5,
-                            fillOpacity: 0.1,
+                            fillOpacity: 0.2,
                             fillColor: 'orange'
                         },
                         onEachFeature: function(feature, layer) {
@@ -1279,6 +1296,89 @@
                         }
                     });
                 }
+            });
+
+
+
+            // Event listener untuk checkbox4
+            checkbox5.addEventListener('change', (event) => {
+                if (event.target.checked) {
+
+                    // Buat ikon khusus
+                    var batasSLSIcon = L.icon({
+                        iconUrl: 'images/batassls.png', // ganti dengan path ikon batas SLS
+                        iconSize: [35, 50], // ukuran ikon
+                        iconAnchor: [12, 41],
+                        popupAnchor: [0, -41]
+                    });
+
+                    var defaultIcon = L.icon({
+                        iconUrl: 'images/konsentrasieko.png', // ganti dengan path ikon default
+                        iconSize: [35, 50],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [0, -41]
+                    });
+
+
+                    var firstFeature = tagging.features[0];
+                    var coordinates_landmark = firstFeature.geometry.coordinates;
+                    var nama_landmark = firstFeature.properties.nama;
+                    var tipe_landmark = firstFeature.properties.tipe_landmark;
+                    selected_idsls = "3316"+document.getElementById('kecamatan').value+document.getElementById('desa').value+document.getElementById('sls').value
+
+                    var matchingFeatures = tagging.features.filter(feature => {
+                        var combined = feature.properties.iddesa + feature.properties.nm_project;
+                        return combined === selected_idsls;
+                    });
+
+                    matchingFeatures.forEach(feature => {
+                        var coordinates_landmark = feature.geometry.coordinates;
+                        var nama_landmark = feature.properties.nama;
+                        var tipe_landmark = feature.properties.tipe_landmark;
+
+                        // Leaflet biasanya format koordinatnya [lat, lng], sedangkan GeoJSON [lng, lat]
+                        var latlng = [coordinates_landmark[1], coordinates_landmark[0]];
+
+                        // Pilih ikon sesuai tipe_landmark
+                        var icon = (tipe_landmark === "Batas SLS") ? batasSLSIcon : defaultIcon;
+
+                        // Tambahkan marker ke peta
+                        L.marker(latlng, { icon: icon })
+                            .addTo(map)
+                            .bindPopup(`<b>${nama_landmark}</b><br>${tipe_landmark}`);
+                    });
+
+
+
+                    console.log(matchingFeatures);
+
+                    // Jika checkbox dicentang, tambahkan tooltip ke semua layer
+                    
+                    // geojsonLayer.eachLayer(layer => {
+                    //     if (!layer.getTooltip()) {
+                    //         // Pilih properti yang sesuai (SLS atau BS)
+                    //         const namaWilayah = bsslstoggle === 'sls' ? layer.feature.properties.nmsls : layer.feature.properties.kdbs+' - '+layer.feature.properties.nmsls;
+
+                    //         layer.bindTooltip(
+                    //             namaWilayah, // Menampilkan nama sesuai pilihan
+                    //             { 
+                    //                 permanent: true, 
+                    //                 direction: 'center', 
+                    //                 className: 'custom-tooltip',
+                    //                 interactive: true // Tooltip tetap muncul saat di-hover
+                    //             }
+                    //         );
+                    //     }
+                    // });
+                } 
+                // else {
+                //     // Jika checkbox tidak dicentang, hapus semua tooltip
+                //     geojsonLayer.eachLayer(layer => {
+                //         if (layer.getTooltip()) {
+                //             layer.unbindTooltip(); // Hapus tooltip dari layer
+                //         }
+                //     });
+                // }
             });
         
         </script>
