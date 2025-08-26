@@ -82,7 +82,7 @@ teknis_json = [
 				"nama": "Quality Gate",
 				"desc": "",
 				"ikon": "https://imgur.com/TLpqABL.png",
-			  	"url": "https://webapps.bps.go.id/nqaf/qgate/",
+			  	"url": "https://nqaf.web.bps.go.id/qgate/",
 			  	"tim": "a-general",
 			  	"isVPN": "true"
 			},
