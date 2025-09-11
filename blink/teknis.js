@@ -15,7 +15,7 @@ teknis_json = [
 				"nama": "Evita",
 				"desc": "",
 				"ikon": "https://imgur.com/cUm3zG2.png",
-			  	"url": "https://s.bps.go.id/evitajateng",
+			  	"url": "https://jateng.web.bps.go.id/evita",
 			  	"tim": "a-general",
 			  	"isVPN": ""
 
