@@ -117,7 +117,7 @@ teknis_json = [
 				"nama": "Web Entri Seruti",
 				"desc": "",
 				"ikon": "https://imgur.com/eDhs4Mr.png",
-			  	"url": "https://webapps.bps.go.id/olah/seruti",
+			  	"url": "https://olah.web.bps.go.id/seruti/login",
 			  	"tim": "b-sosial",
 			  	"isVPN": ""
 			},
