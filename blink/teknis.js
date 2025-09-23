@@ -265,6 +265,14 @@ teknis_json = [
 			  	"tim": "f-ipds",
 			  	"isVPN": ""
 			},
+			{
+				"nama": "PointSE",
+				"desc": "",
+				"ikon": "https://imgur.com/EliY0jU.png",
+			  	"url": "http://pointse.web.bps.go.id/",
+			  	"tim": "f-ipds",
+			  	"isVPN": "true"
+			}
 //////////////////
 //    6 SEKTORAL
 //////////////////	
