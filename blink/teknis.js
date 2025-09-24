@@ -272,7 +272,7 @@ teknis_json = [
 			  	"url": "http://pointse.web.bps.go.id/",
 			  	"tim": "f-ipds",
 			  	"isVPN": "true"
-			}
+			},
 //////////////////
 //    6 SEKTORAL
 //////////////////	
