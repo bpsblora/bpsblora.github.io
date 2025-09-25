@@ -262,7 +262,7 @@ main {
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    width: 250px; /* Sesuaikan lebar dropdown */
+    width: 300px; /* Sesuaikan lebar dropdown */
   }
 
 
@@ -311,4 +311,73 @@ main {
 
 .leaflet-routing-container{
   margin-bottom: 30px !important;
+}
+
+
+
+.bg-orange {
+  background-color: #fd7e14 !important; /* Bootstrap orange */
+  color: #fff !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.select2-container--default .select2-results > .select2-results__options {
+  max-height: 60vh !important; /* bisa 200-300px */
+  overflow-y: auto !important;  /* biar bisa scroll dalam dropdown */
+
+}
+
+
+/* Dropdown option lebih kecil */
+.select2-container--default .select2-results__option {
+    padding: 2px 2px;
+    font-size: 0.8rem; 
+}
+
+
+/* Untuk select2 multiple */
+.select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+  font-size: 12px;
+  padding: 2px 16px;
+}
+
+
+
+/*WARNA CHIP TERPILIH PADA DROPDOWN*/
+/* Kecamatan → biru */
+.select2-kec .select2-selection__choice {
+  background-color: #cff4fc !important;
+  border: 1px solid #9eeaf9 !important;
+  color: #000 !important;
+  font-size: 12px;
+}
+
+/* Desa → kuning */
+.select2-desa .select2-selection__choice {
+  background-color: #fff3cd !important;
+  border: 1px solid #fff3cd !important;
+  color: #000 !important;
+  font-size: 12px;
+}
+
+/* SLS → merah */
+.select2-sls .select2-selection__choice {
+  background-color: #f8d7da !important;
+  border: 1px solid #f8d7da !important;
+  color: #000 !important;
+  font-size: 12px;
 }
