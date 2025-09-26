@@ -24,7 +24,7 @@
                 // cari nama kec dari prefix
                 let idkec = f.properties.iddesa.substring(0,7);
                 let nmkec = batas_kec.features.find(k => k.properties.idkec===idkec)?.properties.nmkec || "";
-                return {id:f.properties.iddesa, text:nmkec+" - "+f.properties.nmdesa};
+                return {id:f.properties.iddesa, text:"["+f.properties.kdkec+"]"+nmkec+" - "+"["+f.properties.kddesa+"]"+f.properties.nmdesa};
               });
               $("#desa").empty().select2({data: desaOptions, placeholder: "Pilih Desa",
               dropdownParent: $("#dropdownContent"),
@@ -46,6 +46,7 @@
             });
             
    
+
 
 
 
