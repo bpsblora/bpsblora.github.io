@@ -24,7 +24,7 @@
                 // cari nama kec dari prefix
                 let idkec = f.properties.iddesa.substring(0,7);
                 let nmkec = batas_kec.features.find(k => k.properties.idkec===idkec)?.properties.nmkec || "";
-                return {id:f.properties.iddesa, text:"["+f.properties.kdkec+"]"+nmkec+" - "+"["+f.properties.kddesa+"]"+f.properties.nmdesa};
+                return {id:f.properties.iddesa, text:"["+f.properties.kddesa+"] "+nmkec+" - "+f.properties.nmdesa};
               });
               $("#desa").empty().select2({data: desaOptions, placeholder: "Pilih Desa",
               dropdownParent: $("#dropdownContent"),
@@ -39,7 +39,7 @@
               let slsFiltered = batas_sls.features.filter(f => selected.some(id => f.properties.idsls.startsWith(id)));
               let slsOptions = sortById(slsFiltered,"idsls").map(f => ({
                 id: f.properties.idsls,
-                text: f.properties.nmdesa+" - "+f.properties.nmsls
+                text: "["+f.properties.kdsls+"] "+f.properties.nmdesa+" - "+f.properties.nmsls
               }));
               $("#sls").empty().select2({data: slsOptions, placeholder:"Pilih SLS",dropdownParent: $("#dropdownContent"),
               selectionCssClass: "select2-sls"});
@@ -51,3 +51,4 @@
 
 
         
+
