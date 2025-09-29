@@ -59,13 +59,38 @@
                 selectionCssClass: "select2-sls"
               });
             });
-
             
+            
+            // ==== Event sls -> filter geojson ====
+            $("#sls").on("change", function() {
+              let selected = $(this).val() || [];
+              let finalFeatures;
+            
+              if (selected.includes("ALL")) {
+                // kalau ALL dipilih -> ambil semua SLS dari desa terpilih
+                let desaSelected = $("#desa").val() || [];
+                finalFeatures = batas_sls.features.filter(f =>
+                  desaSelected.some(id => f.properties.idsls.startsWith(id))
+                );
+            
+                // opsional: set dropdown hanya ALL saja (hapus pilihan lain)
+                $("#sls").val("ALL").trigger("change.select2");
+              } else {
+                // kalau pilih SLS tertentu saja
+                finalFeatures = batas_sls.features.filter(f =>
+                  selected.includes(f.properties.idsls)
+                );
+              }
+            
+              // lanjut render peta pakai finalFeatures
+              console.log(finalFeatures);
+            });
    
 
 
 
 
         
+
 
 
