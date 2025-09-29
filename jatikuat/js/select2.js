@@ -36,14 +36,30 @@
             // ==== Event desa -> filter sls ====
             $("#desa").on("change", function() {
               let selected = $(this).val() || [];
-              let slsFiltered = batas_sls.features.filter(f => selected.some(id => f.properties.idsls.startsWith(id)));
+            
+              let slsFiltered = batas_sls.features.filter(f =>
+                selected.some(id => f.properties.idsls.startsWith(id))
+              );
+            
               let slsOptions = sortById(slsFiltered,"idsls").map(f => ({
                 id: f.properties.idsls,
                 text: "["+f.properties.kdsls+"] "+f.properties.nmdesa+" - "+f.properties.nmsls
               }));
-              $("#sls").empty().select2({data: slsOptions, placeholder:"Pilih SLS",dropdownParent: $("#dropdownContent"),
-              selectionCssClass: "select2-sls"});
+            
+              // Tambahkan opsi ALL di baris pertama
+              slsOptions.unshift({
+                id: "ALL",
+                text: "🌐 Semua SLS"
+              });
+            
+              $("#sls").empty().select2({
+                data: slsOptions,
+                placeholder:"Pilih SLS",
+                dropdownParent: $("#dropdownContent"),
+                selectionCssClass: "select2-sls"
+              });
             });
+
             
    
 
@@ -51,4 +67,5 @@
 
 
         
+
 
