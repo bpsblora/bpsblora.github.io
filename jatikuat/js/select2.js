@@ -34,63 +34,33 @@
             
 
             // ==== Event desa -> filter sls ====
-            $("#desa").on("change", function() {
-              let selected = $(this).val() || [];
-            
-              let slsFiltered = batas_sls.features.filter(f =>
-                selected.some(id => f.properties.idsls.startsWith(id))
-              );
-            
-              let slsOptions = sortById(slsFiltered,"idsls").map(f => ({
-                id: f.properties.idsls,
-                text: "["+f.properties.kdsls+"] "+f.properties.nmdesa+" - "+f.properties.nmsls
-              }));
-            
-              // Tambahkan opsi ALL di baris pertama
-              slsOptions.unshift({
-                id: "ALL",
-                text: "🌐 Semua SLS"
-              });
-            
-              $("#sls").empty().select2({
-                data: slsOptions,
-                placeholder:"Pilih SLS",
-                dropdownParent: $("#dropdownContent"),
-                selectionCssClass: "select2-sls"
-              });
-            });
-            
-            
-            // ==== Event sls -> filter geojson ====
-            $("#sls").on("change", function() {
-              let selected = $(this).val() || [];
-              let finalFeatures;
-            
-              if (selected.includes("ALL")) {
-                // kalau ALL dipilih -> ambil semua SLS dari desa terpilih
-                let desaSelected = $("#desa").val() || [];
-                finalFeatures = batas_sls.features.filter(f =>
-                  desaSelected.some(id => f.properties.idsls.startsWith(id))
-                );
-            
-                // opsional: set dropdown hanya ALL saja (hapus pilihan lain)
-                $("#sls").val("ALL").trigger("change.select2");
-              } else {
-                // kalau pilih SLS tertentu saja
-                finalFeatures = batas_sls.features.filter(f =>
-                  selected.includes(f.properties.idsls)
-                );
-              }
-            
-              // lanjut render peta pakai finalFeatures
-              console.log(finalFeatures);
-            });
+
+            $("#desa").on("change", function() {
+
+              let selected = $(this).val() || [];
+
+              let slsFiltered = batas_sls.features.filter(f => selected.some(id => f.properties.idsls.startsWith(id)));
+
+              let slsOptions = sortById(slsFiltered,"idsls").map(f => ({
+
+                id: f.properties.idsls,
+
+                text: "["+f.properties.kdsls+"] "+f.properties.nmdesa+" - "+f.properties.nmsls
+
+              }));
+
+              $("#sls").empty().select2({data: slsOptions, placeholder:"Pilih SLS",dropdownParent: $("#dropdownContent"),
+
+              selectionCssClass: "select2-sls"});
+
+            });
    
 
 
 
 
         
+
 
 
 
