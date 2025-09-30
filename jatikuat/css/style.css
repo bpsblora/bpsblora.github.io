@@ -384,9 +384,3 @@ main {
 
 
 
-/* Batasi tinggi dropdown Select2 */
-.select2-results__options {
-  max-height: 250px !important; /* atur sesuai kebutuhan */
-  overflow-y: auto !important;
-}
-
