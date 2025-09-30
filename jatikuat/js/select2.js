@@ -91,6 +91,23 @@ $("#desa").on("change", function() {
       return data.text;
     }
   });
+  // Reset isi SLS + clear semua yang terpilih
+  $("#sls").empty().select2({
+    data: slsOptions,
+    placeholder: "Pilih SLS",
+    dropdownParent: $("#dropdownContent"),
+    selectionCssClass: "select2-sls",
+    templateResult: function (data) {
+      if (!data.id) return data.text;
+      if (data.id.startsWith("all_")) {
+        return $('<span><strong>' + data.text + '</strong></span>');
+      }
+      if (data.id.startsWith("sep_")) {
+        return $('<hr style="margin:4px 0; border-top:1px solid #ccc;">');
+      }
+      return data.text;
+    }
+  }).val(null).trigger("change");  // <-- ini yang clear pilihan
 });
 
 
