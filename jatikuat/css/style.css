@@ -381,3 +381,12 @@ main {
   color: #000 !important;
   font-size: 12px;
 }
+
+
+
+/* Batasi tinggi dropdown Select2 */
+.select2-results__options {
+  max-height: 250px !important; /* atur sesuai kebutuhan */
+  overflow-y: auto !important;
+}
+
