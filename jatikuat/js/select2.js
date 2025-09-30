@@ -38,28 +38,49 @@
             $("#desa").on("change", function() {
 
               let selected = $(this).val() || [];
+              let slsFiltered = batas_sls.features.filter(f =>
+                selected.some(id => f.properties.idsls.startsWith(id))
+              );      
+                        
+              let slsOptions = sortById(slsFiltered, "idsls").map(f => ({
+                id: f.properties.idsls,
+                text: "[" + f.properties.kdsls + "] " + f.properties.nmdesa + " - " + f.properties.nmsls
+              }));
+                        
+              slsOptions.unshift({
+                id: "all",
+                text: "🟢 Semua SLS"
+              });
+                        
 
-              let slsFiltered = batas_sls.features.filter(f => selected.some(id => f.properties.idsls.startsWith(id)));
-
-              let slsOptions = sortById(slsFiltered,"idsls").map(f => ({
-
-                id: f.properties.idsls,
-
-                text: "["+f.properties.kdsls+"] "+f.properties.nmdesa+" - "+f.properties.nmsls
-
-              }));
-
-              $("#sls").empty().select2({data: slsOptions, placeholder:"Pilih SLS",dropdownParent: $("#dropdownContent"),
-
-              selectionCssClass: "select2-sls"});
+              $("#sls").empty().select2({
+                data: slsOptions,
+                placeholder: "Pilih SLS",
+                dropdownParent: $("#dropdownContent"),
+                selectionCssClass: "select2-sls"
+              });              
+              
 
             });
    
 
-
+            
+            // ==== Event untuk handle "Semua SLS" ====
+            $("#sls").on("select2:select", function(e) {
+              if (e.params.data.id === "all") {
+                // Ambil semua ID selain "all"
+                let allIds = $("#sls option").map(function() {
+                  return $(this).val();
+                }).get().filter(v => v !== "all");
+            
+                // Set agar semua terpilih
+                $("#sls").val(allIds).trigger("change");
+              }
+            });
 
 
         
+
 
 
 
