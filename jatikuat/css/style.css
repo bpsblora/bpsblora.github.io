@@ -382,5 +382,14 @@ main {
   font-size: 12px;
 }
 
+.select2-sls > .select2-container > .selection > .select2-selection {
+  max-height: 60vh;   /* contoh: 120px = muat 4-5 baris chip */
+  overflow-y: auto !important;
+}
 
-
+.select2-selection__choice__display {
+  white-space: normal !important;   /* biar teks bisa turun ke bawah */
+  word-break: break-word;           /* potong kata panjang */
+  line-height: 1.2em;               /* biar jarak baris rapat */
+  max-width: 100%;                  /* jangan melebar keluar chip */
+}
