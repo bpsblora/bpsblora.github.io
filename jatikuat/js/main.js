@@ -89,9 +89,9 @@ function getGeoJSONCentroid(feature) {
                     <h6 class="m-0 text-center">Informasi SLS</h6>
                   </div>
                   <div class="card-body p-2">
-                    <p class="mb-1"><strong>Kecamatan:</strong> ${f.properties.nmkec}</p>
-                    <p class="mb-1"><strong>Desa:</strong> ${f.properties.nmdesa}</p>
-                    <p class="mb-0"><strong>SLS:</strong> ${f.properties.nmsls}</p>
+                    <p class="mb-1"><strong>Kecamatan : [${f.properties.kdkec}]</strong> ${f.properties.nmkec}</p>
+                    <p class="mb-1"><strong>Desa : [${f.properties.kddesa}]</strong>  ${f.properties.nmdesa}</p>
+                    <p class="mb-0"><strong>SLS : [${f.properties.kdsls}]</strong>  ${f.properties.nmsls}</p>
                     <button id="openstreetmap-btn" onclick="showRoute()" class="mt-1 btn btn-warning btn-xs w-100">
                       <strong>Dapatkan Rute</strong>
                     </button>
