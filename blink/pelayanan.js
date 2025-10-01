@@ -92,6 +92,13 @@ pelayanan_json = [
 				"ikon": "https://imgur.com/nwsevbX.png",
 			  	"url": "https://s.id/petugaspelayanan3316",
 			  	"isVPN": ""
+			},
+			{
+				"nama": "Media Publisitas SE2026",
+				"desc": "",
+				"ikon": "https://imgur.com/s1Qw5vR.png",
+			  	"url": "https://s.bps.go.id/mediapublisitasse2026",
+			  	"isVPN": ""
 			}
 			
 			//salin di bawah baris spasi ini 
