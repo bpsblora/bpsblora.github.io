@@ -1,4 +1,4 @@
-var batas_desa : {
+var batas_desa = {
 "type": "FeatureCollection",
 "name": "FINAL_DESA_202513316",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
