@@ -75,7 +75,7 @@ function getGeoJSONCentroid(feature) {
 
           if (selectedSls.length > 0) {
             // render SLS
-            let slsFiltered = batas_sls.features.filter(f => selectedSls.includes(f.properties.idsls));
+            let slsFiltered = batas_sls.features.filter(f => selectedSls.includes(f.properties.idsubsls));
             layerSls.addData(slsFiltered).eachLayer(function(layer) {
               
               let f = layer.feature;
@@ -91,7 +91,7 @@ function getGeoJSONCentroid(feature) {
                   <div class="card-body p-2">
                     <p class="mb-1"><strong>Kecamatan : [${f.properties.kdkec}]</strong> ${f.properties.nmkec}</p>
                     <p class="mb-1"><strong>Desa : [${f.properties.kddesa}]</strong>  ${f.properties.nmdesa}</p>
-                    <p class="mb-0"><strong>SLS : [${f.properties.kdsls}]</strong>  ${f.properties.nmsls}</p>
+                    <p class="mb-0"><strong>SLS : [${f.properties.kdsls}${f.properties.kdsubsls}]</strong>  ${f.properties.nmsls}</p>
                     <button id="openstreetmap-btn" onclick="showRoute()" class="mt-1 btn btn-warning btn-xs w-100">
                       <strong>Dapatkan Rute</strong>
                     </button>
