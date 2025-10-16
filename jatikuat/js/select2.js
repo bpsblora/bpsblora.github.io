@@ -42,12 +42,12 @@ $("#desa").on("change", function() {
 
   // Loop tiap desa terpilih
   selected.forEach((desaId, index) => {
-    let slsFiltered = batas_sls.features.filter(f =>
-      f.properties.idsls.startsWith(desaId)
+    let subslsFiltered = batas_sls.features.filter(f =>
+      f.properties.idsubsls.startsWith(desaId)
     );
 
     // Tambahkan opsi "Semua SLS Desa X"
-    let namaDesa = slsFiltered.length > 0 ? slsFiltered[0].properties.nmdesa : desaId;
+    let namaDesa = subslsFiltered.length > 0 ? subslsFiltered[0].properties.nmdesa : desaId;
     slsOptions.push({
       id: "all_" + desaId,
       text: "▶ SEMUA SLS DI DESA " + namaDesa
@@ -55,9 +55,9 @@ $("#desa").on("change", function() {
 
     // Tambahkan daftar SLS
     slsOptions = slsOptions.concat(
-      sortById(slsFiltered, "idsls").map(f => ({
-        id: f.properties.idsls,
-        text: "[" + f.properties.kdsls + "] " + f.properties.nmdesa + " - " + f.properties.nmsls
+      sortById(subslsFiltered, "idsubsls").map(f => ({
+        id: f.properties.idsubsls,
+        text: "[" + f.properties.kdsls +f.properties.kdsubsls+ "] " + f.properties.nmdesa + " - " + f.properties.nmsls
       }))
     );
 
@@ -130,10 +130,6 @@ $("#sls").on("select2:select", function(e) {
     $("#sls").val([...new Set([...current, ...allIds])]).trigger("change");
   }
 });
-
-
-        
-
 
 
 
