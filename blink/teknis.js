@@ -189,7 +189,7 @@ teknis_json = [
 			  	"isVPN": "true"
 			},
 			{
-				"nama": "SHP = Survei Harga Produsen",
+				"nama": "SHP - Survei Harga Produsen",
 				"desc": "",
 				"ikon": "https://imgur.com/4dIzHoh.png",
 			  	"url": "http://shp.web.bps.go.id/",
