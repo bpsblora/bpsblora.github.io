@@ -82,6 +82,13 @@ sdm_json = [
 				"ikon": "https://imgur.com/o5b1MGR.png",
 			  	"url": "https://webapps.bps.go.id/jateng/simas/",
 			  	"isVPN": ""
+			},
+			{
+				"nama": "SIPP",
+				"desc": "",
+				"ikon": "https://imgur.com/q2lDbgh.png",
+			  	"url": "http://s.bps.go.id/blorasipp",
+			  	"isVPN": ""
 			}
 			
 			//salin di bawah baris spasi ini 
