@@ -170,9 +170,40 @@ teknis_json = [
 			},
 
 //////////////////
-//    4 DISTRIBUSI
+//    4 DISTRIBUSI & HARGA
 //////////////////	
-
+			{
+				"nama": "SHKK - Survei Harga Kemahalan Konstruksi",
+				"desc": "",
+				"ikon": "https://imgur.com/HbYLPWF.png",
+			  	"url": "http://webentry.bps.go.id/shkk",
+			  	"tim": "f-distribusi ",
+			  	"isVPN": "true"
+			},
+			{
+				"nama": "SHPED - Survei Harga Produsen dan Konsumen Perdesaan",
+				"desc": "",
+				"ikon": "https://imgur.com/4i5napJ.png",
+			  	"url": "http://webentry.bps.go.id/shped",
+			  	"tim": "f-distribusi",
+			  	"isVPN": "true"
+			},
+			{
+				"nama": "SHP = Survei Harga Produsen",
+				"desc": "",
+				"ikon": "https://imgur.com/4dIzHoh.png",
+			  	"url": "http://shp.web.bps.go.id/",
+			  	"tim": "f-distribusi",
+			  	"isVPN": "true"
+			},
+			{
+				"nama": "SHPB - Survei Harga Perdagangan Besar",
+				"desc": "",
+				"ikon": "https://imgur.com/X8nY44U.png",
+			  	"url": "http://shpb.web.bps.go.id/",
+			  	"tim": "f-distribusi",
+			  	"isVPN": "true"
+			},
 
 //////////////////
 //    5 IPDS
