@@ -10,7 +10,7 @@ umum_json = [
 				"nama": "KipApp",
 				"desc": "",
 				"ikon": "https://imgur.com/SsZDy3h.png",
-			  	"url": "https://webapps.bps.go.id/kipapp/",
+			  	"url": "https://kipapp.bps.go.id/",
 			  	"isVPN": ""
 			},
 			{
@@ -150,7 +150,7 @@ umum_json = [
 				"nama": "Sekar",
 				"desc": "",
 				"ikon": "https://imgur.com/pl00gHm.png",
-			  	"url": "https://sekar.bps.go.id/",
+			  	"url": "https://sekar.web.bps.go.id/",
 			  	"isVPN": "true"
 			},
 			{
