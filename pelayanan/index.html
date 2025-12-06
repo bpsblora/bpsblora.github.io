@@ -1,0 +1,379 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Pelayanan Statistik</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="shortcut icon" type="image/jpg" href="favicon.ico"/>
+        <style type="text/css">
+            img{
+                height:150px;
+                width:100%;
+            }
+            div [class^="col-"]{
+                padding-left:5px;
+                padding-right:5px;
+            }
+            .card {
+                transition: 0.5s ease-in-out;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* Efek saat hover */
+            .card:hover {
+                transform: scale(1.05);
+                box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
+            }
+
+            /* Efek glow di sisi kartu */
+            .card::before {
+                content: "";
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 10%, transparent 50%);
+                transition: opacity 0.5s ease-in-out;
+                opacity: 0;
+            }
+            .card:hover::before {
+                opacity: 1;
+                transform: rotate(30deg);
+            }
+
+            /* Efek hover pada gambar */
+            .card img {
+                transition: transform 0.5s ease-in-out;
+            }
+            .card:hover img {
+                transform: scale(1.1);
+            }
+
+            /* Efek fade-in-up */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .card {
+                animation: fadeInUp 0.6s ease-out;
+            }
+            .card-title i{  
+                font-size:15px;
+                transition:1s;
+                cursor:pointer;
+                color:#ffa710
+            }
+            .card-title i:hover{
+                transform: scale(1.25) rotate(100deg); 
+                color:#18d4ca;
+            }
+            .card:hover{
+                transform: scale(1.05);
+                box-shadow: 10px 10px 15px rgba(0,0,0,0.3);
+            }
+            .card::before, .card::after {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                transform: scale3d(0, 0, 1);
+                transition: transform .3s ease-out 0s;
+                background: rgba(255, 255, 255, 0.1);
+                content: '';
+                pointer-events: none;
+            }
+            .card::before {
+                transform-origin: left top;
+            }
+            .card::after {
+                transform-origin: right bottom;
+            }
+            .card:hover::before, .card:hover::after, .card:focus::before, .card:focus::after {
+                    transform: scale3d(1, 1, 1);
+                }
+            @keyframes textclip {
+                to {
+                    background-position: 200% center;
+                }
+            }
+            .fantasy {
+                font-family: fantasy;
+            }
+
+            .border1 { 
+                border-top: 8px solid #ab1515;
+                border-left: 0px;
+                border-right: 0px;
+                border-bottom: 0px;
+            }
+            .border2 { 
+                border-top: 8px solid #020075;
+                border-left: 0px;
+                border-right: 0px;
+                border-bottom: 0px;
+            }
+
+            .header-title {
+                background: linear-gradient(135deg, #ab1515, #020075);
+                border-radius: 10px;
+            }
+
+            .category-title-1 {
+                color: #ab1515;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid #ab1515;
+            }
+
+            .category-title-2 {
+                color: #020075;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid #282abd;
+            }
+
+
+            .video-wrapper {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+                pointer-events: none;
+            }
+
+            .video-wrapper::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(200, 0, 0, 0.2); /* Opacity 50% */
+            }
+
+            .video-wrapper video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Video akan memenuhi area */
+            }
+
+            .overlay {
+                position: relative;
+                z-index: 1;
+                padding: 20px;
+            }
+
+            #particles-js {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: -1; /* Pastikan di belakang semua elemen */
+                background: #fff; /* Warna latar belakang jika partikel tidak dimuat */
+            }
+        </style>
+    </head>
+
+
+    <body>
+        <main>
+            <div id="particles-js"></div>
+
+            <div class="container py-3" style="width:100%;">
+                <!-- Judul Header -->
+                <div class="header-title text-center text-white p-1 mb-2 position-relative">
+                    <div class="video-wrapper">
+                        <video autoplay loop muted playsinline>
+                            <source src="video/background.mp4" type="video/mp4">
+                            Browser Anda tidak mendukung video.
+                        </video>
+                    </div>
+                    <div class="overlay">
+                        <h2 class="fw-bold">Selamat Datang</h2>
+                        <p class="lead mb-1">di Portal Layanan Statistik & Pengaduan BPS Kabupaten Blora</p>
+                    </div>
+                </div>
+
+
+                <!-- Kategori Umum -->
+                <h2 class="category-title-1">Layanan Statistik</h2>
+                <div class="row g-6 menu_pelayanan">
+                </div>
+
+
+                <h2 class="category-title-2">Layanan Pengaduan</h2>
+                <div class="row g-6 menu_pengaduan">
+                </div>
+
+            </div>
+            
+        </main>
+
+
+            
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+
+    <script type="text/javascript" src="pelayanan.js"></script>
+    <script type="text/javascript" src="pengaduan.js"></script>
+
+    
+
+    <script type="text/javascript">
+        function toggleMenu() {
+            const menu = document.querySelector('.menu_hamburger');
+            const hamburger = document.querySelector('.hamburger');
+          
+            if (menu.style.opacity === '1') {
+                menu.style.opacity = '0';
+                setTimeout(() => { menu.style.display = 'none'; }, 300);
+            } else {
+                menu.style.display = 'block';
+                setTimeout(() => { menu.style.opacity = '1'; }, 10); // Delay to ensure display:block is applied before transitioning opacity
+            }
+        }
+
+        $( document ).ready(function() {
+            for (var i = 0; i <= pelayanan_json.length-1; i++) {
+                isVPN = "";
+                if (pelayanan_json[i].hasOwnProperty("isVPN") && pelayanan_json[i]["isVPN"].length > 2) {
+                    isVPN = "vpn";
+                }
+                $(".menu_pelayanan").append(`
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+                        <div class="card card-block pb-1 border1">
+                            <img src="${pelayanan_json[i].ikon}" class="img-fluid" loading="lazy">
+
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="h6 d-flex fw-bold mt-1 align-items-start">
+                                            ${pelayanan_json[i].nama}
+                                            <span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">${isVPN}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="${pelayanan_json[i].url}" class="stretched-link" target="_blank"></a>
+                        </div>
+                    </div>
+                `);
+            }  
+
+
+
+            for (var i = 0; i <= pengaduan_json.length-1; i++) {
+                isVPN = "";
+                if (pengaduan_json[i].hasOwnProperty("isVPN") && pengaduan_json[i]["isVPN"].length > 2) {
+                    isVPN = "vpn";
+                }
+                $(".menu_pengaduan").append(`
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+                        <div class="card card-block pb-1 border2">
+                            <img src="${pengaduan_json[i].ikon}" class="img-fluid" loading="lazy">
+
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="h6 d-flex fw-bold mt-1 align-items-start">
+                                            ${pengaduan_json[i].nama}
+                                            <span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">${isVPN}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="${pelayanan_json[i].url}" class="stretched-link" target="_blank"></a>
+                        </div>
+                    </div>
+                `);
+            }  
+        }); 
+
+
+
+
+
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 100, 
+                    "density": { "enable": true, "value_area": 800 }
+                },
+                "color": { "value": "#454545" },
+                "shape": {
+                    "type": "circle",
+                    "stroke": { "width": 0, "color": "#454545" },
+                    "polygon": { "nb_sides": 5 }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": { "enable": false, "speed": 1, "opacity_min": 0.1, "sync": false }
+                },
+                "size": {
+                    "value": 4,
+                    "random": true,
+                    "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#454545",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "grab" },
+                    "onclick": { "enable": true, "mode": "push" },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+                    "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3 },
+                    "repulse": { "distance": 200, "duration": 0.4 },
+                    "push": { "particles_nb": 4 },
+                    "remove": { "particles_nb": 2 }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+    </body>
+    </html>
