@@ -173,6 +173,13 @@ umum_json = [
 				"ikon": "https://imgur.com/typewjP.png",
 			  	"url": "https://docs.google.com/spreadsheets/d/18aaWqO9zeyykGbJAJS42_G3zRH0oTcwG/edit?usp=sharing&ouid=116161281905621901899&rtpof=true&sd=true",
 			  	"isVPN": ""
+			},
+			{
+				"nama": "Permintaan ATK, ARK, dan Servis",
+				"desc": "",
+				"ikon": "https://imgur.com/YTXrAN3.png",
+			  	"url": "https://docs.google.com/spreadsheets/d/1t2HgFpy7-OKW_Bdr8cmln7wof1Mbas55/edit?gid=1151656041#gid=1151656041",
+			  	"isVPN": ""
 			}
 			
 			//salin di bawah baris spasi ini 
