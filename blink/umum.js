@@ -24,7 +24,7 @@ umum_json = [
 				"nama": "Nomor Surat Keluar",
 				"desc": "",
 				"ikon": "https://imgur.com/ssMbXOi.png",
-			  	"url": "https://docs.google.com/spreadsheets/d/1LyXwYrXslCi5HeRQCdm7A5rAnd03L3bU/edit?usp=sharing&ouid=116161281905621901899&rtpof=true&sd=true",
+			  	"url": "https://docs.google.com/spreadsheets/d/1Sv-ugT3SAwhYaTKPLShLyZw5b8dk61Ai/edit?gid=1422169393#gid=1422169393",
 			  	"isVPN": ""
 			},
 			{
@@ -161,10 +161,10 @@ umum_json = [
 			  	"isVPN": ""
 			},
 			{
-				"nama": "Permohonan SK KPA 2025",
+				"nama": "Permohonan SK KPA 2026",
 				"desc": "",
 				"ikon": "https://imgur.com/wkxLTLq.png",
-			  	"url": "http://s.bps.go.id/Permohonan_SK_KPA_2025",
+			  	"url": "https://docs.google.com/spreadsheets/d/145ZfrKgyWaH1Q4Em3Dy1fM5-dB8wUymo/edit?gid=1354597699#gid=1354597699",
 			  	"isVPN": ""
 			},
 			{
