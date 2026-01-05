@@ -1,20 +1,20 @@
 sdm_json = [
 			{
-				"nama": "Matriks Kegiatan Pegawai 2025",
+				"nama": "Matriks Kegiatan Pegawai",
 				"desc": "",
 				"ikon": "https://imgur.com/d4Ls2sc.png",
-			  	"url": "https://docs.google.com/spreadsheets/d/1DULmZ4Mvv8b-AKFx4TW9slw36pb0MyvS-Ep1Fcw62yg/edit?gid=646339873",
+			  	"url": "https://docs.google.com/spreadsheets/d/1-yX2QvZN3SjKOunzUDjKhjcyBlE3vmQpMgKlVUKPpK0/edit?gid=646339873#gid=646339873",
 			  	"isVPN": ""
 			},
 			{
-				"nama": "Matriks Honor 2025",
+				"nama": "Matriks Honor",
 				"desc": "",
 				"ikon": "https://imgur.com/vKhsVhA.png",
 			  	"url": "https://docs.google.com/spreadsheets/d/1r1maQ6rePDUjvmZZQ0qvGRbhlVvVUB7T/edit",
 			  	"isVPN": ""
 			},
 			{
-				"nama": "Kebutuhan Pegawai 2024",
+				"nama": "Kebutuhan Pegawai",
 				"desc": "",
 				"ikon": "https://imgur.com/noWqbcn.png",
 			  	"url": "http://s.bps.go.id/kebutuhan_pegawai2024",
