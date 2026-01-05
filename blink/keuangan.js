@@ -1,9 +1,9 @@
 keuangan_json = [
 			{
-				"nama": "Revisi DIPA POK 2025",
+				"nama": "Matriks Revisi DIPA POK",
 				"desc": "",
 				"ikon": "https://imgur.com/JrtUbOk.png",
-			  	"url": "https://docs.google.com/spreadsheets/d/1rdJ_YyBpsvwQsuPvxxo80oyY7SFq3tnK/edit?gid=902032279#gid=902032279",
+			  	"url": "https://docs.google.com/spreadsheets/d/1B-EyCYD9tB8Sy6WINtMQqfrTkLPzs1Tx/edit?gid=1147863619#gid=1147863619",
 			  	"isVPN": ""
 			},
 			{
