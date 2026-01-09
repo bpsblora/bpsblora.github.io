@@ -7,10 +7,10 @@ sdm_json = [
 			  	"isVPN": ""
 			},
 			{
-				"nama": "Matriks Honor",
+				"nama": "Matriks Kegiatan (Honor dan Translok)",
 				"desc": "",
 				"ikon": "https://imgur.com/vKhsVhA.png",
-			  	"url": "https://docs.google.com/spreadsheets/d/1r1maQ6rePDUjvmZZQ0qvGRbhlVvVUB7T/edit",
+			  	"url": "https://docs.google.com/spreadsheets/d/19VBYtePFrUchX7-Hx6acqL3S7Kr2wkMN/edit?gid=292514653#gid=292514653",
 			  	"isVPN": ""
 			},
 			{
