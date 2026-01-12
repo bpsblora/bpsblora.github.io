@@ -117,7 +117,7 @@ teknis_json = [
 			  	"url": "https://klasifikasi.web.bps.go.id/",
 			  	"tim": "a-general",
 			  	"isVPN": ""
-			}
+			},
 //////////////////
 //    1 SOSIAL
 //////////////////	
@@ -339,7 +339,7 @@ teknis_json = [
 			  	"tim": "g-sektoral",
 			  	"isVPN": ""
 			}
-			]
+			
 			
 			];
 
