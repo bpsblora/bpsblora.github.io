@@ -110,6 +110,14 @@ teknis_json = [
 			  	"tim": "a-general",
 			  	"isVPN": "true"
 			},
+			{
+				"nama": "Sibaku-Web",
+				"desc": "",
+				"ikon": "https://imgur.com/jtkIVJt.png",
+			  	"url": "https://klasifikasi.web.bps.go.id/",
+			  	"tim": "a-general",
+			  	"isVPN": ""
+			}
 //////////////////
 //    1 SOSIAL
 //////////////////	
@@ -328,14 +336,6 @@ teknis_json = [
 				"desc": "",
 				"ikon": "https://imgur.com/kfOSIvo.png",
 			  	"url": "https://romantik.web.bps.go.id/",
-			  	"tim": "g-sektoral",
-			  	"isVPN": ""
-			},
-			{
-				"nama": "Romantik",
-				"desc": "",
-				"ikon": "https://imgur.com/jtkIVJt.png",
-			  	"url": "https://klasifikasi.web.bps.go.id/",
 			  	"tim": "g-sektoral",
 			  	"isVPN": ""
 			}
