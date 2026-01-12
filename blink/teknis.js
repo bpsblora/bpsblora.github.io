@@ -330,6 +330,14 @@ teknis_json = [
 			  	"url": "https://romantik.web.bps.go.id/",
 			  	"tim": "g-sektoral",
 			  	"isVPN": ""
+			},
+			{
+				"nama": "Romantik",
+				"desc": "",
+				"ikon": "https://imgur.com/jtkIVJt.png",
+			  	"url": "https://klasifikasi.web.bps.go.id/",
+			  	"tim": "g-sektoral",
+			  	"isVPN": ""
 			}
 			
 			
