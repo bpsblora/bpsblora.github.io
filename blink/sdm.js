@@ -89,6 +89,13 @@ sdm_json = [
 				"ikon": "https://imgur.com/q2lDbgh.png",
 			  	"url": "http://s.bps.go.id/blorasipp",
 			  	"isVPN": ""
+			},
+			{
+				"nama": "Tim Kerja",
+				"desc": "",
+				"ikon": "https://imgur.com/DiKwD4U.png",
+			  	"url": "https://docs.google.com/spreadsheets/d/1ZFILF6XZ9hbzlSknQu0f-HL33PV5DpUuaxf4ytRKLh8/edit?gid=0#gid=0",
+			  	"isVPN": ""
 			}
 			
 			//salin di bawah baris spasi ini 
