@@ -339,7 +339,7 @@ teknis_json = [
 			  	"tim": "g-sektoral",
 			  	"isVPN": ""
 			}
-			
+			]
 			
 			];
 
