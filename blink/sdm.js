@@ -77,13 +77,6 @@ sdm_json = [
 			  	"isVPN": "true"
 			},
 			{
-				"nama": "Simas-ASN",
-				"desc": "",
-				"ikon": "https://imgur.com/o5b1MGR.png",
-			  	"url": "https://webapps.bps.go.id/jateng/simas/",
-			  	"isVPN": ""
-			},
-			{
 				"nama": "SIPP",
 				"desc": "",
 				"ikon": "https://imgur.com/q2lDbgh.png",
