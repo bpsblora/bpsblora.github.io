@@ -57,7 +57,7 @@ pelayanan_json = [
 				"nama": "Sinergi",
 				"desc": "",
 				"ikon": "https://imgur.com/gyt8DPA.png",
-			  	"url": "https://webapps.bps.go.id/jateng/sinergiev/admin"
+			  	"url": "https://sinergi.web.bps.go.id/"
 			},
 			{
 				"nama": "SateBlora",
