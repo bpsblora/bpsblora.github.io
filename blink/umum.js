@@ -105,13 +105,6 @@ umum_json = [
 			  	"isVPN": ""
 			},
 			{
-				"nama": "MasPras",
-				"desc": "",
-				"ikon": "https://imgur.com/AcZiWaQ.png",
-			  	"url": "https://webapps.bps.go.id/jateng/maspras/login",
-			  	"isVPN": ""
-			},
-			{
 				"nama": "MailHost BPS",
 				"desc": "",
 				"ikon": "https://imgur.com/uZqUgdD.png",
@@ -143,7 +136,7 @@ umum_json = [
 				"nama": "Daftar Hadir BPS",
 				"desc": "",
 				"ikon": "https://imgur.com/7I8pdNU.png",
-			  	"url": "https://webapps.bps.go.id/daftarhadir/#/daftar-hadir",
+			  	"url": "https://daftarhadir.web.bps.go.id/",
 			  	"isVPN": ""
 			},
 			{
