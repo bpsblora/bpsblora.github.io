@@ -1,953 +1,667 @@
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Blink ~ BPS Blora dalam Link</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-        <link rel="shortcut icon" type="image/jpg" href="favicon.ico"/>
-
-        <style type="text/css">
-
-            .container_jumbotron{
-                border-bottom: 1px solid #828282;
-            }
-            img{
-                height:150px;
-                width:100%;
-            }
-
-            div [class^="col-"]{
-                padding-left:5px;
-                padding-right:5px;
-            }
-            .card{
-                transition:0.5s;
-                cursor:pointer;
-            }
-
-            .card-title i{  
-                font-size:15px;
-                transition:1s;
-                cursor:pointer;
-                color:#ffa710
-            }
-            .card-title i:hover{
-                transform: scale(1.25) rotate(100deg); 
-                color:#18d4ca;
-            }
-            .card:hover{
-                transform: scale(1.05);
-                box-shadow: 10px 10px 15px rgba(0,0,0,0.3);
-            }
-
-
-            .card::before, .card::after {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                transform: scale3d(0, 0, 1);
-                transition: transform .3s ease-out 0s;
-                background: rgba(255, 255, 255, 0.1);
-                content: '';
-                pointer-events: none;
-            }
-            .card::before {
-                transform-origin: left top;
-            }
-            .card::after {
-                transform-origin: right bottom;
-            }
-            .card:hover::before, .card:hover::after, .card:focus::before, .card:focus::after {
-                    transform: scale3d(1, 1, 1);
-                }
-            .animate-character
-                {
-                    text-transform: uppercase;
-                    background-image: linear-gradient(
-                        -225deg,
-                        #08D9D6 0%,
-                        #252A34 29%,
-                        #ff1361 67%,
-                        #EAEAEA 100%
-                    );
-                    background-size: auto auto;
-                    background-clip: border-box;
-                    background-size: 200% auto;
-                    color: #fff;
-                    background-clip: text;
-                    text-fill-color: transparent;
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    animation: textclip 2s linear infinite;
-                    display: inline-block;
-                    font-size: 50px;
-                }
-
-                @keyframes textclip {
-                    to {
-                        background-position: 200% center;
-                    }
-                }
-                .fantasy {
-                    font-family: fantasy;
-                }
-
-                .border1 { 
-                    border-top: 8px solid #ffb3ba;
-                    border-left: 0px;
-                    border-right: 0px;
-                    border-bottom: 0px;
-                }
-                .border2 { 
-                    border-top: 8px solid #ffdfba;
-                    border-left: 0px;
-                    border-right: 0px;
-                    border-bottom: 0px;
-                }
-                .border3 { 
-                    border-top: 8px solid #baffc9;
-                    border-left: 0px;
-                    border-right: 0px;
-                    border-bottom: 0px;
-                }
-                .border4 { 
-                    border-top: 8px solid #bae1ff;
-                    border-left: 0px;
-                    border-right: 0px;
-                    border-bottom: 0px;
-                }
-
-                .a-general {
-                    color: #4d4d4d;
-                }
-                .b-sosial {
-                    color: #d97400;
-                }
-                .c-produksi {
-                    color: #108e44;
-                }
-                .d-neraca {
-                    color: #691970;
-                }
-                .e-distribusi {
-                    color: #0c2e70;
-                }
-                .f-ipds {
-                    color: #990000;
-                }
-                .g-sektoral {
-                    color: #c79f00;
-                }
-
-
-
-
-
-                 .filter-btn {
-                    transition: background-color 0.5s, color 0.5s, background-image 0.5s;
-                    background-size: cover;
-                    background-repeat: no-repeat;
-                    background-position: center center;
-                }
-
-                .filter-btn:hover {
-                    background-color: #fff;
-                    color: #1f807a;
-                    border: 2px solid #1f807a;
-                }
-
-                .active-btn {
-                    background-color: #1f807a;
-                    color: #fff;
-                    
-                }
-
-                
-
-
-
-
-                .btn-magenta{
-                    background-color: #1f807a;
-                    color: #fff;
-                }
-                .border-magenta{
-                    border: 2px solid #1f807a;
-                }
-
-
-
-
-
-                .container_hamburger {
-                  display: flex;
-                  justify-content: flex-end;
-                  align-items: flex-end;
-                  position: fixed;
-                  bottom: 20px;
-                  right: 20px;
-                }
-
-                .hamburger {
-                  position: fixed;
-                  bottom: 20px;
-                  right: 20px;
-                  width: 50px;
-                  height: 50px;
-                  border-radius: 50%;
-                  background-color: #333;
-                  border: none;
-                  outline: none;
-                  transition: opacity 0.3s ease;
-                }
-
-                .menu_hamburger {
-                  opacity: 0;
-                  display: none;
-                  position: fixed;
-                  bottom: 80px;
-                  right: 20px;
-                  background-color: #fff;
-                  border-radius: 5px;
-                  transition: opacity 0.3s ease;
-                }
-
-                .menu-btn {
-                  display: block;
-                  width: 100%;
-                  border: none;
-                  outline: none;
-                  cursor: pointer;
-                }
-
-                .menu-btn i {
-                  margin-right: 10px;
-                  color: #fff
-                }
-
-                .menu-btn:hover {
-                    background-color: #fff7c7;
-                    border: 1px solid #ffc107;
-                    color: #000000;
-
-
-                }
-
-
-                /*---   TYPEWRITER   ---*/
-			
-    			.containertypewritter {
-    				height: 2vh;
-    			    align-items: center;
-    			    box-sizing: border-box;
-    			    background: var(--bg-color);
-    			}
-    
-    			.typewriter {
-    			    font-family: Arial, Helvetica, sans-serif;
-    			    font-size: 14px;
-    			    color: #fff;
-    			    font-weight: bold;
-    			    position: relative;
-    			    margin: 0;
-    			    transform: translateY(-50%);
-    			}
-    
-    			.typewriter span {
-    			    color: var(--text-color);
-    			    padding: 0px;
-    			    border-right: solid var(--text-color) 10px; 
-    			    animation: cursor 1s ease-in-out infinite;
-    			}
-    
-    			@keyframes cursor {
-    			    from { border-color: var(--text-color); }
-    			    to { border-color: transparent; }
-    			}
-    
-    			@media (max-width: 576px) {
-    			    .typewriter { font-size: 14px; }
-    			}
-    			@media (max-width: 768px) {
-    			    .typewriter { font-size: 14px; }
-    			}
-    
-    			.oversize {
-    			    max-width: 120px;
-    			    max-height: 70px;
-    			}
-
-
-        </style>
-    </head>
-
-
-    <body>
-        <main>
-
-
-            <section class="px-0 pb-2 container container_jumbotron sticky-top bg-white">
-                <div class="row py-1 d-flex bg-dark bg-opacity-10">
-                    <div class="col-lg-6 col-md-8 px-3 w-100">
-                        <span class="fw-light">
-                            <span class="animate-character fantasy">B'link</span>
-                            <span class="h5"> ~  BPS Blora dalam link</span>
-                        </span>
-                        <div class="containertypewritter">
-                            <p class="typewriter text-secondary">
-                                <span data-text="ASN, Bangga Melayani Bangsa, BPS, Mencatat Indonesia !"></span>
-                            </p>
-                        </div>
-                        <p class=" text-muted">
-                            <strong>BLINK</strong> merupakan Sistem Informasi yang berisi kumpulan sistem informasi dan aplikasi yang digunakan oleh BPS Kabupaten Blora untuk mempermudah dalam melakukan tugas dan tanggung jawab sebagai "Penyedia Data Statistik Berkualitas untuk Indonesia Maju".
-                        </p>
-                    </div>
-                </div>
-
-
-                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 pt-3 px-1">
-                    <div class="input-group p-0">
-                        <input id="searchInput" type="text" class="form-control border-magenta" placeholder="cari link disini..." style="font-weight: bold;"> 
-                        <div class="input-group-append">
-                            <button class="btn btn-magenta border-magenta rounded-0" type="button">
-                                <i class="fa fa-search text-white"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!--FILTER MENU ON PRGRESS-->
-                <!--<div class="row slick-filter filters d-flex justify-content-center py-2 mt-0 g-3">-->
-                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="umum">Umum</button>-->
-                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="keuangan">Keuangan</button>-->
-                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="sdm">SDM</button>-->
-                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="teknis">Teknis & MK</button>-->
-                <!--    <button class="col btn filter-btn border-magenta active-btn fw-bold m-1" data-category="pelayanan">Pelayanan</button>-->
-                <!--</div>-->
-
-
-            </section>
-
-            <div class="container py-3" style="width:100%;">
-
-                
-
-
-                <!-- ROW UMUM  -->
-                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_umum category-content" data-category="umum">
-                    <p class="h3 mb-0 mt-0 text-dark">
-                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
-                        <lord-icon
-                            src="https://cdn.lordicon.com/yqiuuheo.json"
-                            trigger="loop"
-                            delay="1000"
-                            style="width:80px;height:80px; vertical-align: middle;">
-                        </lord-icon>
-                        <strong style="vertical-align: middle;">&nbsp;Umum</strong>
-                    </p>
-
-                     <div class="row p-2 menu_umum">        
-                        <!-- Card Administrasi disini -->
-                    </div>
-                </div>      
-               
-
-
-                <!-- ROW KEUANGAN  -->
-                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_keuangan category-content" data-category="keuangan">
-                    <p class="h3 mb-0 mt-0 text-dark">
-                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
-                        <lord-icon
-                            src="https://cdn.lordicon.com/qnwzeeae.json"
-                            trigger="loop"
-                            delay="1000"
-                            style="width:80px;height:80px; vertical-align: middle;">
-                        </lord-icon>
-                        <strong style="vertical-align: middle;">&nbsp;Keuangan</strong>
-                    </p>
-
-                    <div class="row p-2 menu_keuangan">        
-                        <!-- Card Keuangan disini -->
-                    </div>
-                </div>      
-                
-
-
-
-                <!-- ROW SDM -->
-                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_sdm category-content" data-category="sdm">
-                    <p class="h3 mb-0 mt-0 text-dark">
-                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
-                        <lord-icon
-                            src="https://cdn.lordicon.com/eodavnff.json"
-                            trigger="loop"
-                            delay="1000"
-                            style="width:80px;height:80px; vertical-align: middle;">
-                        </lord-icon>
-                        <strong style="vertical-align: middle;">&nbsp;Sumber Daya Manusia</strong>
-                    </p>
-
-                    <div class="row p-2 menu_sdm">        
-                        <!-- Card SDM disini -->
-                    </div>
-                </div>      
-                
-
-
-                <!-- ROW TEKNIS -->
-                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_teknis category-content" data-category="teknis">
-                    <p class="h3 mb-0 mt-0 text-dark">
-                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
-                        <lord-icon
-                            src="https://cdn.lordicon.com/kjtalhau.json"
-                            trigger="loop"
-                            delay="1000"
-                            style="width:80px;height:80px; vertical-align: middle;">
-                        </lord-icon>
-                        <strong style="vertical-align: middle;">&nbsp;Teknis & Manajemen Kerja</strong>
-                    </p>
-
-                    <div class="row p-2 menu_teknis">        
-                        <!-- Card SDM disini -->
-                    </div>
-                </div>      
-                
-
-
-                <!-- ROW Pelayanan -->
-                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-3 p-2 mt-2 text-dark container_pelayanan category-content" data-category="pelayanan">
-                    <p class="h3 mb-0 mt-0 text-dark">
-                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
-                        <lord-icon
-                            src="https://cdn.lordicon.com/ndzqltsx.json"
-                            trigger="loop"
-                            delay="1000"
-                            style="width:80px;height:80px; vertical-align: middle;">
-                        </lord-icon>
-                        <strong style="vertical-align: middle;">&nbsp;Pelayanan Statistik & Kehumasan</strong>
-                    </p>
-
-                    <div class="row p-2 menu_pelayanan">        
-                        <!-- Card Pelayanan disini -->
-                    </div>
-                </div>      
-                <div class="container_hamburger">
-                <button class="hamburger" onclick="toggleMenu()"><i class="fa fa-gear fa-spin text-warning" style="font-size:24px"></i></button>
-                <div class="menu_hamburger">
-                    <a class="btn btn-warning menu-btn" href="https://forms.gle/rWG5RQVnPFb2GE9fA" role="button" target="_blank">Usulkan Link</a>
-                </div>
-              </div>
-
-            </div>
-            
-        </main>
-
-
-            
-
-
-
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
-    <script type="text/javascript" src="umum.js"></script>
-    <script type="text/javascript" src="keuangan.js"></script>
-    <script type="text/javascript" src="sdm.js"></script>
-    <script type="text/javascript" src="teknis.js"></script>
-    <script type="text/javascript" src="pelayanan.js"></script>
-
-    
-
-    <script type="text/javascript">
-
-
-        var span = document.querySelector(".typewriter span");
-			var textArr = span.getAttribute("data-text").split(", "); 
-			var maxTextIndex = textArr.length; 
-
-			var sPerChar = 0.08; 
-			var sBetweenWord = 0.8;
-			var textIndex = 0; 
-
-			typing(textIndex, textArr[textIndex]); 
-
-			function typing(textIndex, text) {
-			    var charIndex = 0; 
-			    var maxCharIndex = text.length - 1; 
-
-			    var typeInterval = setInterval(function () {
-			        span.innerHTML += text[charIndex]; 
-			        if(text == "ASN"){
-                        span.style.color = "#2B96C1"; 
-                    } else if(text == "Bangga Melayani Bangsa"){
-                        span.style.color = "#2B96C1";
-                    } else if(text == "BPS"){
-                        span.style.color = "#70BB41"; 
-                    } else if(text == " Mencatat Indonesia !"){
-                        span.style.color = "#DD8A3C";
-                    }
-			        if (charIndex == maxCharIndex) {
-			            clearInterval(typeInterval);
-			            setTimeout(function() { deleting(textIndex, text) }, sBetweenWord * 800); 
-			            
-			        } else {
-			            charIndex += 1; 
-			        }
-			    }, sPerChar * 800); 
-			}
-
-			function deleting(textIndex, text) {
-			    var minCharIndex = 0; 
-			    var charIndex = text.length - 1; 
-
-			    var typeInterval = setInterval(function () {
-			        span.innerHTML = text.substr(0, charIndex); 
-		        	span.classList.remove("text-warning");
-			        if (charIndex == minCharIndex) {
-			            clearInterval(typeInterval);
-			            textIndex + 1 == maxTextIndex ? textIndex = 0 : textIndex += 1; 
-			            setTimeout(function() { typing(textIndex, textArr[textIndex]) }, sBetweenWord * 800); 
-			        } else {
-			            charIndex -= 1; 
-			        }
-			    }, sPerChar * 800); 
-			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-        function toggleMenu() {
-            const menu = document.querySelector('.menu_hamburger');
-            const hamburger = document.querySelector('.hamburger');
-          
-            if (menu.style.opacity === '1') {
-                menu.style.opacity = '0';
-                setTimeout(() => { menu.style.display = 'none'; }, 300);
-            } else {
-                menu.style.display = 'block';
-                setTimeout(() => { menu.style.opacity = '1'; }, 10); // Delay to ensure display:block is applied before transitioning opacity
-            }
-        }
-
-
-        // FILTER CARD
-        $(document).ready(function () {
-            
-            // Handle filter button click
-            $(".filter-btn").click(function () {
-                var category = $(this).data("category");
-
-                // Toggle active class on the clicked button
-                $(this).toggleClass("active-btn");
-
-                // Show/hide content based on the selected categories
-                if ($(this).hasClass("active-btn")) {
-                    $(".category-content[data-category='" + category + "']").show();
-                } else {
-                    $(".category-content[data-category='" + category + "']").hide();
-                }
-
-                // If no buttons are active, hide all content
-                if ($(".filter-btn.active-btn").length === 0) {
-                    $(".category-content").hide();
-                }
-            });
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>B'link ~ BPS Blora dalam Link</title>
+  <link rel="shortcut icon" type="image/jpg" href="favicon.ico"/>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tabler Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+  <style>
+    /* ===================== RESET & BASE ===================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+
+      /* Light mode */
+      --bg-page:    #F4F5F7;
+      --bg-card:    #FFFFFF;
+      --bg-header:  #FFFFFF;
+      --bg-input:   #F0F2F5;
+      --border:     rgba(0,0,0,0.08);
+      --border-md:  rgba(0,0,0,0.14);
+      --text-1:     #1A1A1A;
+      --text-2:     #5A5F6B;
+      --text-3:     #9BA3B0;
+      --accent:     #0F6E56;
+      --accent-bg:  #E1F5EE;
+      --accent-text:#085041;
+      --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-hover:0 4px 12px rgba(0,0,0,0.10);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page:    #111315;
+        --bg-card:    #1C1E21;
+        --bg-header:  #161819;
+        --bg-input:   #252729;
+        --border:     rgba(255,255,255,0.07);
+        --border-md:  rgba(255,255,255,0.13);
+        --text-1:     #ECEEF1;
+        --text-2:     #8D96A3;
+        --text-3:     #525A64;
+        --accent:     #1D9E75;
+        --accent-bg:  #0A2B22;
+        --accent-text:#5DCAA5;
+        --shadow-card: 0 1px 3px rgba(0,0,0,0.3);
+        --shadow-hover:0 4px 16px rgba(0,0,0,0.35);
+      }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-page);
+      color: var(--text-1);
+      min-height: 100vh;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===================== HEADER ===================== */
+    .header {
+      background: var(--bg-header);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      width: 38px; height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #0F6E56 0%, #1D9E75 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px; color: #fff;
+      letter-spacing: -0.3px; flex-shrink: 0;
+      user-select: none;
+    }
+
+    .brand-text { flex: 1; min-width: 0; }
+    .brand-name {
+      font-size: 17px; font-weight: 700; line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+    .brand-sub {
+      font-size: 11px; color: var(--text-3); margin-top: 1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Search */
+    .search-wrap {
+      position: relative;
+    }
+    .search-icon {
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      font-size: 15px; color: var(--text-3); pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 9px 12px 9px 34px;
+      font-size: 14px; font-family: var(--font);
+      color: var(--text-1);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-input::placeholder { color: var(--text-3); }
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15,110,86,0.12);
+    }
+    .search-clear {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      font-size: 14px; color: var(--text-3); cursor: pointer;
+      display: none; background: none; border: none; padding: 2px;
+    }
+    .search-clear:hover { color: var(--text-1); }
+
+    /* ===================== CATEGORY TABS ===================== */
+    .cat-bar {
+      background: var(--bg-header);
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .cat-bar::-webkit-scrollbar { display: none; }
+
+    .cat-list {
+      display: flex; gap: 2px;
+      padding: 8px 0;
+      list-style: none;
+      white-space: nowrap;
+    }
+
+    .cat-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 13px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px; font-weight: 500; font-family: var(--font);
+      cursor: pointer; border: none; background: transparent;
+      color: var(--text-2);
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .cat-btn i { font-size: 14px; }
+    .cat-btn:hover { background: var(--bg-input); color: var(--text-1); }
+    .cat-btn.active {
+      background: var(--accent-bg);
+      color: var(--accent-text);
+      font-weight: 600;
+    }
+
+    /* ===================== MAIN CONTENT ===================== */
+    .main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
+    }
+
+    /* Result info */
+    .result-info {
+      font-size: 12px; color: var(--text-3);
+      margin-bottom: 16px;
+      display: none;
+    }
+    .result-info.visible { display: block; }
+
+    /* Section */
+    .section { margin-bottom: 28px; }
+    .section[data-hidden="true"] { display: none; }
+
+    .section-header {
+      display: flex; align-items: center; gap: 9px;
+      margin-bottom: 12px;
+    }
+
+    .section-icon {
+      width: 30px; height: 30px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0;
+    }
+
+    .section-label { font-size: 13px; font-weight: 600; }
+
+    .section-count {
+      font-size: 11px; color: var(--text-3);
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 99px; padding: 1px 7px;
+      margin-left: 2px;
+    }
+
+    /* App Grid */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+    }
+
+    .app-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 10px 12px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 9px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .app-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--border-md);
+    }
+    .app-card:active { transform: translateY(0); }
+
+    .app-icon-wrap {
+      width: 46px; height: 46px;
+      border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      /* Background & color set inline per category */
+    }
+
+    /* Fallback icon untuk gambar yang gagal / belum ada */
+    .app-icon-img {
+      width: 46px; height: 46px;
+      border-radius: 13px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .app-icon-img.fallback-hidden { display: none; }
+
+    .app-name {
+      font-size: 11.5px; font-weight: 500; line-height: 1.35;
+      color: var(--text-1); word-break: break-word;
+    }
+
+    .vpn-tag {
+      position: absolute; top: 8px; right: 8px;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.3px;
+      padding: 2px 5px; border-radius: 5px;
+      background: #FEF3C7; color: #92400E;
+      border: 1px solid #FDE68A;
+      line-height: 1;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .vpn-tag { background: #2D2210; color: #FCD34D; border-color: #4A3510; }
+    }
+
+    /* ===================== EMPTY STATE ===================== */
+    .empty-state {
+      text-align: center; padding: 48px 20px;
+      color: var(--text-3);
+    }
+    .empty-state i { font-size: 36px; display: block; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; }
+    .empty-state strong { color: var(--text-2); }
+
+    /* ===================== FAB ===================== */
+    .fab {
+      position: fixed; bottom: 22px; right: 22px;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--accent);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 20px;
+      box-shadow: 0 3px 10px rgba(15,110,86,0.35);
+      transition: background 0.15s, transform 0.15s;
+      z-index: 50;
+      text-decoration: none;
+    }
+    .fab:hover { background: #085041; transform: scale(1.07); }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 480px) {
+      .header { padding: 12px 14px 10px; }
+      .main { padding: 16px 12px 80px; }
+      .app-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 7px; }
+      .brand-name { font-size: 16px; }
+    }
+
+    /* ===================== UTIL ===================== */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); border: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header-top">
+      <div class="logo" aria-hidden="true">B'L</div>
+      <div class="brand-text">
+        <div class="brand-name">B'link</div>
+        <div class="brand-sub">BPS Kabupaten Blora — Portal Aplikasi</div>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <i class="ti ti-search search-icon" aria-hidden="true"></i>
+      <input
+        class="search-input"
+        id="searchInput"
+        type="search"
+        placeholder="Cari aplikasi..."
+        autocomplete="off"
+        aria-label="Cari aplikasi"
+      >
+      <button class="search-clear" id="searchClear" aria-label="Hapus pencarian">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== CATEGORY TABS ===== -->
+  <nav class="cat-bar" aria-label="Filter kategori">
+    <ul class="cat-list" id="catList">
+      <li>
+        <button class="cat-btn active" data-cat="all">
+          <i class="ti ti-layout-grid" aria-hidden="true"></i> Semua
+        </button>
+      </li>
+      <li>
+        <button class="cat-btn" data-cat="umum">
+          <i class="ti ti-building" aria-hidden="true"></i> Umum
+        </button>
+      </li>
+      <li>
+        <button class="cat-btn" data-cat="keuangan">
+          <i class="ti ti-coin" aria-hidden="true"></i> Keuangan
+        </button>
+      </li>
+      <li>
+        <button class="cat-btn" data-cat="sdm">
+          <i class="ti ti-users" aria-hidden="true"></i> SDM
+        </button>
+      </li>
+      <li>
+        <button class="cat-btn" data-cat="teknis">
+          <i class="ti ti-tool" aria-hidden="true"></i> Teknis & MK
+        </button>
+      </li>
+      <li>
+        <button class="cat-btn" data-cat="pelayanan">
+          <i class="ti ti-headset" aria-hidden="true"></i> Pelayanan
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main" id="mainContent">
+    <p class="sr-only">Daftar aplikasi yang digunakan BPS Kabupaten Blora</p>
+    <div class="result-info" id="resultInfo" aria-live="polite"></div>
+
+    <!-- Umum -->
+    <section class="section" id="section-umum" data-cat="umum">
+      <div class="section-header">
+        <div class="section-icon" style="background:#E6F1FB; color:#185FA5;">
+          <i class="ti ti-building" aria-hidden="true"></i>
+        </div>
+        <span class="section-label">Umum</span>
+        <span class="section-count" id="count-umum">0</span>
+      </div>
+      <div class="app-grid" id="grid-umum"></div>
+    </section>
+
+    <!-- Keuangan -->
+    <section class="section" id="section-keuangan" data-cat="keuangan">
+      <div class="section-header">
+        <div class="section-icon" style="background:#FAEEDA; color:#854F0B;">
+          <i class="ti ti-coin" aria-hidden="true"></i>
+        </div>
+        <span class="section-label">Keuangan</span>
+        <span class="section-count" id="count-keuangan">0</span>
+      </div>
+      <div class="app-grid" id="grid-keuangan"></div>
+    </section>
+
+    <!-- SDM -->
+    <section class="section" id="section-sdm" data-cat="sdm">
+      <div class="section-header">
+        <div class="section-icon" style="background:#E1F5EE; color:#0F6E56;">
+          <i class="ti ti-users" aria-hidden="true"></i>
+        </div>
+        <span class="section-label">Sumber Daya Manusia</span>
+        <span class="section-count" id="count-sdm">0</span>
+      </div>
+      <div class="app-grid" id="grid-sdm"></div>
+    </section>
+
+    <!-- Teknis -->
+    <section class="section" id="section-teknis" data-cat="teknis">
+      <div class="section-header">
+        <div class="section-icon" style="background:#EEEDFE; color:#534AB7;">
+          <i class="ti ti-tool" aria-hidden="true"></i>
+        </div>
+        <span class="section-label">Teknis & Manajemen Kerja</span>
+        <span class="section-count" id="count-teknis">0</span>
+      </div>
+      <div class="app-grid" id="grid-teknis"></div>
+    </section>
+
+    <!-- Pelayanan -->
+    <section class="section" id="section-pelayanan" data-cat="pelayanan">
+      <div class="section-header">
+        <div class="section-icon" style="background:#FBEAF0; color:#993556;">
+          <i class="ti ti-headset" aria-hidden="true"></i>
+        </div>
+        <span class="section-label">Pelayanan Statistik &amp; Kehumasan</span>
+        <span class="section-count" id="count-pelayanan">0</span>
+      </div>
+      <div class="app-grid" id="grid-pelayanan"></div>
+    </section>
+
+    <!-- Empty state (hidden by default) -->
+    <div class="empty-state" id="emptyState" style="display:none;" aria-live="polite">
+      <i class="ti ti-search-off" aria-hidden="true"></i>
+      <p>Tidak ada aplikasi yang cocok dengan "<strong id="emptyTerm"></strong>"</p>
+    </div>
+  </main>
+
+  <!-- FAB: Usulkan Link -->
+  <a class="fab" href="https://forms.gle/rWG5RQVnPFb2GE9fA" target="_blank" rel="noopener" title="Usulkan Link Baru" aria-label="Usulkan link baru">
+    <i class="ti ti-plus" aria-hidden="true"></i>
+  </a>
+
+  <!-- ===== DATA FILES ===== -->
+  <!--
+    Pastikan file-file JS berikut tersedia di folder yang sama dengan index.html.
+    Setiap file mendefinisikan variabel array global, contoh:
+      umum_json     = [ { nama, url, ikon, isVPN? }, ... ]
+      keuangan_json = [ { nama, url, ikon, isVPN? }, ... ]
+      sdm_json      = [ { nama, url, ikon, isVPN? }, ... ]
+      teknis_json   = [ { nama, url, ikon, tim, isVPN? }, ... ]
+      pelayanan_json= [ { nama, url, ikon, isVPN? }, ... ]
+  -->
+  <script src="umum.js"></script>
+  <script src="keuangan.js"></script>
+  <script src="sdm.js"></script>
+  <script src="teknis.js"></script>
+  <script src="pelayanan.js"></script>
+
+  <!-- ===== APP SCRIPT ===== -->
+  <script>
+    /* -------------------------------------------------------
+       CONFIG
+       Mapping kategori → { variabel data, warna ikon, fallback icon }
+       Sesuaikan fallbackIcon jika ingin ikon default berbeda per kategori
+    ------------------------------------------------------- */
+    const CONFIG = {
+      umum:      { data: () => umum_json,      iconBg: '#E6F1FB', iconColor: '#185FA5', fallbackIcon: 'ti-app-window' },
+      keuangan:  { data: () => keuangan_json,  iconBg: '#FAEEDA', iconColor: '#854F0B', fallbackIcon: 'ti-cash'        },
+      sdm:       { data: () => sdm_json,        iconBg: '#E1F5EE', iconColor: '#0F6E56', fallbackIcon: 'ti-user'        },
+      teknis:    { data: () => teknis_json,     iconBg: '#EEEDFE', iconColor: '#534AB7', fallbackIcon: 'ti-tool'        },
+      pelayanan: { data: () => pelayanan_json,  iconBg: '#FBEAF0', iconColor: '#993556', fallbackIcon: 'ti-headset'     },
+    };
+
+    /* -------------------------------------------------------
+       STATE
+    ------------------------------------------------------- */
+    let activeFilter = 'all';
+    let searchTerm   = '';
+
+    /* -------------------------------------------------------
+       BUILD CARD HTML
+       Mendukung dua format ikon:
+         • URL gambar  → ditampilkan sebagai <img>
+         • kosong/null → fallback ke Tabler icon
+    ------------------------------------------------------- */
+    function buildCard(item, cfg) {
+      const isVPN = item.isVPN && item.isVPN.length > 2;
+      const vpnTag = isVPN ? '<span class="vpn-tag">VPN</span>' : '';
+
+      /* Coba render sebagai gambar, dengan fallback ke icon font */
+      let iconHtml;
+      if (item.ikon && item.ikon.trim() !== '') {
+        iconHtml = `
+          <img
+            class="app-icon-img"
+            src="${escHtml(item.ikon)}"
+            alt=""
+            loading="lazy"
+            onerror="this.classList.add('fallback-hidden'); this.nextElementSibling.style.display='flex';"
+          >
+          <div class="app-icon-wrap" style="background:${cfg.iconBg}; color:${cfg.iconColor}; display:none;">
+            <i class="ti ${cfg.fallbackIcon}" aria-hidden="true"></i>
+          </div>
+        `;
+      } else {
+        iconHtml = `
+          <div class="app-icon-wrap" style="background:${cfg.iconBg}; color:${cfg.iconColor};">
+            <i class="ti ${cfg.fallbackIcon}" aria-hidden="true"></i>
+          </div>
+        `;
+      }
+
+      return `
+        <a class="app-card" href="${escHtml(item.url)}" target="_blank" rel="noopener"
+           aria-label="${escHtml(item.nama)}${isVPN ? ' (butuh VPN)' : ''}">
+          ${vpnTag}
+          ${iconHtml}
+          <span class="app-name">${escHtml(item.nama)}</span>
+        </a>
+      `;
+    }
+
+    /* -------------------------------------------------------
+       RENDER semua kategori
+    ------------------------------------------------------- */
+    function render() {
+      const term = searchTerm.toLowerCase();
+      let totalVisible = 0;
+
+      Object.entries(CONFIG).forEach(([cat, cfg]) => {
+        let items;
+        try { items = cfg.data(); }
+        catch(e) { items = []; }
+
+        /* Sort: teknis pakai tim dulu, lainnya langsung nama */
+        items = [...items].sort((a, b) => {
+          if (a.tim && b.tim) {
+            const t = a.tim.localeCompare(b.tim, 'id');
+            if (t !== 0) return t;
+          }
+          return a.nama.localeCompare(b.nama, 'id');
         });
 
-        
-        
-        // SEARCH CARD
-        var searchInput = document.getElementById("searchInput");
-        searchInput.addEventListener("input", searchCards);
+        /* Filter pencarian */
+        const filtered = term
+          ? items.filter(i =>
+              i.nama.toLowerCase().includes(term) ||
+              (i.desc && i.desc.toLowerCase().includes(term))
+            )
+          : items;
 
-        function searchCards() {
-            var searchTerm = searchInput.value.toLowerCase();
-            var cards = document.querySelectorAll(".card");
-            cards.forEach(function(card) {
-                var cardText = card.textContent || card.innerText;
+        const section  = document.getElementById('section-' + cat);
+        const grid     = document.getElementById('grid-'    + cat);
+        const countEl  = document.getElementById('count-'   + cat);
 
-                if (cardText.toLowerCase().includes(searchTerm)) {
-                    card.parentElement.style.display = "block";
+        const show = (activeFilter === 'all' || activeFilter === cat) && filtered.length > 0;
+        section.setAttribute('data-hidden', show ? 'false' : 'true');
+        section.style.display = show ? '' : 'none';
 
-                } else {
-                    card.parentElement.style.display = "none";
-                    
-                }
-            });
+        grid.innerHTML = filtered.map(item => buildCard(item, cfg)).join('');
+        countEl.textContent = filtered.length;
+        totalVisible += filtered.length;
+      });
 
-            var containers = document.querySelectorAll('.category-content');
+      /* Empty state */
+      const emptyEl = document.getElementById('emptyState');
+      if (totalVisible === 0 && term) {
+        document.getElementById('emptyTerm').textContent = searchTerm;
+        emptyEl.style.display = '';
+      } else {
+        emptyEl.style.display = 'none';
+      }
 
-            containers.forEach(function(container) {
-                var cards = container.querySelectorAll('.card');
+      /* Result info */
+      const infoEl = document.getElementById('resultInfo');
+      if (term) {
+        infoEl.textContent = totalVisible + ' aplikasi ditemukan untuk "' + searchTerm + '"';
+        infoEl.classList.add('visible');
+      } else {
+        infoEl.classList.remove('visible');
+      }
+    }
 
-                var visibleCardCount = 0;
-                cards.forEach(function(card) {
-                    if (window.getComputedStyle(card.parentElement).display != 'none') {
-                        visibleCardCount++;
-                    }
-                });
-                // Menampilkan jumlah card yang tampil di console
-                if (visibleCardCount == 0) {
-                    container.style.display = "none";
-                } else if (visibleCardCount != 0) {
-                    container.style.display = "block";
-                }
-            });
+    /* -------------------------------------------------------
+       ESCAPE HTML untuk keamanan
+    ------------------------------------------------------- */
+    function escHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
 
-        }
+    /* -------------------------------------------------------
+       SEARCH
+    ------------------------------------------------------- */
+    const searchInput = document.getElementById('searchInput');
+    const searchClear = document.getElementById('searchClear');
 
-
-
-
-        var isVPN = "";
-        $( document ).ready(function() {
-            umum_json.sort((a, b) => {
-              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
-              const namaB = b.nama.toUpperCase();
-
-              if (namaA < namaB) {
-                return -1;
-              }
-              if (namaA > namaB) {
-                return 1;
-            }
-              return 0; // Names are equal
-            });
-            for (var i = 0; i <= umum_json.length-1; i++) { 
-                isVPN = "";
-                if (umum_json[i].hasOwnProperty("isVPN") && umum_json[i]["isVPN"].length > 2) {
-                    isVPN = "vpn";
-                }
-                $(".menu_umum").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
-                            '<div class="card card-block pb-2 m-1 border1">'+
-                                '<img src="'+umum_json[i].ikon+'" class="img-fluid" loading="lazy">'+
-                                
-
-                                
-                                '<div class="container">'+
-                                    '<div class="row">'+
-                                        '<div class="col-12">'+
-                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start">'+
-                                                umum_json[i].nama+
-                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
-                                                
-                                            '</div>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</div>'+
-
-
-                                // '<p class="text-muted">'+umum_json[i].desc+'</p>'+ 
-                                '<a href="'+umum_json[i].url+'" class="stretched-link" target="_blank"></a>'+
-                            '</div>'+
-                        '</div>');
-            }  
-        });  
-
-        $( document ).ready(function() {
-            keuangan_json.sort((a, b) => {
-              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
-              const namaB = b.nama.toUpperCase();
-
-              if (namaA < namaB) {
-                return -1;
-              }
-              if (namaA > namaB) {
-                return 1;
-            }
-              return 0; // Names are equal
-            });
-            for (var i = 0; i <= keuangan_json.length-1; i++) {
-                isVPN = "";
-                if (keuangan_json[i].hasOwnProperty("isVPN") && keuangan_json[i]["isVPN"].length > 2) {
-                    isVPN = "vpn";
-                }
-                
-                $(".menu_keuangan").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
-                            '<div class="card card-block pb-2 m-1 border2">'+
-                                '<img src="'+keuangan_json[i].ikon+'" class="img-fluid loading="lazy"">'+
-                                
-                                '<div class="container">'+
-                                    '<div class="row">'+
-                                        '<div class="col-12">'+
-                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start">'+
-                                                keuangan_json[i].nama+
-                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
-                                                
-                                            '</div>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</div>'+
-
-                                '<a href="'+keuangan_json[i].url+'" class="stretched-link" target="_blank"></a>'+
-                            '</div>'+
-                        '</div>');
-            }  
-        });  
-
-        $( document ).ready(function() {
-            sdm_json.sort((a, b) => {
-              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
-              const namaB = b.nama.toUpperCase();
-
-              if (namaA < namaB) {
-                return -1;
-              }
-              if (namaA > namaB) {
-                return 1;
-            }
-              return 0; // Names are equal
-            });
-            for (var i = 0; i <= sdm_json.length-1; i++) {
-                isVPN = "";
-                if (sdm_json[i].hasOwnProperty("isVPN") && sdm_json[i]["isVPN"].length > 2) {
-                    isVPN = "vpn";
-                }
-                
-                $(".menu_sdm").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
-                            '<div class="card card-block pb-2 m-1 border2">'+
-                                '<img src="'+sdm_json[i].ikon+'" class="img-fluid loading="lazy"">'+
-                                
-                                '<div class="container">'+
-                                    '<div class="row">'+
-                                        '<div class="col-12">'+
-                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start">'+
-                                                sdm_json[i].nama+
-                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
-                                                
-                                            '</div>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</div>'+
-
-                                '<a href="'+sdm_json[i].url+'" class="stretched-link" target="_blank"></a>'+
-                            '</div>'+
-                        '</div>');
-            }  
-        });  
-
-
-
-
-
-        $( document ).ready(function() {
-            teknis_json.sort((a, b) => {
-              const timA = a.tim.toUpperCase(); // Ignore case during sorting
-              const timB = b.tim.toUpperCase();
-
-              if (timA < timB) {
-                return -1;
-              }
-              if (timA > timB) {
-                return 1;
-              }
-              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
-              const namaB = b.nama.toUpperCase();
-
-              if (namaA < namaB) {
-                return -1;
-              }
-              if (namaA > namaB) {
-                return 1;
-              }
-              return 0; // Both "tim" and "nama" are equal
-            });
-            for (var i = 0; i <= teknis_json.length-1; i++) {
-                isVPN = "";
-                if (teknis_json[i].hasOwnProperty("isVPN") && teknis_json[i]["isVPN"].length > 2) {
-                    isVPN = "vpn";
-                }
-                
-                $(".menu_teknis").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
-                            '<div class="card card-block pb-2 m-1 border3">'+
-                                '<img src="'+teknis_json[i].ikon+'" class="img-fluid loading="lazy"">'+
-                                
-                                '<div class="container">'+
-                                    '<div class="row">'+
-                                        '<div class="col-12">'+
-                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start '+teknis_json[i].tim+'">'+
-                                                teknis_json[i].nama+
-                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
-                                                
-                                            '</div>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</div>'+
-
-                                '<a href="'+teknis_json[i].url+'" class="stretched-link" target="_blank"></a>'+
-                            '</div>'+
-                        '</div>');
-            }  
-        });  
-
-
-
-        $( document ).ready(function() {
-            pelayanan_json.sort((a, b) => {
-              const namaA = a.nama.toUpperCase(); // Ignore case during sorting
-              const namaB = b.nama.toUpperCase();
-
-              if (namaA < namaB) {
-                return -1;
-              }
-              if (namaA > namaB) {
-                return 1;
-            }
-              return 0; // Names are equal
-            });
-            for (var i = 0; i <= pelayanan_json.length-1; i++) {
-                isVPN = "";
-                if (pelayanan_json[i].hasOwnProperty("isVPN") && pelayanan_json[i]["isVPN"].length > 2) {
-                    isVPN = "vpn";
-                }
-                
-                $(".menu_pelayanan").append('<div class="col-lg-2 col-md-3 col-sm-4 col-6">'+
-                            '<div class="card card-block pb-2 m-1 border3">'+
-                                '<img src="'+pelayanan_json[i].ikon+'" class="img-fluid loading="lazy"">'+
-                                
-                                '<div class="container">'+
-                                    '<div class="row">'+
-                                        '<div class="col-12">'+
-                                            '<div class="h6 d-flex fw-bold mt-1 align-items-start">'+
-                                                pelayanan_json[i].nama+
-                                                '<span class="badge bg-warning me-2 ms-1" style="font-size: x-small;">'+isVPN+'</span>'+
-                                                
-                                            '</div>'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</div>'+
-
-                                '<a href="'+pelayanan_json[i].url+'" class="stretched-link" target="_blank"></a>'+
-                            '</div>'+
-                        '</div>');
-            }  
-        }); 
-
-
-        
-
-
-        particlesJS('particles-js', {
-        particles: {
-            number: {
-                value: 100,
-                density: {
-                    enable: true,
-                    value_area: 800
-                }
-            },
-            color: {
-                value: '#737373' // Change the color as per your design
-            },
-            shape: {
-                type: 'circle',
-                stroke: {
-                    width: 0,
-                    color: '#737373'
-                },
-                polygon: {
-                    nb_sides: 5
-                }
-            },
-            opacity: {
-                value: 0.7,
-                random: false,
-                anim: {
-                    enable: false,
-                    speed: 1,
-                    opacity_min: 0.1,
-                    sync: false
-                }
-            },
-            size: {
-                value: 4,
-                random: true,
-                anim: {
-                    enable: false,
-                    speed: 40,
-                    size_min: 0.1,
-                    sync: false
-                }
-            },
-            line_linked: {
-                enable: true,
-                distance: 150,
-                color: '#a3a3a3', // Change the color as per your design
-                opacity: 0.4,
-                width: 1
-            },
-            move: {
-                enable: true,
-                speed: 6,
-                direction: 'none',
-                random: false,
-                straight: false,
-                out_mode: 'out',
-                bounce: false,
-                attract: {
-                    enable: false,
-                    rotateX: 600,
-                    rotateY: 1200
-                }
-            }
-        },
-        interactivity: {
-            detect_on: 'canvas',
-            events: {
-                onhover: {
-                    enable: true,
-                    mode: 'repulse'
-                },
-                onclick: {
-                    enable: true,
-                    mode: 'push'
-                },
-                resize: true
-            },
-            modes: {
-                grab: {
-                    distance: 400,
-                    line_linked: {
-                        opacity: 1
-                    }
-                },
-                bubble: {
-                    distance: 400,
-                    size: 40,
-                    duration: 2,
-                    opacity: 8,
-                    speed: 3
-                },
-                repulse: {
-                    distance: 200,
-                    duration: 0.4
-                },
-                push: {
-                    particles_nb: 4
-                },
-                remove: {
-                    particles_nb: 2
-                }
-            }
-        },
-        retina_detect: true
+    searchInput.addEventListener('input', function() {
+      searchTerm = this.value;
+      searchClear.style.display = searchTerm ? 'block' : 'none';
+      /* Saat mengetik, tampilkan semua kategori */
+      if (searchTerm) {
+        activeFilter = 'all';
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-cat="all"]').classList.add('active');
+      }
+      render();
     });
-    </script>
-    </body>
-    </html>
+
+    searchClear.addEventListener('click', function() {
+      searchInput.value = '';
+      searchTerm = '';
+      this.style.display = 'none';
+      searchInput.focus();
+      render();
+    });
+
+    /* -------------------------------------------------------
+       CATEGORY FILTER
+    ------------------------------------------------------- */
+    document.getElementById('catList').addEventListener('click', function(e) {
+      const btn = e.target.closest('.cat-btn');
+      if (!btn) return;
+      /* Clear search saat ganti kategori agar tidak bingung */
+      searchInput.value = '';
+      searchTerm = '';
+      searchClear.style.display = 'none';
+
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.cat;
+      render();
+    });
+
+    /* -------------------------------------------------------
+       INIT
+    ------------------------------------------------------- */
+    render();
+  </script>
+</body>
+</html>
