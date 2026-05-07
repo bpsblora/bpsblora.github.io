@@ -255,12 +255,12 @@
     .app-card:active { transform: translateY(-1px) scale(1.005); }
 
     /*
-      Gambar ikon berbentuk landscape (banner): tampilkan penuh dalam kotak
-      dengan rasio 16:9 — tidak terpotong, tidak distorsi.
+      Gambar ikon landscape: cover penuh tanpa ruang putih.
+      Rasio 3/2 cocok untuk banner kantor.
     */
     .app-img-box {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 3 / 2;
       border-radius: var(--radius-sm);
       overflow: hidden;
       background: var(--bg-input);
@@ -269,7 +269,7 @@
     }
     .app-icon-img {
       width: 100%; height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       object-position: center;
       display: block;
     }
@@ -285,6 +285,16 @@
     .app-name {
       font-size: 12.5px; font-weight: 600; line-height: 1.4;
       color: var(--text-1); word-break: break-word;
+    }
+
+    /* Lordicon section header */
+    .section-icon {
+      width: 56px !important; height: 56px !important;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-icon lord-icon {
+      width: 56px; height: 56px;
     }
 
     .vpn-tag {
@@ -459,8 +469,8 @@
     <!-- Umum -->
     <section class="section" id="section-umum" data-cat="umum">
       <div class="section-header">
-        <div class="section-icon" style="background:#E6F1FB; color:#185FA5;">
-          <i class="ti ti-building" aria-hidden="true"></i>
+        <div class="section-icon">
+          <lord-icon src="https://cdn.lordicon.com/yqiuuheo.json" trigger="loop" delay="2000" style="width:56px;height:56px;"></lord-icon>
         </div>
         <span class="section-label">Umum</span>
         <span class="section-count" id="count-umum">0</span>
@@ -471,8 +481,8 @@
     <!-- Keuangan -->
     <section class="section" id="section-keuangan" data-cat="keuangan">
       <div class="section-header">
-        <div class="section-icon" style="background:#FAEEDA; color:#854F0B;">
-          <i class="ti ti-coin" aria-hidden="true"></i>
+        <div class="section-icon">
+          <lord-icon src="https://cdn.lordicon.com/qnwzeeae.json" trigger="loop" delay="2000" style="width:56px;height:56px;"></lord-icon>
         </div>
         <span class="section-label">Keuangan</span>
         <span class="section-count" id="count-keuangan">0</span>
@@ -483,8 +493,8 @@
     <!-- SDM -->
     <section class="section" id="section-sdm" data-cat="sdm">
       <div class="section-header">
-        <div class="section-icon" style="background:#E1F5EE; color:#0F6E56;">
-          <i class="ti ti-users" aria-hidden="true"></i>
+        <div class="section-icon">
+          <lord-icon src="https://cdn.lordicon.com/eodavnff.json" trigger="loop" delay="2000" style="width:56px;height:56px;"></lord-icon>
         </div>
         <span class="section-label">Sumber Daya Manusia</span>
         <span class="section-count" id="count-sdm">0</span>
@@ -495,10 +505,10 @@
     <!-- Teknis -->
     <section class="section" id="section-teknis" data-cat="teknis">
       <div class="section-header">
-        <div class="section-icon" style="background:#EEEDFE; color:#534AB7;">
-          <i class="ti ti-tool" aria-hidden="true"></i>
+        <div class="section-icon">
+          <lord-icon src="https://cdn.lordicon.com/kjtalhau.json" trigger="loop" delay="2000" style="width:56px;height:56px;"></lord-icon>
         </div>
-        <span class="section-label">Teknis & Manajemen Kerja</span>
+        <span class="section-label">Teknis &amp; Manajemen Kerja</span>
         <span class="section-count" id="count-teknis">0</span>
       </div>
       <div class="app-grid" id="grid-teknis"></div>
@@ -507,8 +517,8 @@
     <!-- Pelayanan -->
     <section class="section" id="section-pelayanan" data-cat="pelayanan">
       <div class="section-header">
-        <div class="section-icon" style="background:#FBEAF0; color:#993556;">
-          <i class="ti ti-headset" aria-hidden="true"></i>
+        <div class="section-icon">
+          <lord-icon src="https://cdn.lordicon.com/ndzqltsx.json" trigger="loop" delay="2000" style="width:56px;height:56px;"></lord-icon>
         </div>
         <span class="section-label">Pelayanan Statistik &amp; Kehumasan</span>
         <span class="section-count" id="count-pelayanan">0</span>
@@ -527,6 +537,9 @@
   <a class="fab" href="https://forms.gle/rWG5RQVnPFb2GE9fA" target="_blank" rel="noopener" title="Usulkan Link Baru" aria-label="Usulkan link baru">
     <i class="ti ti-plus" aria-hidden="true"></i>
   </a>
+
+  <!-- Lordicon -->
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
 
   <!-- ===== DATA FILES ===== -->
   <!--
