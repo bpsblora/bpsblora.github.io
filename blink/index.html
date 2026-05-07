@@ -201,70 +201,89 @@
     }
 
     .section-icon {
-      width: 30px; height: 30px; border-radius: var(--radius-sm);
+      width: 38px; height: 38px; border-radius: var(--radius-sm);
       display: flex; align-items: center; justify-content: center;
-      font-size: 15px; flex-shrink: 0;
+      font-size: 19px; flex-shrink: 0;
     }
 
-    .section-label { font-size: 13px; font-weight: 600; }
+    .section-label { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
 
     .section-count {
       font-size: 11px; color: var(--text-3);
       background: var(--bg-input);
       border: 1px solid var(--border);
-      border-radius: 99px; padding: 1px 7px;
+      border-radius: 99px; padding: 2px 8px;
       margin-left: 2px;
     }
 
-    /* App Grid */
+    /* App Grid — minmax lebih lebar untuk gambar landscape */
     .app-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    /* Card enter animation */
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)   scale(1);    }
     }
 
     .app-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 14px 10px 12px;
+      padding: 14px 12px 13px;
       display: flex; flex-direction: column;
-      align-items: center; gap: 9px;
+      align-items: center; gap: 10px;
       text-align: center;
       cursor: pointer;
       text-decoration: none;
       color: inherit;
       position: relative;
       box-shadow: var(--shadow-card);
-      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      transition: transform 0.2s cubic-bezier(0.22,1,0.36,1),
+                  box-shadow 0.2s ease,
+                  border-color 0.2s ease;
+      animation: cardIn 0.3s cubic-bezier(0.22,1,0.36,1) both;
     }
     .app-card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-4px) scale(1.02);
       box-shadow: var(--shadow-hover);
       border-color: var(--border-md);
     }
-    .app-card:active { transform: translateY(0); }
+    .app-card:active { transform: translateY(-1px) scale(1.005); }
 
-    .app-icon-wrap {
-      width: 46px; height: 46px;
-      border-radius: 13px;
+    /*
+      Gambar ikon berbentuk landscape (banner): tampilkan penuh dalam kotak
+      dengan rasio 16:9 — tidak terpotong, tidak distorsi.
+    */
+    .app-img-box {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--bg-input);
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px;
       flex-shrink: 0;
-      /* Background & color set inline per category */
     }
-
-    /* Fallback icon untuk gambar yang gagal / belum ada */
     .app-icon-img {
-      width: 46px; height: 46px;
-      border-radius: 13px;
-      object-fit: cover;
-      flex-shrink: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
     }
     .app-icon-img.fallback-hidden { display: none; }
 
+    /* Fallback icon (jika gambar gagal load) */
+    .app-icon-wrap {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+
     .app-name {
-      font-size: 11.5px; font-weight: 500; line-height: 1.35;
+      font-size: 12.5px; font-weight: 600; line-height: 1.4;
       color: var(--text-1); word-break: break-word;
     }
 
@@ -305,12 +324,59 @@
     }
     .fab:hover { background: #085041; transform: scale(1.07); }
 
+    /* ===================== PAGE LOAD ANIMATIONS ===================== */
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    /* Shimmer skeleton saat halaman pertama load */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position:  600px 0; }
+    }
+
+    .header  { animation: slideDown 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+    .cat-bar { animation: slideDown 0.45s 0.07s cubic-bezier(0.22,1,0.36,1) both; }
+
+    .section { animation: fadeUp 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+    .section:nth-child(1) { animation-delay: 0.10s; }
+    .section:nth-child(2) { animation-delay: 0.18s; }
+    .section:nth-child(3) { animation-delay: 0.26s; }
+    .section:nth-child(4) { animation-delay: 0.34s; }
+    .section:nth-child(5) { animation-delay: 0.42s; }
+
+    .fab { animation: fadeIn 0.5s 0.45s ease both; }
+
+    /* Stagger per-card via JS style="animation-delay:Xms" */
+    .app-card { animation: cardIn 0.32s cubic-bezier(0.22,1,0.36,1) both; }
+
+    /* Respek prefer-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
     /* ===================== RESPONSIVE ===================== */
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
       .header { padding: 12px 14px 10px; }
-      .main { padding: 16px 12px 80px; }
-      .app-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 7px; }
+      .main   { padding: 16px 12px 80px; }
+      /* 2 kolom di HP — cukup untuk gambar landscape terbaca */
+      .app-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
       .brand-name { font-size: 16px; }
+      .section-label { font-size: 17px; }
+    }
+    @media (max-width: 360px) {
+      .app-grid { grid-template-columns: 1fr; }
     }
 
     /* ===================== UTIL ===================== */
@@ -505,35 +571,46 @@
          • URL gambar  → ditampilkan sebagai <img>
          • kosong/null → fallback ke Tabler icon
     ------------------------------------------------------- */
-    function buildCard(item, cfg) {
+    function buildCard(item, cfg, idx) {
       const isVPN = item.isVPN && item.isVPN.length > 2;
       const vpnTag = isVPN ? '<span class="vpn-tag">VPN</span>' : '';
+      /* Stagger: tiap kartu muncul sedikit lebih lambat, max 600ms */
+      const delay = Math.min(idx * 40, 600);
 
-      /* Coba render sebagai gambar, dengan fallback ke icon font */
+      /* Semua gambar dibungkus app-img-box (rasio 16:9, contain)
+         sehingga gambar landscape/banner tampil penuh tanpa crop */
       let iconHtml;
       if (item.ikon && item.ikon.trim() !== '') {
         iconHtml = `
-          <img
-            class="app-icon-img"
-            src="${escHtml(item.ikon)}"
-            alt=""
-            loading="lazy"
-            onerror="this.classList.add('fallback-hidden'); this.nextElementSibling.style.display='flex';"
-          >
-          <div class="app-icon-wrap" style="background:${cfg.iconBg}; color:${cfg.iconColor}; display:none;">
-            <i class="ti ${cfg.fallbackIcon}" aria-hidden="true"></i>
+          <div class="app-img-box" style="background:${cfg.iconBg};">
+            <img
+              class="app-icon-img"
+              src="${escHtml(item.ikon)}"
+              alt="${escHtml(item.nama)}"
+              loading="lazy"
+              onerror="
+                this.classList.add('fallback-hidden');
+                this.nextElementSibling.style.display='flex';
+              "
+            >
+            <div class="app-icon-wrap" style="color:${cfg.iconColor}; display:none;">
+              <i class="ti ${cfg.fallbackIcon}" aria-hidden="true"></i>
+            </div>
           </div>
         `;
       } else {
         iconHtml = `
-          <div class="app-icon-wrap" style="background:${cfg.iconBg}; color:${cfg.iconColor};">
-            <i class="ti ${cfg.fallbackIcon}" aria-hidden="true"></i>
+          <div class="app-img-box" style="background:${cfg.iconBg};">
+            <div class="app-icon-wrap" style="color:${cfg.iconColor};">
+              <i class="ti ${cfg.fallbackIcon}" aria-hidden="true"></i>
+            </div>
           </div>
         `;
       }
 
       return `
         <a class="app-card" href="${escHtml(item.url)}" target="_blank" rel="noopener"
+           style="animation-delay:${delay}ms;"
            aria-label="${escHtml(item.nama)}${isVPN ? ' (butuh VPN)' : ''}">
           ${vpnTag}
           ${iconHtml}
@@ -579,7 +656,7 @@
         section.setAttribute('data-hidden', show ? 'false' : 'true');
         section.style.display = show ? '' : 'none';
 
-        grid.innerHTML = filtered.map(item => buildCard(item, cfg)).join('');
+        grid.innerHTML = filtered.map((item, idx) => buildCard(item, cfg, idx)).join('');
         countEl.textContent = filtered.length;
         totalVisible += filtered.length;
       });
