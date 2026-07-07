@@ -13,9 +13,10 @@
                 maxZoom: 20,
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
             });
-            var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            var googleTerrain = L.tileLayer('https://petadasar.atrbpn.go.id/main/wms/{x}/{y}/{z}', {
+                maxZoom: 22,
+                maxNativeZoom: 22,
+                attribution: '© Kementerian ATR/BPN - Model Dasar Pertanahan'
             });
 
 
