@@ -64,7 +64,7 @@
                 // "Overlay": petaOverlay
                 // "Overlay": petaOverlay,
                 "Satelit": googleSat,
-                "Terain": googleTerrain,
+                "Terain atr": googleTerrain,
                 "Street": googleStreets,
                 "Hibrid": googleHybrid
             };
