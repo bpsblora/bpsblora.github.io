@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <!-- Tambahkan target-densitydpi dan atur skala agar tidak 'pecah' di mode desktop HP -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- width=device-width dan maximum-scale=1.0 memaksa browser HP memetakan koordinat sentuh dengan akurat -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dashboard Capaian SE2026 - BPS Kab Blora</title>
   <style>
     * { 
@@ -16,20 +16,21 @@
       height: 100%;
       background: #211909; 
       overflow: hidden;
-      /* Memaksa browser HP merespons sentuhan secara langsung tanpa jeda */
-      touch-action: manipulation; 
     }
     iframe {
       width: 100%;
       height: 100%;
       border: none;
       display: block;
+      /* Properti kunci agar iframe meneruskan event sentuh secara langsung tanpa jeda scaling */
+      touch-action: manipulation;
+      pointer-events: auto;
     }
   </style>
 </head>
 <body>
   <iframe 
-    src="https://script.google.com/macros/s/AKfycbwZih4yuHNQoLlVzDlckDJMc0Qj6tkHSsophfAZvEk-M_JhJf9rzroZSKkKZ3iTEdUu/exec"
+    src="https://script.google.com/macros/s/AKfycbwhEWULqA2cxVRQ3lfnx9WuEFMDJeFTad12fKxnqmQUVoj5-xsXYIuZ1eNa5GFrHroV/exec"
     allow="fullscreen"
     sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
   </iframe>
