@@ -2,8 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dashboard Capaian SE2026 - BPS Kab. Blora</title>
+  <!-- Tambahkan target-densitydpi dan atur skala agar tidak 'pecah' di mode desktop HP -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Capaian SE2026 - BPS Kab Blora</title>
   <style>
     * { 
       margin: 0; 
@@ -14,7 +15,9 @@
       width: 100%;
       height: 100%;
       background: #211909; 
-      overflow: hidden; /* Mencegah scroll ganda di luar iframe */
+      overflow: hidden;
+      /* Memaksa browser HP merespons sentuhan secara langsung tanpa jeda */
+      touch-action: manipulation; 
     }
     iframe {
       width: 100%;
@@ -26,9 +29,9 @@
 </head>
 <body>
   <iframe 
-    src="https://script.google.com/macros/s/AKfycbyxcQXpRFTvgr9mtIFOzgIifzpe8PQctEykybT6u4lG6TiOM2ZE0f_sWiyl3KKl2ibY/exec"
+    src="https://script.google.com/macros/s/AKfycbwA5cwI91HYgs-CrXXr0jaxXCGbNoploJXBhW7eX6mS8P9gfXgsVFSw3RDtzWwYSCz1/exec"
     allow="fullscreen"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
   </iframe>
 </body>
 </html>
