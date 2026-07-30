@@ -915,10 +915,10 @@ html, body {
 
   // ---- Load data ---------------------------------------------------------
 
+  const API_URL = "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DISINI/exec";
+
   function loadData(forceRefresh) {
     el.refreshIcon.classList.add('is-spinning');
-    
-    // Sembunyikan FAB Refresh saat memuat
     el.refreshBtn.style.display = 'none';
 
     if (!dashboardData) {
@@ -926,14 +926,26 @@ html, body {
       el.error.style.display = 'none';
       el.content.style.display = 'none';
     } else if (forceRefresh) {
-      // Jika refresh paksa, munculkan kembali overlay loading
       el.loading.style.display = 'flex'; 
     }
 
-    google.script.run
-      .withSuccessHandler(function (data) { onDataLoaded(data); })
-      .withFailureHandler(function (err) { onDataError(err); })
-      .getDashboardData(!!forceRefresh);
+    // Menggunakan fetch untuk mengambil data JSON dari Google Apps Script Backend
+    let targetUrl = API_URL;
+    if (forceRefresh) {
+      targetUrl += (targetUrl.indexOf('?') > -1 ? '&' : '?') + 'refresh=true';
+    }
+
+    fetch(targetUrl)
+      .then(function(response) {
+        if (!response.ok) throw new Error('Gagal terhubung ke server Google Apps Script');
+        return response.json();
+      })
+      .then(function(data) {
+        onDataLoaded(data);
+      })
+      .catch(function(err) {
+        onDataError(err);
+      });
   }
 
   function onDataLoaded(data) {
