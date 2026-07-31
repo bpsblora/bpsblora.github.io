@@ -319,15 +319,16 @@
     background: rgba(255, 251, 240, 0.95);
     color: #b45309;
     padding: 6px 14px;
-    border: 1px solid green;
+    border: 1px solid #f59e0b;
     border-radius: 8px;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 800;
     font-family: var(--font-mono);
+    letter-spacing: 0.03em; /* Menjaga jarak antar karakter agar terbaca jelas saat vertikal */
     white-space: nowrap;
     box-shadow: 0 4px 12px rgba(234, 88, 12, 0.15);
     backdrop-filter: blur(2px);
-    transition: left 0.2s ease-out; /* Animasi bergeser halus */
+    transition: left 0.2s ease-out;
   }
     
   /* ---- Gaya Tabel Progres ---- */
@@ -735,16 +736,17 @@
       badge.style.display = 'block';
       textElem.innerText = 'Ideal (Hari Ke-' + IDEAL_DIFF_DAYS + '): ' + IDEAL_PCT.toFixed(1) + '%';
       
+      // Tambahkan rotasi 90 derajat searah jarum jam
+      textElem.style.transform = 'translate(-50%, -50%) rotate(90deg)';
+      
       chartObj.off('finished');
       chartObj.on('finished', function() {
-        // Ambil posisi pixel X berdasarkan nilai persentase pada sumbu X
         var px = chartObj.convertToPixel({xAxisIndex: 0}, IDEAL_PCT);
         if (!isNaN(px)) {
           textElem.style.left = px + 'px';
         }
       });
       
-      // Jalankan sekali langsung untuk inisialisasi awal
       setTimeout(function() {
         var px = chartObj.convertToPixel({xAxisIndex: 0}, IDEAL_PCT);
         if (!isNaN(px)) {
