@@ -562,7 +562,7 @@
               <p class="panel__subtitle">Seluruh kabupaten, sebelum difilter kecamatan</p>
             </div>
             <div class="panel__action">
-              <button class="btn-download" onclick="downloadDonutImage()">📷 Gambar PNG</button>
+              <button class="btn-download" onclick="downloadDonutImage()">📷 Unduh Gambar</button>
             </div>
           </div>
           <div id="donutChart" class="chart chart--donut"></div>
@@ -621,8 +621,8 @@
             <p class="panel__subtitle">Total capaian per status, per petugas pengawas</p>
           </div>
           <div class="panel__action">
-            <button class="btn-download" onclick="downloadPanel('pml', 'image')">📷 Gambar PNG</button>
-            <button class="btn-download" onclick="downloadPanel('pml', 'excel')">📊 Excel (.xlsx)</button>
+            <button class="btn-download" onclick="downloadPanel('pml', 'image')">📷 Unduh Gambar</button>
+            <button class="btn-download" onclick="downloadPanel('pml', 'excel')">📊 Unduh Excel</button>
           </div>
         </div>
         <div class="chart-scroll-wrapper" id="wrapper-pml">
@@ -640,8 +640,8 @@
             <p class="panel__subtitle">Total capaian per status, per petugas pencacah</p>
           </div>
           <div class="panel__action">
-            <button class="btn-download" onclick="downloadPanel('ppl', 'image')">📷 Gambar PNG</button>
-            <button class="btn-download" onclick="downloadPanel('ppl', 'excel')">📊 Excel (.xlsx)</button>
+            <button class="btn-download" onclick="downloadPanel('ppl', 'image')">📷 Unduh Gambar</button>
+            <button class="btn-download" onclick="downloadPanel('ppl', 'excel')">📊 Unduh Excel</button>
           </div>
         </div>
         <div class="chart-scroll-wrapper" id="wrapper-ppl">
@@ -1416,7 +1416,12 @@
       document.body.appendChild(tempDiv);
 
       var tempChart = echarts.init(tempDiv);
-      tempChart.setOption(buildStackedBarOption(agg, statusCols), true);
+      
+      // PERBAIKAN: Ambil opsi chart, lalu matikan animasinya agar batang langsung jadi
+      var chartOption = buildStackedBarOption(agg, statusCols);
+      chartOption.animation = false; 
+      
+      tempChart.setOption(chartOption, true);
 
       // Ambil Data URL Gambar Chart
       var chartUrl = tempChart.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#ffffff' });
