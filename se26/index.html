@@ -340,7 +340,19 @@
 
   /* ---- Loading Overlay & FAB ---- */
   .loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(33, 25, 9, 0.85); backdrop-filter: blur(4px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffffff; font-size: 15px; font-weight: 500; }
-  .spinner { border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.2); border-top-color: var(--orange); animation: spin 0.8s linear infinite; flex-shrink: 0; }
+  
+  /* Animasi Spin dipastikan di luar media query agar berputar di semua layar */
+  @keyframes spin { 
+    to { transform: rotate(360deg); } 
+  }
+
+  .spinner { 
+    border-radius: 50%; 
+    border: 3px solid rgba(255, 255, 255, 0.2); 
+    border-top-color: var(--orange); 
+    animation: spin 0.8s linear infinite !important; 
+    flex-shrink: 0; 
+  }
   .spinner--large { width: 42px; height: 42px; margin-bottom: 20px; border-width: 4px; }
   
   .fab-refresh { position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px; background: var(--orange); color: var(--ink); border: none; border-radius: 50%; box-shadow: 0 4px 12px rgba(11, 37, 48, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1500; transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease; }
@@ -349,7 +361,50 @@
   .fab-refresh__icon { font-size: 26px; line-height: 1; display: inline-block; }
   .fab-refresh__icon.is-spinning { animation: spin 0.8s linear infinite; }
 
-  /* ---- Responsive ---- */
+  /* ---- Indikator Sorting Tabel (Tampak Jelas & Pas) ---- */
+  .data-table th {
+    cursor: pointer !important; 
+    user-select: none;
+    position: relative;
+    padding-right: 18px !important; 
+  }
+
+  .data-table th::after {
+    content: ' \2195'; 
+    opacity: 0.35;
+    font-size: 11px;
+    margin-left: 4px;
+    display: inline-block;
+    transition: opacity 0.2s, color 0.2s;
+  }
+
+  .data-table th:hover::after {
+    opacity: 0.8;
+  }
+
+  .data-table th.sort-asc {
+    background-color: #FFF3D6 !important; 
+    color: #b87f00 !important;
+  }
+  .data-table th.sort-asc::after {
+    content: ' \2191' !important; 
+    opacity: 1 !important;
+    color: var(--orange-deep) !important;
+    font-weight: 800;
+  }
+
+  .data-table th.sort-desc {
+    background-color: #FFF3D6 !important; 
+    color: #b87f00 !important;
+  }
+  .data-table th.sort-desc::after {
+    content: ' \2193' !important; 
+    opacity: 1 !important;
+    color: var(--orange-deep) !important;
+    font-weight: 800;
+  }
+
+  /* ---- Responsive khusus HP ---- */
   @media (max-width: 860px) {
     .cards { grid-template-columns: 1fr; }
     .panel-row { grid-template-columns: 1fr; }
@@ -365,53 +420,8 @@
     .filter-bar { flex-direction: column; align-items: stretch; padding: 16px; }
     .filter-bar__select { min-width: 100%; }
     .cards, .panel-row { grid-template-columns: 1fr; }
-
-
-    /* ---- Indikator Sorting Tabel (Tampak Jelas & Pas) ---- */
-    .data-table th {
-      cursor: pointer !important; 
-      user-select: none;
-      position: relative;
-      padding-right: 18px !important; /* Beri ruang di kanan agar ikon panah tidak menabrak teks */
-    }
-  
-    /* Ikon bawaan saat kolom BISA disort (Panah Samar) */
-    .data-table th::after {
-      content: ' \2195'; /* Simbol panah atas-bawah */
-      opacity: 0.35;
-      font-size: 11px;
-      margin-left: 4px;
-      display: inline-block;
-      transition: opacity 0.2s, color 0.2s;
-    }
-  
-    .data-table th:hover::after {
-      opacity: 0.8;
-    }
-  
-    /* Ikon saat disort ASCENDING (A-Z / Kecil -> Besar) */
-    .data-table th.sort-asc {
-      background-color: #FFF3D6 !important; /* Latar belakang berubah sedikit oranye terang */
-      color: #b87f00 !important;
-    }
-    .data-table th.sort-asc::after {
-      content: ' \2191' !important; /* Simbol Panah Ke Atas */
-      opacity: 1 !important;
-      color: var(--orange-deep) !important;
-      font-weight: 800;
-    }
-  
-    /* Ikon saat disort DESCENDING (Z-A / Besar -> Kecil) */
-    .data-table th.sort-desc {
-      background-color: #FFF3D6 !important; /* Latar belakang berubah sedikit oranye terang */
-      color: #b87f00 !important;
-    }
-    .data-table th.sort-desc::after {
-      content: ' \2193' !important; /* Simbol Panah Ke Bawah */
-      opacity: 1 !important;
-      color: var(--orange-deep) !important;
-      font-weight: 800;
-    }
+  } /* Penutup Media Query dikembalikan ke posisi yang benar */
+    
 </style>
 </head>
 <body>
