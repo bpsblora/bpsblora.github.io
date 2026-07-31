@@ -466,6 +466,14 @@
     margin-bottom: 12px;
     flex-wrap: wrap;
   }
+
+  /* Tombol ketika fitur Sort by PML aktif */
+  .btn-download.is-active {
+    background: var(--ink-soft);
+    color: #ffffff;
+    border-color: var(--ink);
+  }
+
     
 </style>
 </head>
@@ -639,8 +647,11 @@
             <p class="panel__subtitle">Total capaian per status, per petugas pencacah</p>
           </div>
           <div class="panel__action">
-            <button class="btn-download" onclick="downloadPanel('ppl', 'image')">📷 Unduh Gambar</button>
-            <button class="btn-download" onclick="downloadPanel('ppl', 'excel')">📊 Unduh Excel</button>
+            <!-- TOMBOL BARU: Sort by PML (Disembunyikan default) -->
+            <button id="btnToggleGroupPml" class="btn-download" style="display:none;">👥 Sort by PML</button>
+            
+            <button class="btn-download" onclick="downloadPanel('ppl', 'image')">📷 Gambar PNG</button>
+            <button class="btn-download" onclick="downloadPanel('ppl', 'excel')">📊 Excel (.xlsx)</button>
           </div>
         </div>
         <div class="chart-scroll-wrapper" id="wrapper-ppl">
@@ -1020,9 +1031,9 @@
     var map = {}, berjalanTargets = {};
     var selectedPml = el.pmlFilter ? el.pmlFilter.value : 'ALL';
 
-    // BUAT MAPPING PPL -> PML JIKA SEMUA PML TERPILIH
+    // BUAT MAPPING PPL -> PML JIKA SEMUA PML TERPILIH **DAN TOMBOL SORT AKTIF**
     var pplToPml = null;
-    if (role === 'PPL' && selectedPml === 'ALL' && dashboardData.prelistAwal && dashboardData.prelistAwal.mappingPmlPpl) {
+    if (role === 'PPL' && selectedPml === 'ALL' && isGroupPmlActive && dashboardData.prelistAwal && dashboardData.prelistAwal.mappingPmlPpl) {
       pplToPml = {};
       Object.keys(dashboardData.prelistAwal.mappingPmlPpl).forEach(function(key) {
         if (key.startsWith(kecFilter + '_')) {
@@ -1229,13 +1240,23 @@
   function renderUsernameCharts() {
     var kecFilter = el.kecamatanFilter.value;
     var viewMode = document.querySelector('input[name="viewMode"]:checked').value; 
+    var pmlFilterValue = el.pmlFilter ? el.pmlFilter.value : 'ALL';
 
     if (!kecFilter || kecFilter === "") {
       el.filterHint.textContent = 'Silakan pilih kecamatan dari dropdown di atas.';
       el.pplChart.style.display = 'none'; el.pplTable.style.display = 'none'; el.pplEmpty.style.display = 'block';
       el.pmlChart.style.display = 'none'; el.pmlTable.style.display = 'none'; el.pmlEmpty.style.display = 'block';
+      btnToggleGroupPml.style.display = 'none'; // Sembunyikan tombol
       return; 
     }
+    
+    // Tampilkan tombol "Sort by PML" HANYA jika filter Semua PML aktif
+    if (pmlFilterValue === 'ALL') {
+      btnToggleGroupPml.style.display = 'inline-flex';
+    } else {
+      btnToggleGroupPml.style.display = 'none';
+    }
+
     el.filterHint.textContent = 'Kode kecamatan: ' + kecFilter;
 
     var pplAgg = aggregateByUsername(dashboardData.pencacah, kecFilter, PPL_COLS, 'PPL');
@@ -1274,7 +1295,24 @@
 
   el.refreshBtn.addEventListener('click', function () { loadData(true); });
 
-
+  // ---- FITUR TOGGLE SORT BY PML ------------------------------------------
+  var isGroupPmlActive = false;
+  var btnToggleGroupPml = document.getElementById('btnToggleGroupPml');
+  
+  btnToggleGroupPml.addEventListener('click', function() {
+    isGroupPmlActive = !isGroupPmlActive; // Balikkan status
+    
+    if (isGroupPmlActive) {
+      this.classList.add('is-active');
+      this.innerHTML = '✅ Sort by PML Aktif';
+    } else {
+      this.classList.remove('is-active');
+      this.innerHTML = '👥 Sort by PML';
+    }
+    
+    // Render ulang chart/tabel untuk menerapkan efek urutan
+    renderUsernameCharts();
+  });
   // ---- Fitur Sorting Tabel Cerdas (Teks & Angka) -------------------------
   
   // Fungsi untuk mengubah format teks tabel ke angka murni (jika memungkinkan)
