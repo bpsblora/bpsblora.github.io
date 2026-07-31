@@ -1020,6 +1020,20 @@
     var map = {}, berjalanTargets = {};
     var selectedPml = el.pmlFilter ? el.pmlFilter.value : 'ALL';
 
+    // BUAT MAPPING PPL -> PML JIKA SEMUA PML TERPILIH
+    var pplToPml = null;
+    if (role === 'PPL' && selectedPml === 'ALL' && dashboardData.prelistAwal && dashboardData.prelistAwal.mappingPmlPpl) {
+      pplToPml = {};
+      Object.keys(dashboardData.prelistAwal.mappingPmlPpl).forEach(function(key) {
+        if (key.startsWith(kecFilter + '_')) {
+          var pmlU = key.split('_')[1];
+          Object.keys(dashboardData.prelistAwal.mappingPmlPpl[key]).forEach(function(pplU) {
+            pplToPml[pplU] = pmlU;
+          });
+        }
+      });
+    }
+
     if (kecFilter !== 'ALL' && sheetObj.byKecamatan[kecFilter]) {
       var kecBucket = sheetObj.byKecamatan[kecFilter];
       
@@ -1056,7 +1070,18 @@
       return rawTotals[i];
     });
 
-    var order = usernames.map(function (u, i) { return i; }).sort(function (a, b) { return sortValues[a] - sortValues[b]; });
+    // LOGIKA SORTING BARU (Group by PML -> Progress)
+    var order = usernames.map(function (u, i) { return i; }).sort(function (a, b) { 
+      if (pplToPml) {
+        var pmlA = pplToPml[usernames[a]] ? getRealName(pplToPml[usernames[a]]) : 'Z_Tanpa PML';
+        var pmlB = pplToPml[usernames[b]] ? getRealName(pplToPml[usernames[b]]) : 'Z_Tanpa PML';
+        if (pmlA !== pmlB) {
+          return pmlB.localeCompare(pmlA); // Descending alphabet agar grup A di atas chart
+        }
+      }
+      return sortValues[a] - sortValues[b]; // Ascending progress agar nilai tertinggi di atas
+    });
+
     var sortedUsernames = order.map(function (i) { return usernames[i]; });
     var sortedTargets = order.map(function (i) { return targets[i]; });
     var sortedRawTotals = order.map(function (i) { return rawTotals[i]; });
@@ -1071,7 +1096,7 @@
       });
     });
 
-    return { usernames: sortedUsernames, targets: sortedTargets, rawTotals: sortedRawTotals, seriesData: seriesData, rawSeriesData: rawSeriesData, displayMode: displayMode };
+    return { usernames: sortedUsernames, targets: sortedTargets, rawTotals: sortedRawTotals, seriesData: seriesData, rawSeriesData: rawSeriesData, displayMode: displayMode, pmlMapping: pplToPml };
   }
 
   function buildStackedBarOption(agg, statusCols) {
@@ -1090,7 +1115,7 @@
         formatter: function (p) { 
           if (isPersen) {
              var val = agg.targets[p.dataIndex] > 0 ? (agg.rawTotals[p.dataIndex] / agg.targets[p.dataIndex]) * 100 : 0;
-             return val.toFixed(2).replace('.', ',') + '%';
+             return val.toFixed(1).replace('.', ',') + '%';
           }
           return fmt(agg.rawTotals[p.dataIndex]); 
         }
@@ -1104,7 +1129,7 @@
         trigger: 'axis', axisPointer: { type: 'shadow' },
         formatter: function (params) {
           var idx = params[0].dataIndex, visible = params.filter(function (p) { return p.seriesName !== '__total__' && p.value > 0; });
-          var head = '<div style="font-weight:700;margin-bottom:6px;">' + params[0].axisValueLabel + '</div>';
+          var head = '<div style="font-weight:700;margin-bottom:6px;">' + params[0].axisValueLabel.split('\n')[0] + '</div>';
           var body = visible.map(function (p) {
             var rawVal = agg.rawSeriesData[p.seriesName][idx];
             var valText = isPersen ? (p.value + '% (' + rawVal + ' dok)') : fmt(rawVal);
@@ -1112,9 +1137,8 @@
           }).join('');
           
           var tgt = agg.targets[idx];
-          var pct = tgt > 0 ? ((agg.rawTotals[idx] / tgt) * 100).toFixed(2).replace('.', ',') + '%' : '0%';
+          var pct = tgt > 0 ? ((agg.rawTotals[idx] / tgt) * 100).toFixed(1).replace('.', ',') + '%' : '0%';
           var totalTxt = isPersen ? pct : fmt(agg.rawTotals[idx]);
-          
           var totalHtml = '<div style="margin-top:6px;padding-top:6px;border-top:1px solid #E1E9E7;display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:700;"><div style="display:flex;justify-content:space-between;"><span>Total Capaian</span><span style="font-family:IBM Plex Mono">' + totalTxt + '</span></div><div style="display:flex;justify-content:space-between;color:#0D9488;"><span>Target Alokasi</span><span style="font-family:IBM Plex Mono">' + fmt(tgt) + '</span></div></div>';
           return head + (body || '<div style="font-size:12px;color:#8195A0;">Tidak ada dokumen</div>') + totalHtml;
         }
@@ -1124,23 +1148,46 @@
       xAxis: { type: 'value', splitLine: { lineStyle: { color: '#F0E8D5' } }, axisLabel: { fontFamily: 'IBM Plex Mono', fontSize: 11, color: '#54442B', formatter: function(v) { return isPersen ? v + '%' : v; } } },
       yAxis: { 
         type: 'category', data: agg.usernames, 
-        axisLabel: { fontFamily: 'IBM Plex Mono', fontSize: 11.5, color: '#211909', fontWeight: 500, formatter: function (value) { return getRealName(value); } }, 
+        axisLabel: { 
+          fontFamily: 'IBM Plex Mono', fontSize: 11.5, color: '#211909', fontWeight: 500, 
+          formatter: function (value) { 
+            var name = getRealName(value);
+            // TAMBAHKAN LABEL PML DI BAWAH NAMA PPL (JIKA ADA)
+            if (agg.pmlMapping && agg.pmlMapping[value]) {
+              name += '\n{pml|PML: ' + getRealName(agg.pmlMapping[value]) + '}';
+            }
+            return name; 
+          },
+          rich: { pml: { fontSize: 10, color: '#968972', padding: [2, 0, 0, 0] } }
+        }, 
         axisLine: { lineStyle: { color: '#E8DECA' } }, axisTick: { show: false } 
       },
       series: series
     };
   }
 
-  function chartHeight(n) { return Math.max(220, (n * ROW_HEIGHT) + 90); }
+  // TINGGIKAN CHART JIKA ADA LABEL PML MULTILINE
+  function chartHeight(n, isMultiline) { return Math.max(220, (n * (isMultiline ? 46 : 32)) + 90); }
 
   function buildTableHTML(agg, statusCols) {
     var isPersen = agg.displayMode === 'persen';
+    var hasPml = !!agg.pmlMapping;
     var html = '<table class="data-table"><thead><tr><th>Nama Petugas</th>';
     statusCols.forEach(function(col) { html += '<th>' + col + '</th>'; });
     html += '<th>Target Alokasi</th><th>Total Capaian</th></tr></thead><tbody>';
 
-    agg.usernames.forEach(function(u, i) {
-      html += '<tr><td>' + getRealName(u) + '</td>';
+    // LOOP MUNDUR agar yg tertinggi / alfabet A muncul paling atas di tabel
+    for (var i = agg.usernames.length - 1; i >= 0; i--) {
+      var u = agg.usernames[i];
+      var namaTampil = getRealName(u);
+      
+      // Sisipkan label PML khusus tabel PPL
+      if (hasPml) {
+        var pmlName = agg.pmlMapping[u] ? getRealName(agg.pmlMapping[u]) : '-';
+        namaTampil = '<span style="display:block; font-size:10px; color:#968972; font-weight:700; margin-bottom:2px;">PML: ' + pmlName + '</span>' + namaTampil;
+      }
+      
+      html += '<tr><td>' + namaTampil + '</td>';
       statusCols.forEach(function(col) {
         var rawVal = agg.rawSeriesData[col][i];
         var displayVal = isPersen ? agg.seriesData[col][i] + '%' : fmt(rawVal);
@@ -1149,10 +1196,10 @@
 
       var tgt = agg.targets[i];
       var totalRaw = agg.rawTotals[i];
-      var totalPct = tgt > 0 ? ((totalRaw / tgt) * 100).toFixed(2).replace('.', ',') + '%' : '0%';
+      var totalPct = tgt > 0 ? ((totalRaw / tgt) * 100).toFixed(1).replace('.', ',') + '%' : '0%';
       
       html += '<td style="color:var(--slate);">' + fmt(tgt) + '</td><td style="font-weight:800;color:var(--orange-deep);">' + (isPersen ? totalPct : fmt(totalRaw)) + '</td></tr>';
-    });
+    }
     html += '</tbody></table>';
     return html;
   }
@@ -1167,7 +1214,7 @@
     if (viewMode === 'grafik') {
       el.kecTable.style.display = 'none';
       el.kecChart.style.display = 'block';
-      el.kecChart.style.height = chartHeight(kecAgg.usernames.length) + 'px';
+      el.kecChart.style.height = chartHeight(kecAgg.usernames.length, false) + 'px';
       if (!kecChart) kecChart = echarts.init(el.kecChart);
       kecChart.resize(); 
       kecChart.setOption(buildStackedBarOption(kecAgg, PPL_COLS), true);
@@ -1201,7 +1248,7 @@
       el.pplEmpty.style.display = 'none';
       if (viewMode === 'grafik') {
         el.pplTable.style.display = 'none'; el.pplChart.style.display = 'block';
-        el.pplChart.style.height = chartHeight(pplAgg.usernames.length) + 'px';
+        el.pplChart.style.height = chartHeight(pplAgg.usernames.length, !!pplAgg.pmlMapping) + 'px';
         if (!pplChart) pplChart = echarts.init(el.pplChart);
         pplChart.resize(); pplChart.setOption(buildStackedBarOption(pplAgg, PPL_COLS), true);
       } else {
@@ -1216,8 +1263,8 @@
       el.pmlEmpty.style.display = 'none';
       if (viewMode === 'grafik') {
         el.pmlTable.style.display = 'none'; el.pmlChart.style.display = 'block';
-        el.pmlChart.style.height = chartHeight(pmlAgg.usernames.length) + 'px';
-        if (!pmlChart) pmlChart = echarts.init(el.pmlChart);
+        el.pmlChart.style.height = chartHeight(pmlAgg.usernames.length, false) + 'px';
+      if (!pmlChart) pmlChart = echarts.init(el.pmlChart);
         pmlChart.resize(); pmlChart.setOption(buildStackedBarOption(pmlAgg, PML_COLS), true);
       } else {
         el.pmlChart.style.display = 'none'; el.pmlTable.style.display = 'block'; el.pmlTable.innerHTML = buildTableHTML(pmlAgg, PML_COLS);
@@ -1361,66 +1408,64 @@
     }
 
     // A. DOWNLOAD EXCEL (Dibuat langsung dari data backend, tidak tergantung layar)
+    // A. DOWNLOAD EXCEL (Dibuat langsung dari data backend, tidak tergantung layar)
     if (format === 'excel') {
       var wsData = [];
-      
-      // Baris Header Judul dalam Sheet
       wsData.push([panelTitle.toUpperCase() + ' - SE2026 BPS KABUPATEN BLORA']);
       wsData.push(['Wilayah / Filter: ' + kecText + pmlText]);
       wsData.push(['Waktu Unduh: ' + new Date().toLocaleString('id-ID')]);
-      wsData.push([]); // Baris kosong
+      wsData.push([]); 
 
-      // Header Kolom
-      var colHeader = [(type === 'kec' ? 'Nama Kecamatan' : 'Nama Petugas')];
+      var colHeader = [];
+      if (type === 'ppl' && agg.pmlMapping) { colHeader.push('Pengawas (PML)'); }
+      colHeader.push(type === 'kec' ? 'Nama Kecamatan' : 'Nama Petugas');
       statusCols.forEach(function(c) { colHeader.push(c); });
-      colHeader.push('Target Alokasi');
-      colHeader.push('Total Capaian');
-      colHeader.push('Persentase Capaian (%)');
+      colHeader.push('Target Alokasi', 'Total Capaian', 'Persentase Capaian (%)');
       wsData.push(colHeader);
 
-      // Isi Data Baris per Baris
-      agg.usernames.forEach(function(u, i) {
-        var row = [(type === 'kec' ? u : getRealName(u))];
-        statusCols.forEach(function(col) {
-          row.push(agg.rawSeriesData[col][i] || 0);
-        });
+      // LOOP MUNDUR agar Excel juga mengurutkan tertinggi di atas
+      for (var i = agg.usernames.length - 1; i >= 0; i--) {
+        var u = agg.usernames[i];
+        var row = [];
+        
+        // Kolom khusus PML jika terpilih Semua
+        if (type === 'ppl' && agg.pmlMapping) { row.push(agg.pmlMapping[u] ? getRealName(agg.pmlMapping[u]) : '-'); }
+        
+        row.push(type === 'kec' ? u : getRealName(u));
+        statusCols.forEach(function(col) { row.push(agg.rawSeriesData[col][i] || 0); });
+        
         var tgt = agg.targets[i] || 0;
         var total = agg.rawTotals[i] || 0;
         var pct = tgt > 0 ? Number(((total / tgt) * 100).toFixed(2)) : 0;
 
-        row.push(tgt);
-        row.push(total);
-        row.push(pct);
+        row.push(tgt, total, pct);
         wsData.push(row);
-      });
+      }
 
       var wb = XLSX.utils.book_new();
       var ws = XLSX.utils.aoa_to_sheet(wsData);
-
-      // Melebarkan kolom pertama agar nama petugas/kecamatan tidak terpotong di Excel
-      ws['!cols'] = [{ wch: 32 }];
-
+      ws['!cols'] = type === 'ppl' && agg.pmlMapping ? [{ wch: 25 }, { wch: 32 }] : [{ wch: 32 }];
       XLSX.utils.book_append_sheet(wb, ws, "Progres");
       XLSX.writeFile(wb, fileName + '.xlsx');
-    } 
+    }
 
     // B. DOWNLOAD GAMBAR PNG (Digambar penuh dengan Header Judul)
     else if (format === 'image') {
-      // Bikin elemen container sementara di memori untuk dirender oleh ECharts
       var tempDiv = document.createElement('div');
       tempDiv.style.width = '1000px';
-      tempDiv.style.height = chartHeight(agg.usernames.length) + 'px';
+      // MENDUKUNG TINGGI LEBIH BESAR JIKA MULTILINE
+      tempDiv.style.height = chartHeight(agg.usernames.length, !!agg.pmlMapping) + 'px';
       tempDiv.style.position = 'absolute';
       tempDiv.style.left = '-9999px';
       document.body.appendChild(tempDiv);
 
       var tempChart = echarts.init(tempDiv);
-      
-      // PERBAIKAN: Ambil opsi chart, lalu matikan animasinya agar batang langsung jadi
       var chartOption = buildStackedBarOption(agg, statusCols);
       chartOption.animation = false; 
-      
       tempChart.setOption(chartOption, true);
+
+
+      
 
       // Ambil Data URL Gambar Chart
       var chartUrl = tempChart.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#ffffff' });
