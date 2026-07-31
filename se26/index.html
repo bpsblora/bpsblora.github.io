@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
   <base target="_top">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Progres SE2026</title>
+  <title>Dashboard Progres SE2026 - BPS Kab Blora</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,14 +14,14 @@
 
   <style>
   :root {
-    --ink: #211909;          /* Teks gelap dengan nuansa hangat */
-    --ink-soft: #54442B;     /* Teks sekunder hangat */
-    --orange: #febd25;       /* WARNA DASAR ORANYE BARU */
-    --orange-deep: #e8a510;  /* Oranye gelap untuk efek hover/fokus */
-    --bg: #FDFCF8;           /* Background halaman sedikit hangat (putih tulang) */
+    --ink: #211909;          
+    --ink-soft: #54442B;     
+    --orange: #febd25;       
+    --orange-deep: #e8a510;  
+    --bg: #FDFCF8;           
     --surface: #FFFFFF;
-    --line: #F0E8D5;         /* Garis batas hangat */
-    --slate: #968972;        /* Teks keterangan/abu-abu hangat */
+    --line: #F0E8D5;         
+    --slate: #968972;        
     --radius: 14px;
     --shadow: 0 1px 2px rgba(33, 25, 9, 0.04), 0 8px 24px -12px rgba(33, 25, 9, 0.12);
     --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
@@ -31,7 +31,7 @@
 
   * { box-sizing: border-box; }
 
-html, body {
+  html, body {
     margin: 0;
     padding: 0;
     background: var(--bg);
@@ -43,22 +43,22 @@ html, body {
   h1, h2, h3 { font-family: var(--font-display); margin: 0; }
   button, select { font-family: inherit; }
 
-
   /* ---- Topbar Wrapper (Fixed) ---- */
-.topbar-wrapper {
+  .topbar-wrapper {
+    position: fixed; /* Kembalikan ke fixed agar menempel di atas */
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
     background: var(--bg);
     box-shadow: 0 4px 20px -10px rgba(33, 25, 9, 0.15);
-    touch-action: manipulation; /* Membantu deteksi sentuhan di perangkat mobile */
+    touch-action: manipulation; 
   }
 
   /* ---- Topbar ---- */
   .topbar {
-    background: #fff2b5; /* Menggunakan warna solid oranye baru */
-    color: var(--ink); /* Teks menjadi gelap agar kontras dengan oranye */
+    background: #fff2b5; 
+    color: var(--ink); 
   }
   .topbar__inner {
     max-width: 1180px;
@@ -76,7 +76,6 @@ html, body {
       .topbar__brand { justify-content: center; text-align: center; }
   }
 
-  /* CSS Baru untuk Logo Gambar */
   .topbar__logo {
     height: 38px;
     width: auto;
@@ -92,41 +91,14 @@ html, body {
   .topbar__subtitle {
     margin: 2px 0 0;
     font-size: 13px;
-    color: rgba(33, 25, 9, 0.72); /* Warna subtitle gelap transparan */
+    color: rgba(33, 25, 9, 0.72); 
   }
 
-
-
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border-radius: 9px;
-    border: 1px solid transparent;
-    padding: 9px 14px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s ease, transform 0.1s ease;
-  }
-  .btn:active { transform: translateY(1px); }
-  .btn--ghost {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.3);
-    color: #fff;
-  }
-  .btn--ghost:hover { background: rgba(255,255,255,0.18); }
-  .btn__icon { display: inline-block; transition: transform 0.5s ease; }
-  .btn__icon.is-spinning { animation: spin 0.8s linear infinite; }
-
-/* ---- Layout Container ---- */
+  /* ---- Layout Container ---- */
   .container {
     max-width: 1180px;
     margin: 0 auto;
-    /* MEMBERIKAN PADDING ATAS YANG BESAR AGAR KONTEN TIDAK TERTUTUP HEADER FIXED */
-    /* Kira-kira tinggi topbar (80px) + controls (55px) = 135px */
-    padding: 5px 24px 60px; 
+    padding: 160px 24px 60px; /* Padding atas besar agar tidak tertutup fixed header */
   }
 
   .state-banner {
@@ -142,16 +114,6 @@ html, body {
     margin-top: 24px;
   }
   .state-banner--error { border-color: #F3C6B8; background: #FFF6F2; color: #9A3412; }
-
-  .spinner {
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    border: 2.5px solid var(--line);
-    border-top-color: var(--orange);
-    animation: spin 0.7s linear infinite;
-    flex-shrink: 0;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
 
   /* ---- Cards ---- */
   .cards {
@@ -182,7 +144,7 @@ html, body {
     color: var(--ink);
   }
   .card__value--mono { font-family: var(--font-mono); }
-  .card__value--big { font-size: 34px; color: var(--teal-deep); }
+  .card__value--big { font-size: 34px; color: var(--orange-deep); }
   .card__caption { margin-top: 4px; font-size: 12.5px; color: var(--slate); }
 
   .progress-row {
@@ -200,14 +162,14 @@ html, body {
     margin-top: 12px;
     height: 8px;
     border-radius: 999px;
-    background: #F2EAD6; /* Alas abu-abu hangat */
+    background: #F2EAD6; 
     overflow: hidden;
   }
 
   .progress-bar__fill {
     height: 100%;
     border-radius: 999px;
-    background: var(--orange); /* Diubah menjadi oranye */
+    background: var(--orange); 
     transition: width 0.6s ease;
   }
 
@@ -265,143 +227,97 @@ html, body {
   }
 
   /* ---- Filter ---- */
-  /* ---- Filter Bar (Dibuat Sangat Mencolok) ---- */
   .filter-bar {
     margin-top: 24px;
     display: flex;
     align-items: flex-start;
-    justify-content: center; /* Mengketengahkan posisi filter */
+    justify-content: center; 
     gap: 24px;
     flex-wrap: wrap;
-    background: #FFFBF0; /* Latar belakang oranye sangat muda */
-    border: 2px dashed var(--orange); /* Garis putus-putus tebal khas kotak perhatian */
+    background: #FFFBF0; 
+    border: 2px dashed var(--orange); 
     border-radius: 12px;
     padding: 24px 28px;
     box-shadow: 0 4px 12px rgba(254, 189, 37, 0.15);
-    animation: border-pulse 2.5s infinite; /* Efek denyut halus pada kotak */
+    animation: border-pulse 2.5s infinite; 
   }
 
-  /* Animasi denyut bayangan agar pengguna langsung melihat ke area ini */
   @keyframes border-pulse {
     0% { box-shadow: 0 0 0 0 rgba(254, 189, 37, 0.4); }
     70% { box-shadow: 0 0 0 10px rgba(254, 189, 37, 0); }
     100% { box-shadow: 0 0 0 0 rgba(254, 189, 37, 0); }
   }
 
-  .filter-item {
-    display: flex;
-    flex-direction: column; /* Menyusun label di atas dropdown agar rapi */
-    gap: 10px;
-  }
-
-  .filter-bar__label {
-    font-size: 14.5px;
-    font-weight: 800;
-    color: var(--orange-deep);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    text-align: center;
-  }
-
+  .filter-item { display: flex; flex-direction: column; gap: 10px; }
+  .filter-bar__label { font-size: 14.5px; font-weight: 800; color: var(--orange-deep); text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
   .filter-bar__select {
-    border: 2px solid var(--orange); /* Garis solid tebal */
-    border-radius: 10px;
-    padding: 12px 18px; /* Area klik diperbesar */
-    font-size: 15px; /* Huruf diperbesar agar mudah dibaca */
-    font-weight: 600;
-    color: var(--ink);
-    background: #ffffff;
-    min-width: 260px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: all 0.2s ease;
+    border: 2px solid var(--orange); border-radius: 10px; padding: 12px 18px; 
+    font-size: 15px; font-weight: 600; color: var(--ink); background: #ffffff;
+    min-width: 260px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.2s ease;
   }
+  .filter-bar__select:hover { border-color: var(--orange-deep); box-shadow: 0 6px 16px rgba(254, 189, 37, 0.3); transform: translateY(-2px); }
+  .filter-bar__select:focus-visible, .filter-bar__select:active { outline: none; border-color: var(--orange-deep); box-shadow: 0 0 0 4px rgba(254, 189, 37, 0.3); transform: translateY(0); }
+  .filter-bar__hint { width: 100%; margin-top: 8px; font-size: 13.5px; color: var(--ink-soft); font-weight: 600; text-align: center; background: #fdfaf2; padding: 6px; border-radius: 6px; }
 
-  .filter-bar__select:hover {
-    border-color: var(--orange-deep);
-    box-shadow: 0 6px 16px rgba(254, 189, 37, 0.3);
-    transform: translateY(-2px); /* Efek terangkat saat disentuh mouse */
-  }
-
-  .filter-bar__select:focus-visible,
-  .filter-bar__select:active {
-    outline: none;
-    border-color: var(--orange-deep);
-    box-shadow: 0 0 0 4px rgba(254, 189, 37, 0.3);
-    transform: translateY(0);
-  }
-
-  .filter-bar__hint {
-    width: 100%;
-    margin-top: 8px;
-    font-size: 13.5px;
-    color: var(--ink-soft);
-    font-weight: 600;
-    text-align: center;
-    background: #fdfaf2;
-    padding: 6px;
-    border-radius: 6px;
-  }
-
-  .empty-note {
-    padding: 40px 24px;
-    text-align: center;
-    color: var(--orange-deep);
-    background: #FFFBF0;
-    border: 2px dashed var(--orange);
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
-    margin-top: 16px;
-  }
-
-  /* ---- Footer ---- */
-  .footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 12px;
-    color: var(--slate);
-  }
+  .empty-note { padding: 40px 24px; text-align: center; color: var(--orange-deep); background: #FFFBF0; border: 2px dashed var(--orange); border-radius: 12px; font-size: 16px; font-weight: 700; margin-top: 16px; }
+  .footer { text-align: center; padding: 20px; font-size: 12px; color: var(--slate); }
 
   /* ---- Controls Bar & Toggles ---- */
   .controls-bar {
     background: var(--surface);
-    border-bottom: 1px solid var(--line); /* Ubah border hanya di bawah */
+    border-bottom: 1px solid var(--line); 
     padding: 12px 24px;
     display: flex;
-    justify-content: center; /* MENGUBAH JADI CENTER */
+    justify-content: center; 
     gap: 36px;
     flex-wrap: wrap;
-    /* Menghilangkan margin dan border-radius karena ini bagian dari header yang menempel dinding layar */
     margin: 0;
     border-radius: 0;
   }
-
   .control-group { display: flex; align-items: center; gap: 14px; }
   .control-label { font-size: 13.5px; font-weight: 600; color: var(--ink-soft); }
   
-  .toggle-pill {
-    display: flex;
-    background: #F2EAD6; /* Alas abu-abu hangat */
-    border-radius: 8px;
-    padding: 4px;
-  }
-
+  .toggle-pill { display: flex; background: #F2EAD6; border-radius: 8px; padding: 4px; }
   .toggle-pill input { display: none; }
-  .toggle-pill label {
-    padding: 7px 18px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  .toggle-pill label { padding: 7px 18px; font-size: 13px; font-weight: 600; color: var(--ink-soft); border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+  .toggle-pill input:checked + label { background: #febd25; color: #000000; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+  /* ---- Scrollable Chart & Table Wrapper ---- */
+  .chart-scroll-wrapper {
+    max-height: 420px; 
+    overflow-y: auto;   
+    overflow-x: auto;   
+    margin-top: 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
   }
-  .toggle-pill input:checked + label {
-    background: #febd25;
-    color: #000000; /* Teks saat diklik jadi hitam */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  }
+  .chart-scroll-wrapper::-webkit-scrollbar { width: 8px; height: 8px; }
+  .chart-scroll-wrapper::-webkit-scrollbar-track { background: #F4F7F6; border-radius: 4px; }
+  .chart-scroll-wrapper::-webkit-scrollbar-thumb { background: #d4c5a9; border-radius: 4px; }
+  .chart-scroll-wrapper::-webkit-scrollbar-thumb:hover { background: var(--orange-deep); }
+
+  /* ---- Gaya Tabel Progres ---- */
+  .table-container { width: 100%; padding-bottom: 0; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: right; }
+  .data-table th, .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .data-table th { background: #FFFBF0; color: var(--orange-deep); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; position: sticky; top: 0; z-index: 20; }
+  
+  .data-table th:first-child, .data-table td:first-child { text-align: left; position: sticky; left: 0; background: #ffffff; z-index: 21; font-weight: 600; color: var(--ink); border-right: 1px solid var(--line); box-shadow: 2px 0 5px rgba(0,0,0,0.03); }
+  .data-table th:first-child { background: #FFFBF0; z-index: 25; }
+  .data-table tbody tr:hover td { background: #fdfaf2; }
+
+  /* ---- Loading Overlay & FAB ---- */
+  .loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(33, 25, 9, 0.85); backdrop-filter: blur(4px); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffffff; font-size: 15px; font-weight: 500; }
+  .spinner { border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.2); border-top-color: var(--orange); animation: spin 0.8s linear infinite; flex-shrink: 0; }
+  .spinner--large { width: 42px; height: 42px; margin-bottom: 20px; border-width: 4px; }
+  
+  .fab-refresh { position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px; background: var(--orange); color: var(--ink); border: none; border-radius: 50%; box-shadow: 0 4px 12px rgba(11, 37, 48, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1500; transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease; }
+  .fab-refresh:hover { background: var(--orange-deep); transform: translateY(-3px); box-shadow: 0 6px 16px rgba(11, 37, 48, 0.4); }
+  .fab-refresh:active { transform: translateY(0); }
+  .fab-refresh__icon { font-size: 26px; line-height: 1; display: inline-block; }
+  .fab-refresh__icon.is-spinning { animation: spin 0.8s linear infinite; }
 
   /* ---- Responsive ---- */
   @media (max-width: 860px) {
@@ -410,219 +326,17 @@ html, body {
     .topbar__inner { flex-wrap: wrap; }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .spinner, .btn__icon.is-spinning { animation: none; }
-    .progress-bar__fill { transition: none; }
-  }
-
-  /* ---- Scrollable Chart & Table Wrapper (Diperbarui) ---- */
-  .chart-scroll-wrapper {
-    max-height: 420px; /* Batasi tinggi maksimal agar tabel pas di layar tanpa harus scroll ke bawah */
-    overflow-y: auto;   /* Scroll vertikal mandiri di dalam kotak */
-    overflow-x: auto;   /* Scroll horizontal mandiri di dalam kotak yang sama */
-    margin-top: 16px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    background: #ffffff;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
-  }
-
-  /* Scrollbar kustom yang ramping dan bersih */
-  .chart-scroll-wrapper::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  .chart-scroll-wrapper::-webkit-scrollbar-track {
-    background: #F4F7F6;
-    border-radius: 4px;
-  }
-  .chart-scroll-wrapper::-webkit-scrollbar-thumb {
-    background: #d4c5a9;
-    border-radius: 4px;
-  }
-  .chart-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-    background: var(--orange-deep);
-  }
-
-  /* ---- Loading Overlay ---- */
-  .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(33, 25, 9, 0.85); /* Overlay diubah jadi cokelat gelap */
-    backdrop-filter: blur(4px); /* Efek blur pada background jika browser mendukung */
-    z-index: 9999; /* Pastikan selalu berada di paling atas */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 500;
-  }
-  
-  .spinner {
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    border-top-color: var(--orange); /* Putaran spinner warna oranye */    animation: spin 0.8s linear infinite;
-    flex-shrink: 0;
-  }
-  
-  .spinner--large {
-    width: 42px;
-    height: 42px;
-    margin-bottom: 20px;
-    border-width: 4px;
-  }
-
-  /* ---- Floating Action Button (FAB) Refresh ---- */
-  .fab-refresh {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 56px;
-    height: 56px;
-    background: var(--orange); /* Tombol mengambang oranye */
-    color: var(--ink);
-    border: none;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(11, 37, 48, 0.3);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1500; /* Di atas elemen konten, tapi di bawah loading overlay */
-    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .fab-refresh:hover {
-    background: var(--orange-deep);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(11, 37, 48, 0.4);
-  }
-  
-  .fab-refresh:active {
-    transform: translateY(0);
-  }
-  
-  .fab-refresh__icon {
-    font-size: 26px;
-    line-height: 1;
-    display: inline-block;
-  }
-  .fab-refresh__icon.is-spinning {
-    animation: spin 0.8s linear infinite;
-  }
-
-  /* ---- Gaya Tabel Progres ---- */
-  .table-container {
-    width: 100%;
-    padding-bottom: 0;
-  }
-  
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    text-align: right; /* Angka rata kanan agar mudah dibandingkan */
-  }
-  
-  .data-table th, .data-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--line);
-    white-space: nowrap; /* Mencegah teks terpotong ke bawah */
-  }
-  
-  .data-table th {
-    background: #FFFBF0;
-    color: var(--orange-deep);
-    font-weight: 700;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    position: sticky;
-    top: 0;
-    z-index: 20;
-  }
-  
-  /* Kolom pertama (Nama Petugas) dibuat statis tidak ikut tergeser ke samping */
-  .data-table th:first-child,
-  .data-table td:first-child {
-    text-align: left;
-    position: sticky;
-    left: 0;
-    background: #ffffff;
-    z-index: 21;
-    font-weight: 600;
-    color: var(--ink);
-    border-right: 1px solid var(--line);
-    box-shadow: 2px 0 5px rgba(0,0,0,0.03);
-  }
-  
-  .data-table th:first-child {
-    background: #FFFBF0;
-    z-index: 25;
-  }
-  
-  .data-table tbody tr:hover td {
-    background: #fdfaf2;
-  }
-
-/* ---- Responsivitas Khusus Layar HP / Mobile ---- */
   @media (max-width: 768px) {
-    /* Padding atas dikurangi agar konten tidak terlalu turun */
-    .container {
-      padding: 5px 12px 40px !important; 
-    }
-
-    /* Mengubah susunan controls-bar (slider) agar bertumpuk ke bawah di HP */
-    .controls-bar {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 10px;
-      padding: 10px 16px;
-    }
-
-    .control-group {
-      justify-content: space-between;
-    }
-
-    .toggle-pill {
-      flex: 1;
-      justify-content: center;
-    }
-
-    .toggle-pill label {
-      flex: 1;
-      text-align: center;
-      padding: 6px 10px;
-      font-size: 11.5px;
-    }
-
-    /* Filter bar menyesuaikan layar kecil */
-    .filter-bar {
-      flex-direction: column;
-      align-items: stretch;
-      padding: 16px;
-    }
-
-    .filter-bar__select {
-      min-width: 100%;
-    }
-
-    /* Ukuran kartu ringkasan atas */
-    .cards {
-      grid-template-columns: 1fr;
-    }
-    
-    .panel-row {
-      grid-template-columns: 1fr;
-    }
+    .container { padding: 220px 12px 40px !important; }
+    .controls-bar { flex-direction: column; align-items: stretch; gap: 10px; padding: 10px 16px; }
+    .control-group { justify-content: space-between; }
+    .toggle-pill { flex: 1; justify-content: center; }
+    .toggle-pill label { flex: 1; text-align: center; padding: 6px 10px; font-size: 11.5px; }
+    .filter-bar { flex-direction: column; align-items: stretch; padding: 16px; }
+    .filter-bar__select { min-width: 100%; }
+    .cards, .panel-row { grid-template-columns: 1fr; }
   }
 </style>
-  
 </head>
 <body>
   <!-- LOADING OVERLAY -->
@@ -631,23 +345,19 @@ html, body {
     <span>Memuat data&hellip;</span>
   </div>
 
- <header class="topbar-wrapper">
+  <header class="topbar-wrapper">
     <div class="topbar">
       <div class="topbar__inner">
         <div class="topbar__brand">
-          <!-- Ganti tulisan span badge dengan gambar logo -->
           <img src="https://imgur.com/lx5iFuO.png" alt="Logo SE2026" class="topbar__logo">
           <div>
             <h1 class="topbar__title">Dashboard Capaian SE2026</h1>
             <p class="topbar__subtitle">Rekapitulasi Pendataan &middot; Sensus Ekonomi 2026 BPS Kabupaten Blora</p>
           </div>
         </div>
-        
       </div>
     </div>
 
-    <!-- Pindahkan SLIDERS ke dalam header wrapper agar ikut fixed -->
-    <!-- Pindahkan SLIDERS ke dalam header wrapper agar ikut fixed -->
     <section class="controls-bar" id="controlsBar" style="display:none;">
       <!-- SLIDER 1 -->
       <div class="control-group">
@@ -660,7 +370,6 @@ html, body {
         </div>
       </div>
 
-
       <!-- SLIDER 2 -->
       <div class="control-group">
         <label class="control-label">Target Pembagi:</label>
@@ -671,9 +380,8 @@ html, body {
           <label for="targetAwal">Prelist Awal</label>
         </div>
       </div>
-
       
-      <!-- SLIDER 3 (BARU) -->
+      <!-- SLIDER 3 -->
       <div class="control-group">
         <label class="control-label">Tampilan Data:</label>
         <div class="toggle-pill">
@@ -684,12 +392,9 @@ html, body {
         </div>
       </div>
     </section>
-
   </header>
 
   <main class="container">
-
-
     <div id="errorState" class="state-banner state-banner--error" style="display:none;">
       <span>&#9888; <span id="errorMessage">Terjadi kesalahan saat memuat data.</span></span>
     </div>
@@ -734,6 +439,18 @@ html, body {
         </div>
       </section>
 
+      <!-- KECAMATAN TABLE/CHART (BARU) -->
+      <section class="panel" style="margin-top: 32px; border-color: var(--orange); box-shadow: 0 8px 30px rgba(254,189,37,0.15);">
+        <div class="panel__header">
+          <h2 class="panel__title">Progres per Kecamatan</h2>
+          <p class="panel__subtitle">Perbandingan capaian antar kecamatan (berdasarkan kolom SUBMITTED RESPONDENT s.d. REJECTED BY Admin Kabupaten)</p>
+        </div>
+        <div class="chart-scroll-wrapper">
+          <div id="kecChart" class="chart chart--bar"></div>
+          <div id="kecTableContainer" class="table-container" style="display:none;"></div>
+        </div>
+      </section>
+
       <!-- FILTER -->
       <section class="filter-bar">
         <div class="filter-item">
@@ -743,7 +460,6 @@ html, body {
           </select>
         </div>
 
-        <!-- TAMBAHAN DROPDOWN FILTER PML -->
         <div class="filter-item">
           <label class="filter-bar__label" for="pmlFilter">Filter PML (Pengawas)</label>
           <select id="pmlFilter" class="filter-bar__select">
@@ -754,15 +470,12 @@ html, body {
         <span class="filter-bar__hint" id="filterHint"></span>
       </section>
 
-      
-
       <!-- PML TABLE/CHART -->
       <section class="panel">
         <div class="panel__header">
           <h2 class="panel__title">Progres Petugas Pengawas / PML</h2>
           <p class="panel__subtitle">Total capaian per status, per petugas (kolom EDITED BY Pengawas s.d. REJECTED BY Admin Kabupaten)</p>
         </div>
-        <!-- Tambahkan div pembungkus (wrapper) di sini -->
         <div class="chart-scroll-wrapper">
           <div id="pmlChart" class="chart chart--bar"></div>
           <div id="pmlTableContainer" class="table-container" style="display:none;"></div>
@@ -776,7 +489,6 @@ html, body {
           <h2 class="panel__title">Progres Petugas Pencacah / PPL</h2>
           <p class="panel__subtitle">Total capaian per status, per petugas (kolom SUBMITTED RESPONDENT s.d. REJECTED BY Admin Kabupaten)</p>
         </div>
-        <!-- Tambahkan div pembungkus (wrapper) di sini -->
         <div class="chart-scroll-wrapper">
           <div id="pplChart" class="chart chart--bar"></div>
           <div id="pplTableContainer" class="table-container" style="display:none;"></div>
@@ -790,7 +502,7 @@ html, body {
   <footer class="footer">
     <span>© 2026 BPS Kabupaten Blora · Tim TI</span>
   </footer>
-  <!-- FLOATING REFRESH BUTTON -->
+  
   <button id="refreshBtn" class="fab-refresh" title="Muat ulang data" style="display:none;">
     <span class="fab-refresh__icon" id="refreshIcon">&#8635;</span>
   </button>
@@ -798,8 +510,6 @@ html, body {
   <script>
 (function () {
   'use strict';
-
-  // ---- Konstanta status & warna (harus sinkron dengan Code.gs) ----------
 
   var COLS = {
     OPEN: 'OPEN',
@@ -827,13 +537,12 @@ html, body {
 
   var ALL_COLS = [COLS.OPEN, COLS.DRAFT].concat(PPL_COLS);
 
-  // Gradasi hijau -> biru untuk status "capaian" (D..K)
   var STATUS_COLORS = {};
-  STATUS_COLORS[COLS.OPEN] = '#8195A0'; // abu-abu
-  STATUS_COLORS[COLS.DRAFT] = '#D97706'; // oranye
+  STATUS_COLORS[COLS.OPEN] = '#8195A0'; 
+  STATUS_COLORS[COLS.DRAFT] = '#D97706'; 
   STATUS_COLORS[COLS.SUBMITTED_RESPONDENT] = '#7ebdf7';
   STATUS_COLORS[COLS.SUBMITTED_PENCACAH] = '#0c86f7';
-  STATUS_COLORS[COLS.EDITED_PENGAWAS] = '#0a6b42'; // *Menggunakan warna approve admin karena belum spesifik
+  STATUS_COLORS[COLS.EDITED_PENGAWAS] = '#0a6b42'; 
   STATUS_COLORS[COLS.REJECTED_PENGAWAS] = '#e83925';
   STATUS_COLORS[COLS.REVOKED_PENGAWAS] = '#06427a';
   STATUS_COLORS[COLS.APPROVED_PENGAWAS] = '#1ee692';
@@ -841,37 +550,29 @@ html, body {
   STATUS_COLORS[COLS.REJECTED_ADMINKAB] = '#7a1206';
 
   var DONUT_GROUPS = [
-    { key: 'OPEN', label: 'Open', color: STATUS_COLORS[COLS.OPEN], cols: [COLS.OPEN],
-      desc: 'Sasaran SLS/RT yang belum mulai dikerjakan.' },
-    { key: 'DRAFT', label: 'Draft', color: STATUS_COLORS[COLS.DRAFT], cols: [COLS.DRAFT],
-      desc: 'Dokumen masih dalam proses pengisian, belum dikirim.' },
-    // Warna chart donut disinkronkan dengan warna Submit Pencacah
-    { key: 'SUBMIT', label: 'Submit', color: STATUS_COLORS[COLS.SUBMITTED_PENCACAH], cols: [COLS.SUBMITTED_RESPONDENT, COLS.SUBMITTED_PENCACAH],
-      desc: 'Dokumen sudah dikirim, menunggu tindak lanjut pengawas.' },
-    // Warna chart donut disinkronkan dengan warna Approve Pengawas
-    { key: 'APPROVE', label: 'Approve', color: STATUS_COLORS[COLS.APPROVED_PENGAWAS], cols: PML_COLS,
-      desc: 'Dokumen sudah ditindaklanjuti pengawas/admin kabupaten (approved, edited, rejected, atau revoked).' }
+    { key: 'OPEN', label: 'Open', color: STATUS_COLORS[COLS.OPEN], cols: [COLS.OPEN], desc: 'Sasaran SLS/RT yang belum mulai dikerjakan.' },
+    { key: 'DRAFT', label: 'Draft', color: STATUS_COLORS[COLS.DRAFT], cols: [COLS.DRAFT], desc: 'Dokumen masih dalam proses pengisian, belum dikirim.' },
+    { key: 'SUBMIT', label: 'Submit', color: STATUS_COLORS[COLS.SUBMITTED_PENCACAH], cols: [COLS.SUBMITTED_RESPONDENT, COLS.SUBMITTED_PENCACAH], desc: 'Dokumen sudah dikirim, menunggu tindak lanjut pengawas.' },
+    { key: 'APPROVE', label: 'Approve', color: STATUS_COLORS[COLS.APPROVED_PENGAWAS], cols: PML_COLS, desc: 'Dokumen sudah ditindaklanjuti pengawas/admin kabupaten (approved, edited, rejected, atau revoked).' }
   ];
 
-  var ROW_HEIGHT = 32;      // tinggi per baris username (px)
-  var MAX_VISIBLE_ROWS = 14; // jumlah baris yang tampil sekaligus sebelum perlu scroll
+  var ROW_HEIGHT = 32;      
 
   var fmtInt = new Intl.NumberFormat('id-ID');
   function fmt(n) { return fmtInt.format(Math.round(n || 0)); }
 
-  function formatKec(code) {
-    if (!code || code.length < 7) return code;
-    return code.substring(0, 2) + '.' + code.substring(2, 4) + '.' + code.substring(4, 7);
-  }
-
-  // ---- State ----------------------------------------------------------
+  var KECAMATAN_NAMES = {
+    '010': 'Jati', '020': 'Randublatung', '030': 'Kradenan', '040': 'Kedungtuban',
+    '050': 'Cepu', '060': 'Sambong', '070': 'Jiken', '080': 'Bogorejo',
+    '090': 'Jepon', '100': 'Kota Blora', '110': 'Banjarejo', '120': 'Tunjungan',
+    '130': 'Japah', '140': 'Ngawen', '150': 'Kunduran', '160': 'Todanan'
+  };
 
   var dashboardData = null;
   var donutChart = null;
+  var kecChart = null;
   var pplChart = null;
   var pmlChart = null;
-
-  // ---- Elemen DOM ------------------------------------------------------
 
   var el = {
     loading: document.getElementById('loadingState'),
@@ -885,17 +586,21 @@ html, body {
     donutChart: document.getElementById('donutChart'),
     legendList: document.getElementById('legendList'),
     kecamatanFilter: document.getElementById('kecamatanFilter'),
-    pmlFilter: document.getElementById('pmlFilter'), // <-- TAMBAHKAN INI
+    pmlFilter: document.getElementById('pmlFilter'), 
     filterHint: document.getElementById('filterHint'),
+    
+    // Elemen Chart Kecamatan
+    kecChart: document.getElementById('kecChart'),
+    kecTable: document.getElementById('kecTableContainer'),
+    
     pplChart: document.getElementById('pplChart'),
-    pplTable: document.getElementById('pplTableContainer'), // <-- TAMBAHKAN INI
+    pplTable: document.getElementById('pplTableContainer'), 
     pplEmpty: document.getElementById('pplEmpty'),
     pmlChart: document.getElementById('pmlChart'),
-    pmlTable: document.getElementById('pmlTableContainer'), // <-- TAMBAHKAN INI
+    pmlTable: document.getElementById('pmlTableContainer'), 
     pmlEmpty: document.getElementById('pmlEmpty'),
     refreshBtn: document.getElementById('refreshBtn'),
     refreshIcon: document.getElementById('refreshIcon')
-    
   };
 
   function getRealName(username) {
@@ -905,8 +610,6 @@ html, body {
     }
     return username;
   }
-
-  // ---- Load data ---------------------------------------------------------
 
   const API_URL = "https://script.google.com/macros/s/AKfycbyyo0jdmBCucGf8bRu6v8JA3GHAL8zLZJw8fmKm94plXH8oIxNDrHS6s3hH2UebxybY/exec";
 
@@ -922,7 +625,6 @@ html, body {
       el.loading.style.display = 'flex'; 
     }
 
-    // Menggunakan fetch untuk mengambil data JSON dari Google Apps Script Backend
     let targetUrl = API_URL;
     if (forceRefresh) {
       targetUrl += (targetUrl.indexOf('?') > -1 ? '&' : '?') + 'refresh=true';
@@ -945,10 +647,8 @@ html, body {
     dashboardData = data;
     el.refreshIcon.classList.remove('is-spinning');
     
-    // Hilangkan overlay loading dan tampilkan FAB Refresh
     el.loading.style.display = 'none';
     el.refreshBtn.style.display = 'flex'; 
-    
     el.error.style.display = 'none';
     el.content.style.display = 'block';
 
@@ -959,21 +659,24 @@ html, body {
     renderDonut(data);
     renderLegend();
     populateKecamatanFilter(data);
+    
+    // Panggil render kecamatan chart juga
+    renderKecamatanCharts();
     renderUsernameCharts();
 
-    // --- KODE YANG HILANG: SENSOR KLIK UNTUK SLIDER ---
     document.querySelectorAll('input[name="targetMode"], input[name="displayMode"], input[name="viewMode"]').forEach(function(radio) {
       radio.addEventListener('change', function() {
         if (dashboardData) {
           renderProgressCard(dashboardData); 
+          renderKecamatanCharts(); // Ikut terupdate saat slider digeser
           renderUsernameCharts();
         }
       });
     });
-    // --------------------------------------------------
 
     window.addEventListener('resize', function () {
       if (donutChart) donutChart.resize();
+      if (kecChart) kecChart.resize();
       if (pplChart) pplChart.resize();
       if (pmlChart) pmlChart.resize();
     });
@@ -981,36 +684,21 @@ html, body {
 
   function onDataError(err) {
     el.refreshIcon.classList.remove('is-spinning');
-    
-    // Hilangkan overlay loading tapi tampilkan pesan error
     el.loading.style.display = 'none';
-    
-    // Tetap tampilkan FAB Refresh agar user bisa mencoba ulang saat error
     el.refreshBtn.style.display = 'flex'; 
-    
     el.error.style.display = 'flex';
-    el.errorMessage.textContent = (err && err.message) ? err.message :
-      'Gagal memuat data. Periksa akses spreadsheet atau coba muat ulang.';
+    el.errorMessage.textContent = (err && err.message) ? err.message : 'Gagal memuat data. Periksa akses spreadsheet atau coba muat ulang.';
   }
 
-  // ---- Cards ------------------------------------------------------------
-
-  function renderLastUpdated(data) {
-    el.lastUpdatedValue.textContent = data.lastUpdated || 'Tidak tersedia';
-  }
-
-  function sumCols(totals, cols) {
-    var sum = 0;
-    cols.forEach(function (c) { sum += (totals[c] || 0); });
-    return sum;
-  }
+  function renderLastUpdated(data) { el.lastUpdatedValue.textContent = data.lastUpdated || 'Tidak tersedia'; }
+  function sumCols(totals, cols) { var sum = 0; cols.forEach(function (c) { sum += (totals[c] || 0); }); return sum; }
 
   function renderProgressCard(data) {
     var targetMode = document.querySelector('input[name="targetMode"]:checked').value;
     var totals = data.pencacah.totals;
     var capaian = sumCols(totals, PPL_COLS);
-    
     var sasaran = 0, labelSasaran = '';
+    
     if (targetMode === 'berjalan') {
       sasaran = sumCols(totals, ALL_COLS);
       labelSasaran = 'Prelist Berjalan';
@@ -1025,15 +713,11 @@ html, body {
     el.progressBarFill.style.width = Math.min(100, pct) + '%';
   }
 
-  // ---- Donut chart --------------------------------------------------------
-
   function renderDonut(data) {
     var totals = data.pencacah.totals;
     var pieData = DONUT_GROUPS.map(function (g) {
       return {
-        name: g.label,
-        value: sumCols(totals, g.cols),
-        itemStyle: { color: g.color },
+        name: g.label, value: sumCols(totals, g.cols), itemStyle: { color: g.color },
         breakdown: g.cols.map(function (c) { return { label: c, value: totals[c] || 0 }; })
       };
     });
@@ -1043,13 +727,11 @@ html, body {
       tooltip: {
         trigger: 'item',
         formatter: function (p) {
-          var lines = '<div style="font-weight:700;margin-bottom:4px;">' + p.marker + ' ' + p.name +
-            ' &mdash; ' + fmt(p.value) + ' (' + p.percent + '%)</div>';
+          var lines = '<div style="font-weight:700;margin-bottom:4px;">' + p.marker + ' ' + p.name + ' &mdash; ' + fmt(p.value) + ' (' + p.percent + '%)</div>';
           var bd = p.data.breakdown.filter(function (b) { return b.value > 0; });
           if (bd.length > 1 || (bd.length === 1 && bd[0].label !== p.name)) {
             lines += bd.map(function (b) {
-              return '<div style="display:flex;justify-content:space-between;gap:14px;font-size:12px;color:#37515A;">' +
-                '<span>' + b.label + '</span><b style="font-family:IBM Plex Mono">' + fmt(b.value) + '</b></div>';
+              return '<div style="display:flex;justify-content:space-between;gap:14px;font-size:12px;color:#37515A;"><span>' + b.label + '</span><b style="font-family:IBM Plex Mono">' + fmt(b.value) + '</b></div>';
             }).join('');
           }
           return lines;
@@ -1057,17 +739,9 @@ html, body {
       },
       legend: { bottom: 0, textStyle: { fontFamily: 'Inter', fontSize: 12 } },
       series: [{
-        type: 'pie',
-        radius: ['48%', '72%'],
-        center: ['50%', '44%'],
-        avoidLabelOverlap: true,
+        type: 'pie', radius: ['48%', '72%'], center: ['50%', '44%'], avoidLabelOverlap: true,
         itemStyle: { borderColor: '#fff', borderWidth: 2, borderRadius: 4 },
-        label: {
-          formatter: '{d}%',
-          fontFamily: 'IBM Plex Mono',
-          fontWeight: 600,
-          fontSize: 12
-        },
+        label: { formatter: '{d}%', fontFamily: 'IBM Plex Mono', fontWeight: 600, fontSize: 12 },
         labelLine: { length: 10, length2: 8 },
         data: pieData
       }]
@@ -1076,73 +750,117 @@ html, body {
 
   function renderLegend() {
     el.legendList.innerHTML = DONUT_GROUPS.map(function (g) {
-      return '<li>' +
-        '<div class="legend-item__head"><span class="legend-dot" style="background:' + g.color + '"></span>' + g.label + '</div>' +
-        '<p class="legend-item__desc">' + g.desc + '<br>Termasuk status: <em>' + g.cols.join(', ') + '</em></p>' +
-        '</li>';
+      return '<li><div class="legend-item__head"><span class="legend-dot" style="background:' + g.color + '"></span>' + g.label + '</div><p class="legend-item__desc">' + g.desc + '<br>Termasuk status: <em>' + g.cols.join(', ') + '</em></p></li>';
     }).join('');
   }
 
-  // ---- Filter kecamatan --------------------------------------------------
-
-  // Kamus pemetaan kode kecamatan ke nama resmi
-  var KECAMATAN_NAMES = {
-    '010': 'Jati', '020': 'Randublatung', '030': 'Kradenan', '040': 'Kedungtuban',
-    '050': 'Cepu', '060': 'Sambong', '070': 'Jiken', '080': 'Bogorejo',
-    '090': 'Jepon', '100': 'Kota Blora', '110': 'Banjarejo', '120': 'Tunjungan',
-    '130': 'Japah', '140': 'Ngawen', '150': 'Kunduran', '160': 'Todanan'
-  };
-
   function populateKecamatanFilter(data) {
     var opts = ['<option value="" disabled selected>--- Pilih Kecamatan ---</option>'];
-    
     data.kecamatanList.forEach(function (code) {
       var subCode = code.length >= 7 ? code.substring(4, 7) : code;
       var kecName = KECAMATAN_NAMES[subCode] || ('Kecamatan ' + subCode);
-      opts.push('<option value="' + code + '">' + '[' + subCode + '] - ' + kecName + '</option>');
+      opts.push('<option value="' + code + '">[' + subCode + '] - ' + kecName + '</option>');
     });
-    
     el.kecamatanFilter.innerHTML = opts.join('');
     
-    // Ketika kecamatan berubah, update pilihan PML dan render ulang grafik
     el.kecamatanFilter.addEventListener('change', function () {
       populatePmlFilter(dashboardData);
       renderUsernameCharts();
     });
   }
 
-
   function populatePmlFilter(data) {
     var kecFilter = el.kecamatanFilter.value;
     var pmlSet = {};
 
-    // Kumpulkan daftar username PML yang memiliki beban di kecamatan tersebut
     if (kecFilter && data.pengawas.byKecamatan[kecFilter]) {
       var pmlBucket = data.pengawas.byKecamatan[kecFilter].byUsername;
-      Object.keys(pmlBucket).forEach(function (pml) {
-        // Cek apakah PML ini benar-benar punya dokumen/aktivitas
-        pmlSet[pml] = true;
-      });
+      Object.keys(pmlBucket).forEach(function (pml) { pmlSet[pml] = true; });
     }
 
     var pmlList = Object.keys(pmlSet).sort();
     var opts = ['<option value="ALL">Semua PML (Semua PPL)</option>'];
-    
-    pmlList.forEach(function (pml) {
-      // value tetap menggunakan email (pml) untuk logika filter backend,
-      // tetapi teks yang ditampilkan adalah nama aslinya
-      opts.push('<option value="' + pml + '">' + getRealName(pml) + '</option>');
-    });
+    pmlList.forEach(function (pml) { opts.push('<option value="' + pml + '">' + getRealName(pml) + '</option>'); });
 
     el.pmlFilter.innerHTML = opts.join('');
-    el.pmlFilter.value = 'ALL'; // Default semua PML
+    el.pmlFilter.value = 'ALL'; 
     
     el.pmlFilter.addEventListener('change', function () {
       renderUsernameCharts();
     });
   }
 
-  // ---- Agregasi per-username sesuai filter kecamatan ---------------------
+  // ---- FUNGSI BARU: Agregasi per Kecamatan (Makro) ---------------------
+  function aggregateByKecamatan(statusCols) {
+    var targetMode = document.querySelector('input[name="targetMode"]:checked').value;
+    var displayMode = document.querySelector('input[name="displayMode"]:checked').value;
+    
+    var kecCodes = dashboardData.kecamatanList;
+    var map = {}; 
+    var berjalanTargets = {};
+    var awalTargets = {};
+
+    kecCodes.forEach(function(code) {
+      map[code] = {};
+      berjalanTargets[code] = 0;
+      awalTargets[code] = 0;
+      
+      statusCols.forEach(function(c) { map[code][c] = 0; });
+      
+      // Ambil data dari sheet pencacah per kecamatan
+      if (dashboardData.pencacah.byKecamatan[code]) {
+        var totals = dashboardData.pencacah.byKecamatan[code].totals;
+        statusCols.forEach(function(c) { map[code][c] = totals[c] || 0; });
+        ALL_COLS.forEach(function(c) { berjalanTargets[code] += (totals[c] || 0); });
+      }
+      
+      // Ambil target awal dari prelist (jumlahkan seluruh PPL di kecamatan tersebut)
+      if (dashboardData.prelistAwal && dashboardData.prelistAwal.byKecamatan[code]) {
+        var kecPpl = dashboardData.prelistAwal.byKecamatan[code].byPpl;
+        var sumTgt = 0;
+        Object.keys(kecPpl).forEach(function(k) { sumTgt += kecPpl[k]; });
+        awalTargets[code] = sumTgt;
+      }
+    });
+
+    var targets = kecCodes.map(function(code) {
+      return targetMode === 'berjalan' ? berjalanTargets[code] : awalTargets[code];
+    });
+
+    var rawTotals = kecCodes.map(function(code) {
+      return statusCols.reduce(function(s, c) { return s + map[code][c]; }, 0);
+    });
+
+    var sortValues = kecCodes.map(function(code, i) {
+      if (displayMode === 'persen') return targets[i] > 0 ? (rawTotals[i] / targets[i]) * 100 : 0;
+      return rawTotals[i];
+    });
+
+    var order = kecCodes.map(function(c, i) { return i; }).sort(function(a, b) { return sortValues[a] - sortValues[b]; });
+
+    var sortedNames = order.map(function(i) {
+      var code = kecCodes[i];
+      var subCode = code.length >= 7 ? code.substring(4, 7) : code;
+      var name = KECAMATAN_NAMES[subCode] || code;
+      return '[' + subCode + '] ' + name;
+    });
+    
+    var sortedTargets = order.map(function(i) { return targets[i]; });
+    var sortedRawTotals = order.map(function(i) { return rawTotals[i]; });
+
+    var seriesData = {}, rawSeriesData = {};
+    statusCols.forEach(function(c) {
+      rawSeriesData[c] = order.map(function(idx) { return map[kecCodes[idx]][c]; });
+      seriesData[c] = order.map(function(idx, i) {
+        var rawVal = map[kecCodes[idx]][c], tgt = sortedTargets[i];
+        if (displayMode === 'persen') return tgt > 0 ? Number(((rawVal / tgt) * 100).toFixed(2)) : 0;
+        return rawVal;
+      });
+    });
+
+    return { usernames: sortedNames, targets: sortedTargets, rawTotals: sortedRawTotals, seriesData: seriesData, rawSeriesData: rawSeriesData, displayMode: displayMode };
+  }
+
 
   function aggregateByUsername(sheetObj, kecFilter, statusCols, role) {
     var map = {}, berjalanTargets = {};
@@ -1152,25 +870,16 @@ html, body {
       var kecBucket = sheetObj.byKecamatan[kecFilter];
       
       Object.keys(kecBucket.byUsername).forEach(function (username) {
-        
-        // 1. FILTER PPL: Jika sedang membuat tabel PPL, cek apakah PPL ini bawahan PML yang dipilih
         if (role === 'PPL' && selectedPml !== 'ALL') {
           var isUnderPml = false;
           if (dashboardData.prelistAwal && dashboardData.prelistAwal.mappingPmlPpl) {
             var keyRelasi = kecFilter + '_' + selectedPml;
-            if (dashboardData.prelistAwal.mappingPmlPpl[keyRelasi] && dashboardData.prelistAwal.mappingPmlPpl[keyRelasi][username]) {
-              isUnderPml = true;
-            }
+            if (dashboardData.prelistAwal.mappingPmlPpl[keyRelasi] && dashboardData.prelistAwal.mappingPmlPpl[keyRelasi][username]) { isUnderPml = true; }
           }
-          if (!isUnderPml) return; // Lewati/jangan gambar PPL ini jika dia bukan bawahan PML tersebut
+          if (!isUnderPml) return; 
         }
+        if (role === 'PML' && selectedPml !== 'ALL') { if (username !== selectedPml) return; }
 
-        // 2. FILTER PML: Jika sedang membuat tabel PML, pastikan namanya sama persis dengan yang dipilih
-        if (role === 'PML' && selectedPml !== 'ALL') {
-          if (username !== selectedPml) return; // Lewati PML lain yang tidak dipilih
-        }
-
-        // Masukkan ke dalam map untuk digambar
         map[username] = {}; berjalanTargets[username] = 0;
         statusCols.forEach(function (c) { map[username][c] = (kecBucket.byUsername[username][c] || 0); });
         ALL_COLS.forEach(function (c) { berjalanTargets[username] += (kecBucket.byUsername[username][c] || 0); });
@@ -1187,17 +896,13 @@ html, body {
       return (kData && (role === 'PPL' ? kData.byPpl[u] : kData.byPml[u])) || 0;
     });
 
-    var rawTotals = usernames.map(function(u) {
-      return statusCols.reduce(function(s, c) { return s + map[u][c]; }, 0);
-    });
-
+    var rawTotals = usernames.map(function(u) { return statusCols.reduce(function(s, c) { return s + map[u][c]; }, 0); });
     var sortValues = usernames.map(function(u, i) {
       if (displayMode === 'persen') return targets[i] > 0 ? (rawTotals[i] / targets[i]) * 100 : 0;
       return rawTotals[i];
     });
 
     var order = usernames.map(function (u, i) { return i; }).sort(function (a, b) { return sortValues[a] - sortValues[b]; });
-
     var sortedUsernames = order.map(function (i) { return usernames[i]; });
     var sortedTargets = order.map(function (i) { return targets[i]; });
     var sortedRawTotals = order.map(function (i) { return rawTotals[i]; });
@@ -1249,78 +954,39 @@ html, body {
           var body = visible.map(function (p) {
             var rawVal = agg.rawSeriesData[p.seriesName][idx];
             var valText = isPersen ? (p.value + '% (' + rawVal + ' dok)') : fmt(rawVal);
-            return '<div style="display:flex;justify-content:space-between;gap:16px;font-size:12px;">' +
-              '<span>' + p.marker + ' ' + p.seriesName + '</span><b style="font-family:IBM Plex Mono">' + valText + '</b></div>';
+            return '<div style="display:flex;justify-content:space-between;gap:16px;font-size:12px;"><span>' + p.marker + ' ' + p.seriesName + '</span><b style="font-family:IBM Plex Mono">' + valText + '</b></div>';
           }).join('');
           
           var tgt = agg.targets[idx];
           var pct = tgt > 0 ? ((agg.rawTotals[idx] / tgt) * 100).toFixed(1).replace('.', ',') + '%' : '0%';
           var totalTxt = isPersen ? pct : fmt(agg.rawTotals[idx]);
           
-          var totalHtml = '<div style="margin-top:6px;padding-top:6px;border-top:1px solid #E1E9E7;display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:700;">' +
-            '<div style="display:flex;justify-content:space-between;"><span>Total Capaian</span><span style="font-family:IBM Plex Mono">' + totalTxt + '</span></div>' +
-            '<div style="display:flex;justify-content:space-between;color:#0D9488;"><span>Target Alokasi</span><span style="font-family:IBM Plex Mono">' + fmt(tgt) + '</span></div></div>';
-            
+          var totalHtml = '<div style="margin-top:6px;padding-top:6px;border-top:1px solid #E1E9E7;display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:700;"><div style="display:flex;justify-content:space-between;"><span>Total Capaian</span><span style="font-family:IBM Plex Mono">' + totalTxt + '</span></div><div style="display:flex;justify-content:space-between;color:#0D9488;"><span>Target Alokasi</span><span style="font-family:IBM Plex Mono">' + fmt(tgt) + '</span></div></div>';
           return head + (body || '<div style="font-size:12px;color:#8195A0;">Tidak ada dokumen</div>') + totalHtml;
         }
       },
       legend: { top: 0, type: 'scroll', data: statusCols, textStyle: { fontFamily: 'Inter', fontSize: 11.5 } },
       grid: { left: 8, right: isPersen ? 80 : 60, top: 40, bottom: 8, containLabel: true },
-      xAxis: {
-        type: 'value', splitLine: { lineStyle: { color: '#F0E8D5' } },
-        axisLabel: { fontFamily: 'IBM Plex Mono', fontSize: 11, color: '#54442B', formatter: function(v) { return isPersen ? v + '%' : v; } }
-      },
+      xAxis: { type: 'value', splitLine: { lineStyle: { color: '#F0E8D5' } }, axisLabel: { fontFamily: 'IBM Plex Mono', fontSize: 11, color: '#54442B', formatter: function(v) { return isPersen ? v + '%' : v; } } },
       yAxis: { 
-        type: 'category', 
-        data: agg.usernames, 
-        axisLabel: { 
-          fontFamily: 'IBM Plex Mono', 
-          fontSize: 11.5, 
-          color: '#211909', 
-          fontWeight: 500,
-          // --- TAMBAHAN BARU: Format label Y Axis ---
-          formatter: function (value) {
-            return getRealName(value);
-          }
-          // ------------------------------------------
-        }, 
-        axisLine: { lineStyle: { color: '#E8DECA' } }, 
-        axisTick: { show: false } 
+        type: 'category', data: agg.usernames, 
+        axisLabel: { fontFamily: 'IBM Plex Mono', fontSize: 11.5, color: '#211909', fontWeight: 500, formatter: function (value) { return getRealName(value); } }, 
+        axisLine: { lineStyle: { color: '#E8DECA' } }, axisTick: { show: false } 
       },
       series: series
     };
   }
 
-  function chartHeight(n) {
-    // Menghitung total tinggi berdasarkan jumlah petugas tanpa batasan MAX_VISIBLE_ROWS.
-    // Jika ada 50 petugas, tinggi kanvas otomatis memanjang agar semua masuk.
-    return Math.max(220, (n * ROW_HEIGHT) + 90);
-  }
+  function chartHeight(n) { return Math.max(220, (n * ROW_HEIGHT) + 90); }
 
-  // Data diurutkan ascending (terkecil di index 0). Karena kategori Y digambar
-  // dari bawah ke atas, entri terbesar otomatis ada di index terakhir/paling
-  // atas. Supaya saat pertama dibuka langsung terlihat yang capaiannya besar,
-  // window dataZoom diarahkan ke ujung atas (persentase tinggi).
-  function buildDataZoom_(n) {
-    // Mengembalikan array kosong agar scroll/zoom bawaan dari Echarts dinonaktifkan
-    return [];
-  }
-
-  // --- FUNGSI BARU: PEMBUAT TABEL HTML ---
   function buildTableHTML(agg, statusCols) {
     var isPersen = agg.displayMode === 'persen';
     var html = '<table class="data-table"><thead><tr><th>Nama Petugas</th>';
-    
-    // Header Kolom Status
-    statusCols.forEach(function(col) {
-      html += '<th>' + col + '</th>';
-    });
+    statusCols.forEach(function(col) { html += '<th>' + col + '</th>'; });
     html += '<th>Target Alokasi</th><th>Total Capaian</th></tr></thead><tbody>';
 
-    // Baris per Petugas
     agg.usernames.forEach(function(u, i) {
       html += '<tr><td>' + getRealName(u) + '</td>';
-      
       statusCols.forEach(function(col) {
         var rawVal = agg.rawSeriesData[col][i];
         var displayVal = isPersen ? agg.seriesData[col][i] + '%' : fmt(rawVal);
@@ -1331,19 +997,36 @@ html, body {
       var totalRaw = agg.rawTotals[i];
       var totalPct = tgt > 0 ? ((totalRaw / tgt) * 100).toFixed(1).replace('.', ',') + '%' : '0%';
       
-      html += '<td style="color:var(--slate);">' + fmt(tgt) + '</td>';
-      html += '<td style="font-weight:800;color:var(--orange-deep);">' + (isPersen ? totalPct : fmt(totalRaw)) + '</td>';
-      html += '</tr>';
+      html += '<td style="color:var(--slate);">' + fmt(tgt) + '</td><td style="font-weight:800;color:var(--orange-deep);">' + (isPersen ? totalPct : fmt(totalRaw)) + '</td></tr>';
     });
-    
     html += '</tbody></table>';
     return html;
   }
 
-  // --- FUNGSI YANG DIPERBARUI ---
+  // --- FUNGSI RENDER CHART KECAMATAN (BARU) ---
+  function renderKecamatanCharts() {
+    var viewMode = document.querySelector('input[name="viewMode"]:checked').value; 
+    
+    // Kita gunakan PPL_COLS agar sesuai dengan alur dokumen dari awal pengumpulan hingga akhir
+    var kecAgg = aggregateByKecamatan(PPL_COLS);
+
+    if (viewMode === 'grafik') {
+      el.kecTable.style.display = 'none';
+      el.kecChart.style.display = 'block';
+      el.kecChart.style.height = chartHeight(kecAgg.usernames.length) + 'px';
+      if (!kecChart) kecChart = echarts.init(el.kecChart);
+      kecChart.resize(); 
+      kecChart.setOption(buildStackedBarOption(kecAgg, PPL_COLS), true);
+    } else {
+      el.kecChart.style.display = 'none';
+      el.kecTable.style.display = 'block';
+      // Render tabel dan ubah header 'Nama Petugas' menjadi 'Nama Kecamatan' khusus untuk tabel ini
+      el.kecTable.innerHTML = buildTableHTML(kecAgg, PPL_COLS).replace('<th>Nama Petugas</th>', '<th>Nama Kecamatan</th>');
+    }
+  }
+
   function renderUsernameCharts() {
     var kecFilter = el.kecamatanFilter.value;
-    // Cek status toggle Tampilan Data (Grafik vs Tabel)
     var viewMode = document.querySelector('input[name="viewMode"]:checked').value; 
 
     if (!kecFilter || kecFilter === "") {
@@ -1363,17 +1046,12 @@ html, body {
     } else {
       el.pplEmpty.style.display = 'none';
       if (viewMode === 'grafik') {
-        el.pplTable.style.display = 'none';
-        el.pplChart.style.display = 'block';
+        el.pplTable.style.display = 'none'; el.pplChart.style.display = 'block';
         el.pplChart.style.height = chartHeight(pplAgg.usernames.length) + 'px';
         if (!pplChart) pplChart = echarts.init(el.pplChart);
-        pplChart.resize(); 
-        pplChart.setOption(buildStackedBarOption(pplAgg, PPL_COLS), true);
+        pplChart.resize(); pplChart.setOption(buildStackedBarOption(pplAgg, PPL_COLS), true);
       } else {
-        // Tampilkan Tabel, sembunyikan Grafik
-        el.pplChart.style.display = 'none';
-        el.pplTable.style.display = 'block';
-        el.pplTable.innerHTML = buildTableHTML(pplAgg, PPL_COLS);
+        el.pplChart.style.display = 'none'; el.pplTable.style.display = 'block'; el.pplTable.innerHTML = buildTableHTML(pplAgg, PPL_COLS);
       }
     }
 
@@ -1383,31 +1061,19 @@ html, body {
     } else {
       el.pmlEmpty.style.display = 'none';
       if (viewMode === 'grafik') {
-        el.pmlTable.style.display = 'none';
-        el.pmlChart.style.display = 'block';
+        el.pmlTable.style.display = 'none'; el.pmlChart.style.display = 'block';
         el.pmlChart.style.height = chartHeight(pmlAgg.usernames.length) + 'px';
         if (!pmlChart) pmlChart = echarts.init(el.pmlChart);
-        pmlChart.resize(); 
-        pmlChart.setOption(buildStackedBarOption(pmlAgg, PML_COLS), true);
+        pmlChart.resize(); pmlChart.setOption(buildStackedBarOption(pmlAgg, PML_COLS), true);
       } else {
-        // Tampilkan Tabel, sembunyikan Grafik
-        el.pmlChart.style.display = 'none';
-        el.pmlTable.style.display = 'block';
-        el.pmlTable.innerHTML = buildTableHTML(pmlAgg, PML_COLS);
+        el.pmlChart.style.display = 'none'; el.pmlTable.style.display = 'block'; el.pmlTable.innerHTML = buildTableHTML(pmlAgg, PML_COLS);
       }
     }
   }
 
-  // ---- Refresh button -----------------------------------------------------
-
-  el.refreshBtn.addEventListener('click', function () {
-    loadData(true);
-  });
-
-  // ---- Init -----------------------------------------------------------
-
+  el.refreshBtn.addEventListener('click', function () { loadData(true); });
   loadData(false);
 })();
-</script>
+  </script>
 </body>
 </html>
