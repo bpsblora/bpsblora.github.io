@@ -584,8 +584,8 @@
             <p class="panel__subtitle">Perbandingan capaian antar kecamatan</p>
           </div>
           <div class="panel__action">
-            <button class="btn-download" onclick="downloadPanel('kec', 'image')">📷 Gambar PNG</button>
-            <button class="btn-download" onclick="downloadPanel('kec', 'excel')">📊 Excel (.xlsx)</button>
+            <button class="btn-download" onclick="downloadPanel('kec', 'image')">📷 Unduh Gambar</button>
+            <button class="btn-download" onclick="downloadPanel('kec', 'excel')">📊 Unduh Excel</button>
           </div>
         </div>
         <div class="chart-scroll-wrapper" id="wrapper-kec">
@@ -1303,79 +1303,172 @@
 
   // ---- FUNGSI DOWNLOAD PANEL (GAMBAR & EXCEL UTUH) ----------------------
 
-  // 1. Download Gambar Donut Chart
+  // 1. Download Gambar Donut Chart (Disertai Judul Header)
   window.downloadDonutImage = function() {
     if (!donutChart) return;
-    var url = donutChart.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#ffffff' });
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'Distribusi_Status_Kabupaten_SE2026.png';
-    a.click();
+    
+    // Ambil gambar dari ECharts
+    var chartUrl = donutChart.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#ffffff' });
+    var img = new Image();
+    img.src = chartUrl;
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      
+      var headerHeight = 90;
+      canvas.width = img.width;
+      canvas.height = img.height + headerHeight;
+      
+      // Latar belakang putih
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Tulis Judul & Subtitle
+      ctx.fillStyle = '#211909';
+      ctx.font = 'bold 24px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Distribusi Status - Sensus Ekonomi 2026', 30, 40);
+      
+      ctx.fillStyle = '#54442B';
+      ctx.font = '16px "Inter", sans-serif';
+      ctx.fillText('Kabupaten Blora · Unduh: ' + new Date().toLocaleString('id-ID'), 30, 68);
+      
+      // Tempelkan chart di bawah header
+      ctx.drawImage(img, 0, headerHeight);
+      
+      var a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'Distribusi_Status_Kabupaten_SE2026.png';
+      a.click();
+    };
   };
 
-  // 2. Download Panel (Kecamatan / PML / PPL)
+  // 2. Download Panel (Kecamatan / PML / PPL) secara Independen
   window.downloadPanel = function(type, format) {
-    var chartObj = (type === 'kec') ? kecChart : (type === 'pml' ? pmlChart : pplChart);
-    var viewMode = document.querySelector('input[name="viewMode"]:checked').value;
     var kecSelect = document.getElementById('kecamatanFilter');
-    var kecName = kecSelect.options[kecSelect.selectedIndex] ? kecSelect.options[kecSelect.selectedIndex].text : 'Kabupaten';
-    var fileName = 'Progres_' + type.toUpperCase() + '_' + kecName.replace(/[^a-zA-Z0-9]/g, '_');
+    var pmlSelect = document.getElementById('pmlFilter');
+    var kecText = kecSelect.options[kecSelect.selectedIndex] ? kecSelect.options[kecSelect.selectedIndex].text : 'Semua Kecamatan';
+    var pmlText = pmlSelect && pmlSelect.value !== 'ALL' ? ' - PML: ' + pmlSelect.options[pmlSelect.selectedIndex].text : '';
+    
+    var panelTitle = (type === 'kec') ? 'Progres per Kecamatan' : (type === 'pml' ? 'Progres Petugas Pengawas (PML)' : 'Progres Petugas Pencacah (PPL)');
+    var fileName = 'Progres_' + type.toUpperCase() + '_' + kecText.replace(/[^a-zA-Z0-9]/g, '_');
 
-    // A. DOWNLOAD EXCEL
+    // Dapatkan data agregasi backend (Independen dari tampilan slider)
+    var statusCols = (type === 'pml') ? PML_COLS : PPL_COLS;
+    var agg = (type === 'kec') ? aggregateByKecamatan(statusCols) : aggregateByUsername(dashboardData[type === 'pml' ? 'pengawas' : 'pencacah'], kecSelect.value, statusCols, type.toUpperCase());
+
+    if (!agg || agg.usernames.length === 0) {
+      alert('Tidak ada data untuk diunduh.');
+      return;
+    }
+
+    // A. DOWNLOAD EXCEL (Dibuat langsung dari data backend, tidak tergantung layar)
     if (format === 'excel') {
-      var tableContainerId = type + 'TableContainer';
-      var container = document.getElementById(tableContainerId);
+      var wsData = [];
       
-      // Jika mode tampilan sedang Grafik, render dulu tabelnya secara sementara di memori
-      var tableElem = container.querySelector('table');
-      if (!tableElem) {
-        alert('Tabel tidak tersedia untuk diunduh.');
-        return;
-      }
+      // Baris Header Judul dalam Sheet
+      wsData.push([panelTitle.toUpperCase() + ' - SE2026 BPS KABUPATEN BLORA']);
+      wsData.push(['Wilayah / Filter: ' + kecText + pmlText]);
+      wsData.push(['Waktu Unduh: ' + new Date().toLocaleString('id-ID')]);
+      wsData.push([]); // Baris kosong
 
-      var wb = XLSX.utils.table_to_book(tableElem, { sheet: "Progres Data" });
+      // Header Kolom
+      var colHeader = [(type === 'kec' ? 'Nama Kecamatan' : 'Nama Petugas')];
+      statusCols.forEach(function(c) { colHeader.push(c); });
+      colHeader.push('Target Alokasi');
+      colHeader.push('Total Capaian');
+      colHeader.push('Persentase Capaian (%)');
+      wsData.push(colHeader);
+
+      // Isi Data Baris per Baris
+      agg.usernames.forEach(function(u, i) {
+        var row = [(type === 'kec' ? u : getRealName(u))];
+        statusCols.forEach(function(col) {
+          row.push(agg.rawSeriesData[col][i] || 0);
+        });
+        var tgt = agg.targets[i] || 0;
+        var total = agg.rawTotals[i] || 0;
+        var pct = tgt > 0 ? Number(((total / tgt) * 100).toFixed(2)) : 0;
+
+        row.push(tgt);
+        row.push(total);
+        row.push(pct);
+        wsData.push(row);
+      });
+
+      var wb = XLSX.utils.book_new();
+      var ws = XLSX.utils.aoa_to_sheet(wsData);
+
+      // Melebarkan kolom pertama agar nama petugas/kecamatan tidak terpotong di Excel
+      ws['!cols'] = [{ wch: 32 }];
+
+      XLSX.utils.book_append_sheet(wb, ws, "Progres");
       XLSX.writeFile(wb, fileName + '.xlsx');
     } 
-    
-    // B. DOWNLOAD GAMBAR (PNG MEMANJANG UTUH)
+
+    // B. DOWNLOAD GAMBAR PNG (Digambar penuh dengan Header Judul)
     else if (format === 'image') {
-      var wrapper = document.getElementById('wrapper-' + type);
+      // Bikin elemen container sementara di memori untuk dirender oleh ECharts
+      var tempDiv = document.createElement('div');
+      tempDiv.style.width = '1000px';
+      tempDiv.style.height = chartHeight(agg.usernames.length) + 'px';
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.left = '-9999px';
+      document.body.appendChild(tempDiv);
+
+      var tempChart = echarts.init(tempDiv);
+      tempChart.setOption(buildStackedBarOption(agg, statusCols), true);
+
+      // Ambil Data URL Gambar Chart
+      var chartUrl = tempChart.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#ffffff' });
       
-      // Jika dalam mode Grafik ECharts
-      if (viewMode === 'grafik' && chartObj) {
-        var url = chartObj.getDataURL({
-          type: 'png',
-          pixelRatio: 2,
-          backgroundColor: '#ffffff'
-        });
+      var img = new Image();
+      img.src = chartUrl;
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        
+        var headerHeight = 100;
+        canvas.width = img.width;
+        canvas.height = img.height + headerHeight;
+        
+        // Background Putih
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Header Teks Judul
+        ctx.fillStyle = '#211909';
+        ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText(panelTitle, 30, 42);
+        
+        ctx.fillStyle = '#e8a510';
+        ctx.font = 'bold 18px "Inter", sans-serif';
+        ctx.fillText('Sensus Ekonomi 2026 · BPS Kabupaten Blora', 30, 68);
+
+        ctx.fillStyle = '#54442B';
+        ctx.font = '14px "Inter", sans-serif';
+        ctx.fillText('Filter: ' + kecText + pmlText + '  |  Diunduh: ' + new Date().toLocaleString('id-ID'), 30, 90);
+
+        // Garis Pembatas
+        ctx.strokeStyle = '#F0E8D5';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(30, 98);
+        ctx.lineTo(canvas.width - 30, 98);
+        ctx.stroke();
+
+        // Tempelkan Grafik
+        ctx.drawImage(img, 0, headerHeight);
+
+        // Download
         var a = document.createElement('a');
-        a.href = url;
+        a.href = canvas.toDataURL('image/png');
         a.download = fileName + '.png';
         a.click();
-      } 
-      // Jika dalam mode Tabel HTML, gunakan html2canvas untuk capture seluruh panjang tabel
-      else {
-        var tableElem = wrapper.querySelector('table');
-        if (!tableElem) return;
 
-        // Tampilkan overlay loading sebentar saat proses gambar
-        document.getElementById('loadingState').style.display = 'flex';
-
-        html2canvas(tableElem, {
-          backgroundColor: '#ffffff',
-          scale: 2, // Resolusi tinggi
-          windowWidth: tableElem.scrollWidth
-        }).then(function(canvas) {
-          document.getElementById('loadingState').style.display = 'none';
-          var a = document.createElement('a');
-          a.href = canvas.toDataURL('image/png');
-          a.download = fileName + '_Tabel.png';
-          a.click();
-        }).catch(function(err) {
-          document.getElementById('loadingState').style.display = 'none';
-          alert('Gagal mengunduh gambar tabel.');
-        });
-      }
+        // Bersihkan memori elemen temporary
+        tempChart.dispose();
+        document.body.removeChild(tempDiv);
+      };
     }
   };
 })();
