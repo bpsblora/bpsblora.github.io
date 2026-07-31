@@ -365,6 +365,36 @@
     .filter-bar { flex-direction: column; align-items: stretch; padding: 16px; }
     .filter-bar__select { min-width: 100%; }
     .cards, .panel-row { grid-template-columns: 1fr; }
+
+
+    /* ---- Indikator Sorting Tabel ---- */
+  .data-table th {
+    cursor: pointer; /* Mengubah kursor jadi tangan agar terlihat bisa diklik */
+    user-select: none; /* Mencegah teks terblok tak sengaja saat diklik cepat */
+  }
+
+  /* Panah abu-abu default (bisa diurutkan) */
+  .data-table th::after {
+    content: ' \2195'; /* Kode untuk panah atas-bawah */
+    opacity: 0.3;
+    margin-left: 4px;
+    font-size: 10px;
+    display: inline-block;
+  }
+
+  /* Panah saat diurutkan Ascending (A-Z, Kecil-Besar) */
+  .data-table th.sort-asc::after {
+    content: ' \2191'; /* Panah atas */
+    opacity: 1;
+    color: var(--orange-deep);
+  }
+
+  /* Panah saat diurutkan Descending (Z-A, Besar-Kecil) */
+  .data-table th.sort-desc::after {
+    content: ' \2193'; /* Panah bawah */
+    opacity: 1;
+    color: var(--orange-deep);
+  }
   }
 </style>
 </head>
@@ -1102,6 +1132,78 @@
   }
 
   el.refreshBtn.addEventListener('click', function () { loadData(true); });
+
+
+  // ---- Fitur Sorting Tabel Cerdas (Teks & Angka) -------------------------
+  
+  // Fungsi untuk mengubah format teks tabel ke angka murni (jika memungkinkan)
+  function parseCellValue(cellText) {
+    var val = cellText.trim();
+    if (val === '-' || val === '') return 0;
+    
+    // Hapus titik pemisah ribuan (misal: 1.234 -> 1234)
+    var cleaned = val.replace(/\./g, '');
+    // Ganti koma dengan titik untuk desimal (misal: 12,5% -> 12.5%)
+    cleaned = cleaned.replace(/,/g, '.');
+    // Hapus simbol persen
+    cleaned = cleaned.replace(/%/g, '');
+    
+    var num = parseFloat(cleaned);
+    // Jika hasilnya angka valid, kembalikan angkanya. Jika bukan, kembalikan teks huruf kecil
+    if (!isNaN(num)) {
+      return num;
+    }
+    return val.toLowerCase();
+  }
+
+  // Menangkap klik pada seluruh halaman, filter hanya untuk header tabel
+  document.addEventListener('click', function(e) {
+    var th = e.target.closest('th');
+    if (!th) return; // Abaikan jika yang diklik bukan tag <th>
+    
+    var table = th.closest('.data-table');
+    if (!table) return;
+
+    var tbody = table.querySelector('tbody');
+    var rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    // Cari index kolom ke berapa yang diklik
+    var colIndex = Array.from(th.parentNode.children).indexOf(th);
+    
+    // Tentukan arah urutan (berlawanan dengan arah saat ini)
+    var isAsc = th.getAttribute('data-sort') !== 'asc';
+    
+    // Reset panah di semua kolom lain dalam tabel tersebut
+    table.querySelectorAll('th').forEach(function(el) { 
+      el.removeAttribute('data-sort'); 
+      el.classList.remove('sort-asc', 'sort-desc');
+    });
+    
+    // Terapkan arah baru pada kolom yang diklik
+    th.setAttribute('data-sort', isAsc ? 'asc' : 'desc');
+    th.classList.add(isAsc ? 'sort-asc' : 'sort-desc');
+
+    // Lakukan proses urut (sort) pada baris-baris
+    rows.sort(function(a, b) {
+      var valA = parseCellValue(a.children[colIndex].textContent);
+      var valB = parseCellValue(b.children[colIndex].textContent);
+      
+      // Jika keduanya angka, urutkan secara matematis
+      if (typeof valA === 'number' && typeof valB === 'number') {
+        return isAsc ? valA - valB : valB - valA;
+      } else {
+        // Jika teks biasa (contoh: Nama Petugas), urutkan berdasar alfabet
+        var strA = String(valA);
+        var strB = String(valB);
+        return isAsc ? strA.localeCompare(strB) : strB.localeCompare(strA);
+      }
+    });
+
+    // Masukkan kembali baris yang sudah diurutkan ke dalam tabel
+    rows.forEach(function(row) { tbody.appendChild(row); });
+  });
+
+  // ---- Inisialisasi Jalankan Pertama Kali ------------------
   loadData(false);
 })();
   </script>
