@@ -287,7 +287,7 @@
 
   /* ---- Scrollable Chart & Table Wrapper ---- */
   .chart-scroll-wrapper {
-    max-height: 420px; 
+    max-height: 600px; 
     overflow-y: auto;   
     overflow-x: auto;   
     margin-top: 16px;
@@ -1119,6 +1119,50 @@
       };
     });
 
+    // ---- LOGIKA GARIS PROGRES IDEAL (HANYA DI MODE PERSEN) ----
+    var markLineObj = null;
+    if (isPersen) {
+      // 1. Tetapkan tanggal mulai (15 Juni 2026)
+      var startDate = new Date(2026, 5, 15); // Bulan ke-5 karena array bulan di JS dimulai dari 0 (Jan = 0, Jun = 5)
+      var today = new Date();
+      
+      // 2. Hitung selisih hari
+      var diffTime = today.getTime() - startDate.getTime();
+      var diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      // 3. Kunci rentang hari agar tidak minus atau lebih dari 75
+      if (diffDays < 0) diffDays = 0;
+      if (diffDays > 75) diffDays = 75;
+      
+      // 4. Hitung persentase ideal
+      var idealVal = (diffDays / 75) * 100;
+
+      markLineObj = {
+        symbol: ['none', 'none'],
+        silent: true,
+        label: {
+          show: true,
+          position: 'insideEndTop', 
+          formatter: 'Ideal (Hari Ke-' + diffDays + '): ' + idealVal.toFixed(1) + '%',
+          color: 'rgba(154, 52, 18, 0.45)', // Warna teks samar 
+          fontSize: 11,
+          fontFamily: 'Inter',
+          fontWeight: 800,
+          rotate: -90, // Membuat teks menjadi vertikal mengikuti garis
+          offset: [-8, 20] // Menggeser teks sedikit agar tidak menabrak garis ujung
+        },
+        lineStyle: {
+          type: 'solid', // Garis tegas tidak putus-putus
+          color: 'rgba(234, 88, 12, 0.55)', // Warna garis oranye-merah tegas tapi tembus pandang
+          width: 2.5
+        },
+        data: [
+          { xAxis: idealVal } // Pasang titik absis di nilai ideal
+        ]
+      };
+    }
+
+    // Masukkan data seri bayangan (untuk menampilkan angka total di ujung bar)
     series.push({
       name: '__total__', type: 'bar', stack: 'total', barMaxWidth: 22, silent: true, itemStyle: { color: 'transparent' },
       label: {
@@ -1131,7 +1175,8 @@
           return fmt(agg.rawTotals[p.dataIndex]); 
         }
       },
-      data: agg.usernames.map(function () { return 0; })
+      data: agg.usernames.map(function () { return 0; }),
+      markLine: markLineObj // Sisipkan garis batas ideal ke grafik ini
     });
 
     return {
@@ -1163,7 +1208,6 @@
           fontFamily: 'IBM Plex Mono', fontSize: 11.5, color: '#211909', fontWeight: 500, 
           formatter: function (value) { 
             var name = getRealName(value);
-            // TAMBAHKAN LABEL PML DI BAWAH NAMA PPL (JIKA ADA)
             if (agg.pmlMapping && agg.pmlMapping[value]) {
               name += '\n{pml|PML: ' + getRealName(agg.pmlMapping[value]) + '}';
             }
