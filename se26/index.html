@@ -319,7 +319,7 @@
     background: rgba(255, 251, 240, 0.95);
     color: #b45309;
     padding: 6px 14px;
-    border: 1px solid #f59e0b;
+    border: 1px solid green;
     border-radius: 8px;
     font-size: 11.5px;
     font-weight: 800;
@@ -737,14 +737,27 @@
       
       chartObj.off('finished');
       chartObj.on('finished', function() {
-        // Ambil koordinat pixel X secara langsung dari garis Echarts
-        var px = chartObj.convertToPixel({xAxisId: '0'}, IDEAL_PCT);
-        if (px) textElem.style.left = px + 'px';
+        // Ambil posisi pixel X berdasarkan nilai persentase pada sumbu X
+        var px = chartObj.convertToPixel({xAxisIndex: 0}, IDEAL_PCT);
+        if (!isNaN(px)) {
+          textElem.style.left = px + 'px';
+        }
       });
+      
+      // Jalankan sekali langsung untuk inisialisasi awal
+      setTimeout(function() {
+        var px = chartObj.convertToPixel({xAxisIndex: 0}, IDEAL_PCT);
+        if (!isNaN(px)) {
+          textElem.style.left = px + 'px';
+        }
+      }, 50);
+      
     } else {
       badge.style.display = 'none';
     }
   }
+
+  
   var COLS = {
     OPEN: 'OPEN',
     DRAFT: 'DRAFT',
