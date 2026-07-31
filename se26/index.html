@@ -367,35 +367,51 @@
     .cards, .panel-row { grid-template-columns: 1fr; }
 
 
-    /* ---- Indikator Sorting Tabel ---- */
-  .data-table th {
-    cursor: pointer; /* Mengubah kursor jadi tangan agar terlihat bisa diklik */
-    user-select: none; /* Mencegah teks terblok tak sengaja saat diklik cepat */
-  }
-
-  /* Panah abu-abu default (bisa diurutkan) */
-  .data-table th::after {
-    content: ' \2195'; /* Kode untuk panah atas-bawah */
-    opacity: 0.3;
-    margin-left: 4px;
-    font-size: 10px;
-    display: inline-block;
-  }
-
-  /* Panah saat diurutkan Ascending (A-Z, Kecil-Besar) */
-  .data-table th.sort-asc::after {
-    content: ' \2191'; /* Panah atas */
-    opacity: 1;
-    color: var(--orange-deep);
-  }
-
-  /* Panah saat diurutkan Descending (Z-A, Besar-Kecil) */
-  .data-table th.sort-desc::after {
-    content: ' \2193'; /* Panah bawah */
-    opacity: 1;
-    color: var(--orange-deep);
-  }
-  }
+    /* ---- Indikator Sorting Tabel (Tampak Jelas & Pas) ---- */
+    .data-table th {
+      cursor: pointer !important; 
+      user-select: none;
+      position: relative;
+      padding-right: 18px !important; /* Beri ruang di kanan agar ikon panah tidak menabrak teks */
+    }
+  
+    /* Ikon bawaan saat kolom BISA disort (Panah Samar) */
+    .data-table th::after {
+      content: ' \2195'; /* Simbol panah atas-bawah */
+      opacity: 0.35;
+      font-size: 11px;
+      margin-left: 4px;
+      display: inline-block;
+      transition: opacity 0.2s, color 0.2s;
+    }
+  
+    .data-table th:hover::after {
+      opacity: 0.8;
+    }
+  
+    /* Ikon saat disort ASCENDING (A-Z / Kecil -> Besar) */
+    .data-table th.sort-asc {
+      background-color: #FFF3D6 !important; /* Latar belakang berubah sedikit oranye terang */
+      color: #b87f00 !important;
+    }
+    .data-table th.sort-asc::after {
+      content: ' \2191' !important; /* Simbol Panah Ke Atas */
+      opacity: 1 !important;
+      color: var(--orange-deep) !important;
+      font-weight: 800;
+    }
+  
+    /* Ikon saat disort DESCENDING (Z-A / Besar -> Kecil) */
+    .data-table th.sort-desc {
+      background-color: #FFF3D6 !important; /* Latar belakang berubah sedikit oranye terang */
+      color: #b87f00 !important;
+    }
+    .data-table th.sort-desc::after {
+      content: ' \2193' !important; /* Simbol Panah Ke Bawah */
+      opacity: 1 !important;
+      color: var(--orange-deep) !important;
+      font-weight: 800;
+    }
 </style>
 </head>
 <body>
