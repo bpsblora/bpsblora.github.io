@@ -287,6 +287,7 @@
 
   /* ---- Scrollable Chart & Table Wrapper ---- */
   .chart-scroll-wrapper {
+    position: relative; /* TAMBAHAN BARU: Agar koordinat garis presisi */
     max-height: 600px; 
     overflow-y: auto;   
     overflow-x: auto;   
@@ -301,6 +302,34 @@
   .chart-scroll-wrapper::-webkit-scrollbar-thumb { background: #d4c5a9; border-radius: 4px; }
   .chart-scroll-wrapper::-webkit-scrollbar-thumb:hover { background: var(--orange-deep); }
 
+  /* ---- STICKY IDEAL PROGRESS BADGE ---- */
+  .ideal-badge {
+    position: sticky;
+    top: 50%; /* Membuat kotak transparan terkunci tepat di tengah layar vertikal */
+    left: 0;
+    width: 100%;
+    height: 0;
+    z-index: 50;
+    pointer-events: none;
+    display: none;
+  }
+  .ideal-badge__text {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 251, 240, 0.95);
+    color: #b45309;
+    padding: 6px 14px;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.15);
+    backdrop-filter: blur(2px);
+    transition: left 0.2s ease-out; /* Animasi bergeser halus */
+  }
+    
   /* ---- Gaya Tabel Progres ---- */
   .table-container { width: 100%; padding-bottom: 0; }
   .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; }/* Diubah ke tengah agar angka 3 digit rapi di bawah judul */
@@ -596,6 +625,9 @@
           </div>
         </div>
         <div class="chart-scroll-wrapper" id="wrapper-kec">
+          <!-- SISIPAN BADGE MENGAMBANG -->
+          <div class="ideal-badge" id="badge-kec"><div class="ideal-badge__text" id="badge-text-kec"></div></div>
+          
           <div id="kecChart" class="chart chart--bar"></div>
           <div id="kecTableContainer" class="table-container" style="display:none;"></div>
         </div>
@@ -633,6 +665,9 @@
           </div>
         </div>
         <div class="chart-scroll-wrapper" id="wrapper-pml">
+          <!-- SISIPAN BADGE MENGAMBANG -->
+          <div class="ideal-badge" id="badge-pml"><div class="ideal-badge__text" id="badge-text-pml"></div></div>
+          
           <div id="pmlChart" class="chart chart--bar"></div>
           <div id="pmlTableContainer" class="table-container" style="display:none;"></div>
         </div>
@@ -655,6 +690,9 @@
           </div>
         </div>
         <div class="chart-scroll-wrapper" id="wrapper-ppl">
+          <!-- SISIPAN BADGE MENGAMBANG -->
+          <div class="ideal-badge" id="badge-ppl"><div class="ideal-badge__text" id="badge-text-ppl"></div></div>
+          
           <div id="pplChart" class="chart chart--bar"></div>
           <div id="pplTableContainer" class="table-container" style="display:none;"></div>
         </div>
@@ -676,6 +714,37 @@
 (function () {
   'use strict';
 
+  // ---- KALKULASI PROGRES IDEAL (Diperbarui Setiap Load) ----
+  var IDEAL_DIFF_DAYS = 0;
+  var IDEAL_PCT = 0;
+  (function calculateIdeal() {
+    var startDate = new Date(2026, 5, 15); // 15 Juni 2026
+    var today = new Date();
+    var diffTime = today.getTime() - startDate.getTime();
+    IDEAL_DIFF_DAYS = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    if (IDEAL_DIFF_DAYS < 0) IDEAL_DIFF_DAYS = 0;
+    if (IDEAL_DIFF_DAYS > 75) IDEAL_DIFF_DAYS = 75;
+    IDEAL_PCT = (IDEAL_DIFF_DAYS / 75) * 100;
+  })();
+
+  function syncIdealBadge(chartObj, agg, badgeId, textId) {
+    var badge = document.getElementById(badgeId);
+    var textElem = document.getElementById(textId);
+    
+    if (agg.displayMode === 'persen' && agg.usernames.length > 0) {
+      badge.style.display = 'block';
+      textElem.innerText = 'Ideal (Hari Ke-' + IDEAL_DIFF_DAYS + '): ' + IDEAL_PCT.toFixed(1) + '%';
+      
+      chartObj.off('finished');
+      chartObj.on('finished', function() {
+        // Ambil koordinat pixel X secara langsung dari garis Echarts
+        var px = chartObj.convertToPixel({xAxisId: '0'}, IDEAL_PCT);
+        if (px) textElem.style.left = px + 'px';
+      });
+    } else {
+      badge.style.display = 'none';
+    }
+  }
   var COLS = {
     OPEN: 'OPEN',
     DRAFT: 'DRAFT',
@@ -1141,24 +1210,16 @@
         symbol: ['none', 'none'],
         silent: true,
         label: {
-          show: true,
-          position: 'insideEndTop', 
-          formatter: 'Ideal (Hari Ke-' + diffDays + '): ' + idealVal.toFixed(1) + '%',
-          color: 'rgba(154, 52, 18, 0.45)', // Warna teks samar 
-          fontSize: 11,
-          fontFamily: 'Inter',
-          fontWeight: 800,
-          rotate: -90, // Membuat teks menjadi vertikal mengikuti garis
-          offset: [-8, 20] // Menggeser teks sedikit agar tidak menabrak garis ujung
+          // Label ECharts dibiarkan samar di pojok atas khusus untuk ditangkap gambar download
+          show: true, position: 'insideEndTop', 
+          formatter: 'Ideal (Hari Ke-' + IDEAL_DIFF_DAYS + ')',
+          color: 'rgba(154, 52, 18, 0.3)', // Dibuat jauh lebih samar
+          fontSize: 10, fontFamily: 'Inter', fontWeight: 800, rotate: -90, offset: [-8, 20]
         },
         lineStyle: {
-          type: 'solid', // Garis tegas tidak putus-putus
-          color: 'rgba(234, 88, 12, 0.55)', // Warna garis oranye-merah tegas tapi tembus pandang
-          width: 2.5
+          type: 'solid', color: 'rgba(234, 88, 12, 0.55)', width: 2.5
         },
-        data: [
-          { xAxis: idealVal } // Pasang titik absis di nilai ideal
-        ]
+        data: [ { xAxis: IDEAL_PCT } ] 
       };
     }
 
@@ -1262,8 +1323,6 @@
   // --- FUNGSI RENDER CHART KECAMATAN (BARU) ---
   function renderKecamatanCharts() {
     var viewMode = document.querySelector('input[name="viewMode"]:checked').value; 
-    
-    // Kita gunakan PPL_COLS agar sesuai dengan alur dokumen dari awal pengumpulan hingga akhir
     var kecAgg = aggregateByKecamatan(PPL_COLS);
 
     if (viewMode === 'grafik') {
@@ -1273,11 +1332,12 @@
       if (!kecChart) kecChart = echarts.init(el.kecChart);
       kecChart.resize(); 
       kecChart.setOption(buildStackedBarOption(kecAgg, PPL_COLS), true);
+      syncIdealBadge(kecChart, kecAgg, 'badge-kec', 'badge-text-kec'); // <-- TAMBAHAN INI
     } else {
       el.kecChart.style.display = 'none';
       el.kecTable.style.display = 'block';
-      // Render tabel dan ubah header 'Nama Petugas' menjadi 'Nama Kecamatan' khusus untuk tabel ini
       el.kecTable.innerHTML = buildTableHTML(kecAgg, PPL_COLS).replace('<th>Nama Petugas</th>', '<th>Nama Kecamatan</th>');
+      document.getElementById('badge-kec').style.display = 'none'; // <-- Sembunyikan badge jika mode Tabel
     }
   }
 
@@ -1309,6 +1369,7 @@
     // Render PPL
     if (pplAgg.usernames.length === 0) {
       el.pplChart.style.display = 'none'; el.pplTable.style.display = 'none'; el.pplEmpty.style.display = 'block';
+      document.getElementById('badge-ppl').style.display = 'none';
     } else {
       el.pplEmpty.style.display = 'none';
       if (viewMode === 'grafik') {
@@ -1316,14 +1377,17 @@
         el.pplChart.style.height = chartHeight(pplAgg.usernames.length, !!pplAgg.pmlMapping) + 'px';
         if (!pplChart) pplChart = echarts.init(el.pplChart);
         pplChart.resize(); pplChart.setOption(buildStackedBarOption(pplAgg, PPL_COLS), true);
+        syncIdealBadge(pplChart, pplAgg, 'badge-ppl', 'badge-text-ppl'); // <-- TAMBAHAN INI
       } else {
         el.pplChart.style.display = 'none'; el.pplTable.style.display = 'block'; el.pplTable.innerHTML = buildTableHTML(pplAgg, PPL_COLS);
+        document.getElementById('badge-ppl').style.display = 'none';
       }
     }
 
     // Render PML
     if (pmlAgg.usernames.length === 0) {
       el.pmlChart.style.display = 'none'; el.pmlTable.style.display = 'none'; el.pmlEmpty.style.display = 'block';
+      document.getElementById('badge-pml').style.display = 'none';
     } else {
       el.pmlEmpty.style.display = 'none';
       if (viewMode === 'grafik') {
@@ -1331,8 +1395,10 @@
         el.pmlChart.style.height = chartHeight(pmlAgg.usernames.length, false) + 'px';
       if (!pmlChart) pmlChart = echarts.init(el.pmlChart);
         pmlChart.resize(); pmlChart.setOption(buildStackedBarOption(pmlAgg, PML_COLS), true);
+        syncIdealBadge(pmlChart, pmlAgg, 'badge-pml', 'badge-text-pml'); // <-- TAMBAHAN INI
       } else {
         el.pmlChart.style.display = 'none'; el.pmlTable.style.display = 'block'; el.pmlTable.innerHTML = buildTableHTML(pmlAgg, PML_COLS);
+        document.getElementById('badge-pml').style.display = 'none';
       }
     }
   }
