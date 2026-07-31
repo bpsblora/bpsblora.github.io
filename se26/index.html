@@ -11,6 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <!-- TAMBAHAN LIBRARY UNTUK EXCEL DAN IMAGE DOWNLOAD -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
   :root {
@@ -421,6 +425,48 @@
     .filter-bar__select { min-width: 100%; }
     .cards, .panel-row { grid-template-columns: 1fr; }
   } /* Penutup Media Query dikembalikan ke posisi yang benar */
+
+
+
+  /* ---- Gaya Tombol Download Panel ---- */
+  .panel__action {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: #FFFBF0;
+    color: var(--orange-deep);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-download:hover {
+    background: var(--orange);
+    color: var(--ink);
+    border-color: var(--orange-deep);
+    transform: translateY(-1px);
+  }
+
+  /* Penyesuaian Header Panel agar Judul & Tombol Download Sejajar */
+  .panel__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
     
 </style>
 </head>
@@ -509,10 +555,15 @@
 
       <!-- DONUT + KETERANGAN -->
       <section class="panel-row">
-        <div class="panel panel--donut">
+       <div class="panel panel--donut">
           <div class="panel__header">
-            <h2 class="panel__title">Distribusi Status &middot;</h2>
-            <p class="panel__subtitle">Seluruh kabupaten, sebelum difilter kecamatan</p>
+            <div>
+              <h2 class="panel__title">Distribusi Status &middot;</h2>
+              <p class="panel__subtitle">Seluruh kabupaten, sebelum difilter kecamatan</p>
+            </div>
+            <div class="panel__action">
+              <button class="btn-download" onclick="downloadDonutImage()">📷 Gambar PNG</button>
+            </div>
           </div>
           <div id="donutChart" class="chart chart--donut"></div>
         </div>
@@ -528,10 +579,16 @@
       <!-- KECAMATAN TABLE/CHART (BARU) -->
       <section class="panel" style="margin-top: 32px; border-color: var(--orange); box-shadow: 0 8px 30px rgba(254,189,37,0.15);">
         <div class="panel__header">
-          <h2 class="panel__title">Progres per Kecamatan</h2>
-          <p class="panel__subtitle">Perbandingan capaian antar kecamatan (berdasarkan kolom SUBMITTED RESPONDENT s.d. REJECTED BY Admin Kabupaten)</p>
+          <div>
+            <h2 class="panel__title">Progres per Kecamatan</h2>
+            <p class="panel__subtitle">Perbandingan capaian antar kecamatan</p>
+          </div>
+          <div class="panel__action">
+            <button class="btn-download" onclick="downloadPanel('kec', 'image')">📷 Gambar PNG</button>
+            <button class="btn-download" onclick="downloadPanel('kec', 'excel')">📊 Excel (.xlsx)</button>
+          </div>
         </div>
-        <div class="chart-scroll-wrapper">
+        <div class="chart-scroll-wrapper" id="wrapper-kec">
           <div id="kecChart" class="chart chart--bar"></div>
           <div id="kecTableContainer" class="table-container" style="display:none;"></div>
         </div>
@@ -559,10 +616,16 @@
       <!-- PML TABLE/CHART -->
       <section class="panel">
         <div class="panel__header">
-          <h2 class="panel__title">Progres Petugas Pengawas / PML</h2>
-          <p class="panel__subtitle">Total capaian per status, per petugas (kolom EDITED BY Pengawas s.d. REJECTED BY Admin Kabupaten)</p>
+          <div>
+            <h2 class="panel__title">Progres Petugas Pengawas / PML</h2>
+            <p class="panel__subtitle">Total capaian per status, per petugas pengawas</p>
+          </div>
+          <div class="panel__action">
+            <button class="btn-download" onclick="downloadPanel('pml', 'image')">📷 Gambar PNG</button>
+            <button class="btn-download" onclick="downloadPanel('pml', 'excel')">📊 Excel (.xlsx)</button>
+          </div>
         </div>
-        <div class="chart-scroll-wrapper">
+        <div class="chart-scroll-wrapper" id="wrapper-pml">
           <div id="pmlChart" class="chart chart--bar"></div>
           <div id="pmlTableContainer" class="table-container" style="display:none;"></div>
         </div>
@@ -572,10 +635,16 @@
       <!-- PPL TABLE/CHART -->
       <section class="panel">
         <div class="panel__header">
-          <h2 class="panel__title">Progres Petugas Pencacah / PPL</h2>
-          <p class="panel__subtitle">Total capaian per status, per petugas (kolom SUBMITTED RESPONDENT s.d. REJECTED BY Admin Kabupaten)</p>
+          <div>
+            <h2 class="panel__title">Progres Petugas Pencacah / PPL</h2>
+            <p class="panel__subtitle">Total capaian per status, per petugas pencacah</p>
+          </div>
+          <div class="panel__action">
+            <button class="btn-download" onclick="downloadPanel('ppl', 'image')">📷 Gambar PNG</button>
+            <button class="btn-download" onclick="downloadPanel('ppl', 'excel')">📊 Excel (.xlsx)</button>
+          </div>
         </div>
-        <div class="chart-scroll-wrapper">
+        <div class="chart-scroll-wrapper" id="wrapper-ppl">
           <div id="pplChart" class="chart chart--bar"></div>
           <div id="pplTableContainer" class="table-container" style="display:none;"></div>
         </div>
@@ -1231,6 +1300,84 @@
 
   // ---- Inisialisasi Jalankan Pertama Kali ------------------
   loadData(false);
+
+  // ---- FUNGSI DOWNLOAD PANEL (GAMBAR & EXCEL UTUH) ----------------------
+
+  // 1. Download Gambar Donut Chart
+  window.downloadDonutImage = function() {
+    if (!donutChart) return;
+    var url = donutChart.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#ffffff' });
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'Distribusi_Status_Kabupaten_SE2026.png';
+    a.click();
+  };
+
+  // 2. Download Panel (Kecamatan / PML / PPL)
+  window.downloadPanel = function(type, format) {
+    var chartObj = (type === 'kec') ? kecChart : (type === 'pml' ? pmlChart : pplChart);
+    var viewMode = document.querySelector('input[name="viewMode"]:checked').value;
+    var kecSelect = document.getElementById('kecamatanFilter');
+    var kecName = kecSelect.options[kecSelect.selectedIndex] ? kecSelect.options[kecSelect.selectedIndex].text : 'Kabupaten';
+    var fileName = 'Progres_' + type.toUpperCase() + '_' + kecName.replace(/[^a-zA-Z0-9]/g, '_');
+
+    // A. DOWNLOAD EXCEL
+    if (format === 'excel') {
+      var tableContainerId = type + 'TableContainer';
+      var container = document.getElementById(tableContainerId);
+      
+      // Jika mode tampilan sedang Grafik, render dulu tabelnya secara sementara di memori
+      var tableElem = container.querySelector('table');
+      if (!tableElem) {
+        alert('Tabel tidak tersedia untuk diunduh.');
+        return;
+      }
+
+      var wb = XLSX.utils.table_to_book(tableElem, { sheet: "Progres Data" });
+      XLSX.writeFile(wb, fileName + '.xlsx');
+    } 
+    
+    // B. DOWNLOAD GAMBAR (PNG MEMANJANG UTUH)
+    else if (format === 'image') {
+      var wrapper = document.getElementById('wrapper-' + type);
+      
+      // Jika dalam mode Grafik ECharts
+      if (viewMode === 'grafik' && chartObj) {
+        var url = chartObj.getDataURL({
+          type: 'png',
+          pixelRatio: 2,
+          backgroundColor: '#ffffff'
+        });
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = fileName + '.png';
+        a.click();
+      } 
+      // Jika dalam mode Tabel HTML, gunakan html2canvas untuk capture seluruh panjang tabel
+      else {
+        var tableElem = wrapper.querySelector('table');
+        if (!tableElem) return;
+
+        // Tampilkan overlay loading sebentar saat proses gambar
+        document.getElementById('loadingState').style.display = 'flex';
+
+        html2canvas(tableElem, {
+          backgroundColor: '#ffffff',
+          scale: 2, // Resolusi tinggi
+          windowWidth: tableElem.scrollWidth
+        }).then(function(canvas) {
+          document.getElementById('loadingState').style.display = 'none';
+          var a = document.createElement('a');
+          a.href = canvas.toDataURL('image/png');
+          a.download = fileName + '_Tabel.png';
+          a.click();
+        }).catch(function(err) {
+          document.getElementById('loadingState').style.display = 'none';
+          alert('Gagal mengunduh gambar tabel.');
+        });
+      }
+    }
+  };
 })();
   </script>
 </body>
