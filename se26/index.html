@@ -415,33 +415,36 @@ html, body {
     .progress-bar__fill { transition: none; }
   }
 
-  /* ---- Scrollable Chart Wrapper ---- */
+  /* ---- Scrollable Chart & Table Wrapper (Diperbarui) ---- */
   .chart-scroll-wrapper {
-    max-height: 550px; /* Anda bisa menyesuaikan tinggi ini, misalnya 600px atau 700px */
-    overflow-y: auto;
-    overflow-x: hidden;
+    max-height: 420px; /* Batasi tinggi maksimal agar tabel pas di layar tanpa harus scroll ke bawah */
+    overflow-y: auto;   /* Scroll vertikal mandiri di dalam kotak */
+    overflow-x: auto;   /* Scroll horizontal mandiri di dalam kotak yang sama */
     margin-top: 16px;
-    padding-right: 8px; /* Memberi ruang agar scrollbar tidak menimpa label grafik */
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
   }
 
-  /* Opsional: Membuat bentuk scrollbar lebih ramping dan bersih */
+  /* Scrollbar kustom yang ramping dan bersih */
   .chart-scroll-wrapper::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
+    height: 8px;
   }
   .chart-scroll-wrapper::-webkit-scrollbar-track {
     background: #F4F7F6;
     border-radius: 4px;
   }
   .chart-scroll-wrapper::-webkit-scrollbar-thumb {
-    background: #C9D6D2;
+    background: #d4c5a9;
     border-radius: 4px;
   }
+  .chart-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--orange-deep);
+  }
 
-
-
-
-
-/* ---- Loading Overlay ---- */
+  /* ---- Loading Overlay ---- */
   .loading-overlay {
     position: fixed;
     top: 0;
@@ -516,8 +519,7 @@ html, body {
   /* ---- Gaya Tabel Progres ---- */
   .table-container {
     width: 100%;
-    overflow-x: auto; /* Memungkinkan tabel digeser horizontal */
-    padding-bottom: 12px;
+    padding-bottom: 0;
   }
   
   .data-table {
@@ -528,7 +530,7 @@ html, body {
   }
   
   .data-table th, .data-table td {
-    padding: 10px 12px;
+    padding: 10px 14px;
     border-bottom: 1px solid var(--line);
     white-space: nowrap; /* Mencegah teks terpotong ke bawah */
   }
@@ -542,17 +544,17 @@ html, body {
     letter-spacing: 0.05em;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 20;
   }
   
-  /* Kolom pertama (Nama Petugas) dibuat statis tidak ikut tergeser */
+  /* Kolom pertama (Nama Petugas) dibuat statis tidak ikut tergeser ke samping */
   .data-table th:first-child,
   .data-table td:first-child {
     text-align: left;
     position: sticky;
     left: 0;
     background: #ffffff;
-    z-index: 11;
+    z-index: 21;
     font-weight: 600;
     color: var(--ink);
     border-right: 1px solid var(--line);
@@ -561,16 +563,11 @@ html, body {
   
   .data-table th:first-child {
     background: #FFFBF0;
-    z-index: 12;
+    z-index: 25;
   }
   
   .data-table tbody tr:hover td {
     background: #fdfaf2;
-  }
-
-  /* Mengizinkan scroll horizontal pada wrapper yang membungkus tabel/chart */
-  .chart-scroll-wrapper {
-    overflow-x: auto; 
   }
 
 /* ---- Responsivitas Khusus Layar HP / Mobile ---- */
@@ -624,12 +621,8 @@ html, body {
       grid-template-columns: 1fr;
     }
   }
-
-
-
-
-
 </style>
+  
 </head>
 <body>
   <!-- LOADING OVERLAY -->
