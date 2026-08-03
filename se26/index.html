@@ -736,7 +736,7 @@
     
     if (agg.displayMode === 'persen' && agg.usernames.length > 0) {
       badge.style.display = 'block';
-      textElem.innerText = 'Ideal (Hari Ke-' + IDEAL_DIFF_DAYS + '): ' + IDEAL_PCT.toFixed(1) + '%';
+      textElem.innerText = 'Ideal (Hari Ke-' + IDEAL_DIFF_DAYS + '): ' + IDEAL_PCT.toFixed(2) + '%';
       
       // Tambahkan rotasi 90 derajat searah jarum jam
       textElem.style.transform = 'translate(-50%, -50%) rotate(90deg)';
@@ -1310,7 +1310,7 @@
         formatter: function (p) { 
           if (isPersen) {
              var val = agg.targets[p.dataIndex] > 0 ? (agg.rawTotals[p.dataIndex] / agg.targets[p.dataIndex]) * 100 : 0;
-             return val.toFixed(1).replace('.', ',') + '%';
+             return val.toFixed(2).replace('.', ',') + '%';
           }
           return fmt(agg.rawTotals[p.dataIndex]); 
         }
@@ -1334,7 +1334,7 @@
           }).join('');
           
           var tgt = agg.targets[idx];
-          var pct = tgt > 0 ? ((agg.rawTotals[idx] / tgt) * 100).toFixed(1).replace('.', ',') + '%' : '0%';
+          var pct = tgt > 0 ? ((agg.rawTotals[idx] / tgt) * 100).toFixed(2).replace('.', ',') + '%' : '0%';
           var totalTxt = isPersen ? pct : fmt(agg.rawTotals[idx]);
           var totalHtml = '<div style="margin-top:6px;padding-top:6px;border-top:1px solid #E1E9E7;display:flex;flex-direction:column;gap:4px;font-size:12.5px;font-weight:700;"><div style="display:flex;justify-content:space-between;"><span>Total Capaian</span><span style="font-family:IBM Plex Mono">' + totalTxt + '</span></div><div style="display:flex;justify-content:space-between;color:#0D9488;"><span>Target Alokasi</span><span style="font-family:IBM Plex Mono">' + fmt(tgt) + '</span></div></div>';
           return head + (body || '<div style="font-size:12px;color:#8195A0;">Tidak ada dokumen</div>') + totalHtml;
@@ -1399,7 +1399,7 @@
 
       var tgt = agg.targets[i];
       var totalRaw = agg.rawTotals[i];
-      var totalPct = tgt > 0 ? ((totalRaw / tgt) * 100).toFixed(1).replace('.', ',') + '%' : '0%';
+      var totalPct = tgt > 0 ? ((totalRaw / tgt) * 100).toFixed(2).replace('.', ',') + '%' : '0%';
       
       html += '<td style="color:var(--slate);">' + fmt(tgt) + '</td><td style="font-weight:800;color:var(--orange-deep);">' + (isPersen ? totalPct : fmt(totalRaw)) + '</td></tr>';
     }
