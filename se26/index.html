@@ -1659,7 +1659,6 @@
     }
 
     // A. DOWNLOAD EXCEL (Dibuat langsung dari data backend, tidak tergantung layar)
-    // A. DOWNLOAD EXCEL (Dibuat langsung dari data backend, tidak tergantung layar)
     if (format === 'excel') {
       var wsData = [];
       wsData.push([panelTitle.toUpperCase() + ' - SE2026 BPS KABUPATEN BLORA']);
@@ -1780,9 +1779,8 @@
       };
     }
   };
-})();
 
-    // ---- FUNGSI DOWNLOAD PECAH PER PML (MULTIPLE DOWNLOADS) ----
+  // ---- FUNGSI DOWNLOAD PECAH PER PML (MULTIPLE DOWNLOADS) ----
   
   // Helper Promise untuk memproses satu per satu gambar agar browser tidak hang/memblokir
   function downloadSinglePmlImage(pmlUsername, kecValue, kecText, pmlRealName) {
@@ -1806,7 +1804,7 @@
 
       // Pertegas garis
       if (agg.displayMode === 'persen' && chartOption.series) {
-        var totalSeries = chartOption.series.find(s => s.name === '__total__');
+        var totalSeries = chartOption.series.find(function(s) { return s.name === '__total__'; });
         if (totalSeries && totalSeries.markLine) {
           totalSeries.markLine.lineStyle = { type: 'solid', color: '#e8580c', width: 3.5 };
         }
@@ -1857,17 +1855,7 @@
 
         tempChart.dispose();
         document.body.removeChild(tempDiv);
-      };
-    }
-  };
-
-  // ---- FUNGSI DOWNLOAD PECAH PER PML (MULTIPLE DOWNLOADS) ----
-  
-  // Helper Promise untuk memproses satu per satu gambar agar browser tidak hang/memblokir
-  function downloadSinglePmlImage(pmlUsername, kecValue, kecText, pmlRealName) {
-    return new Promise(function(resolve) {
-      // ... (KODE ANDA TETAP SAMA) ...
-      
+        
         // Jeda waktu 800ms sangat krusial agar browser (terutama Chrome) tidak memblokir auto-download
         setTimeout(resolve, 800); 
       };
@@ -1876,11 +1864,38 @@
 
   // Fungsi Utama Trigger Button
   window.downloadPanelSplitPml = async function() {
-    // ... (KODE ANDA TETAP SAMA) ...
+    var kecSelect = document.getElementById('kecamatanFilter');
+    var kecText = kecSelect.options[kecSelect.selectedIndex] ? kecSelect.options[kecSelect.selectedIndex].text : '';
+    var kecValue = kecSelect.value;
+
+    if (kecValue === 'ALL' || !kecValue) {
+      alert('Pilih satu kecamatan spesifik pada filter di atas terlebih dahulu.');
+      return;
+    }
+
+    var pmlList = [];
+    if (dashboardData.pengawas.byKecamatan[kecValue]) {
+      pmlList = Object.keys(dashboardData.pengawas.byKecamatan[kecValue].byUsername);
+    }
+
+    if (pmlList.length === 0) {
+      alert('Tidak ada data Pengawas (PML) pada wilayah ini.');
+      return;
+    }
+
+    if (!confirm('Sistem akan mengunduh ' + pmlList.length + ' file gambar secara otomatis.\n\nJika browser Anda menampilkan peringatan "Allow multiple downloads / Izinkan unduhan ganda", mohon diklik IZINKAN.\n\nLanjutkan?')) {
+      return;
+    }
+
+    // Tampilkan animasi Loading agar layar terblokir selama proses generate
+    el.loading.style.display = 'flex';
+    var loadingText = el.loading.querySelector('span');
 
     for (var i = 0; i < pmlList.length; i++) {
       var pmlRealName = getRealName(pmlList[i]);
-      loadingText.textContent = 'Menyiapkan ' + (i+1) + ' dari ' + pmlList.length + ' file... (' + pmlRealName + ')';
+      if(loadingText) {
+        loadingText.textContent = 'Menyiapkan ' + (i+1) + ' dari ' + pmlList.length + ' file... (' + pmlRealName + ')';
+      }
       
       // Tunggu hingga satu gambar selesai didownload sebelum merender gambar berikutnya
       await downloadSinglePmlImage(pmlList[i], kecValue, kecText, pmlRealName);
@@ -1888,10 +1903,16 @@
 
     // Kembalikan status loading
     el.loading.style.display = 'none';
-    loadingText.innerHTML = 'Memuat data&hellip;'; 
+    if(loadingText) {
+      loadingText.innerHTML = 'Memuat data&hellip;'; 
+    }
   };
 
-})(); // <--- PINDAHKAN PENUTUPNYA KE SINI
+})(); // <--- PENUTUP FUNGSI UTAMA (IIFE)
   </script>
 </body>
 </html>
+
+
+
+
