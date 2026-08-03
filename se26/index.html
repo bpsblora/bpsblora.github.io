@@ -1253,7 +1253,7 @@
       markLineData.push({ xAxis: IDEAL_PCT });
     }
 
-    // ---- LOGIKA PEMISAH & AREA BACKGROUND PER PML ----
+    // ---- LOGIKA AREA BACKGROUND PER PML ----
     var markAreaData = [];
     if (agg.pmlMapping && agg.usernames.length > 0) {
       var currentPml = null;
@@ -1269,20 +1269,9 @@
           currentPml = pmlOfU;
         } else if (pmlOfU !== currentPml) {
           // KONVERSI INDEKS: ECharts merender array secara terbalik (0 di bawah)
-          // Koordinat sela antar-baris yang presisi = (totalData - indeks_sekarang) - 0.5
           var splitY = (totalUser - i) - 0.5;
 
-          // 1. Garis pemisah horizontal tepat berada di sela-sela antar kelompok PML
-          markLineData.push({
-            yAxis: splitY,
-            lineStyle: { 
-              type: 'dashed', 
-              color: '#7c6847', // Warna cokelat tegas agar jelas memisahkan kelompok
-              width: 1.5 
-            }
-          });
-
-          // 2. Hitung posisi batas area background kelompok PML
+          // Hitung posisi batas area background kelompok PML (Garis putus-putus dihapus)
           var yStart = (totalUser - groupStartIndex) - 0.5;
           var yEnd = splitY;
 
