@@ -687,7 +687,7 @@
             <button id="btnToggleGroupPml" class="btn-download" style="display:none;">👥 Sort by PML</button>
             
             <!-- TAMBAHAN BARU: Tombol Unduh Pecah per PML (Hidden Default) -->
-            <button id="btnDownloadPmlSplit" class="btn-download" style="display:none; background:#ffedd5; color:#ea580c; border-color:#fb923c;" onclick="downloadPanelSplitPml()">📸 Unduh per PML (Pecah)</button>
+            <button id="btnDownloadPmlSplit" class="btn-download" style="display:none; background:#ffedd5; color:#ea580c; border-color:#fb923c;" onclick="downloadPanelSplitPml()">📸 Unduh Gambar tiap PML</button>
             
             <button class="btn-download" onclick="downloadPanel('ppl', 'image')">📷 Gambar PNG</button>
             <button class="btn-download" onclick="downloadPanel('ppl', 'excel')">📊 Excel (.xlsx)</button>
@@ -1853,7 +1853,17 @@
 
         tempChart.dispose();
         document.body.removeChild(tempDiv);
-        
+      };
+    }
+  };
+
+  // ---- FUNGSI DOWNLOAD PECAH PER PML (MULTIPLE DOWNLOADS) ----
+  
+  // Helper Promise untuk memproses satu per satu gambar agar browser tidak hang/memblokir
+  function downloadSinglePmlImage(pmlUsername, kecValue, kecText, pmlRealName) {
+    return new Promise(function(resolve) {
+      // ... (KODE ANDA TETAP SAMA) ...
+      
         // Jeda waktu 800ms sangat krusial agar browser (terutama Chrome) tidak memblokir auto-download
         setTimeout(resolve, 800); 
       };
@@ -1862,32 +1872,7 @@
 
   // Fungsi Utama Trigger Button
   window.downloadPanelSplitPml = async function() {
-    var kecSelect = document.getElementById('kecamatanFilter');
-    var kecText = kecSelect.options[kecSelect.selectedIndex] ? kecSelect.options[kecSelect.selectedIndex].text : '';
-    var kecValue = kecSelect.value;
-
-    if (kecValue === 'ALL' || !kecValue) {
-      alert('Pilih satu kecamatan spesifik pada filter di atas terlebih dahulu.');
-      return;
-    }
-
-    var pmlList = [];
-    if (dashboardData.pengawas.byKecamatan[kecValue]) {
-      pmlList = Object.keys(dashboardData.pengawas.byKecamatan[kecValue].byUsername);
-    }
-
-    if (pmlList.length === 0) {
-      alert('Tidak ada data Pengawas (PML) pada wilayah ini.');
-      return;
-    }
-
-    if (!confirm('Sistem akan mengunduh ' + pmlList.length + ' file gambar secara otomatis.\n\nJika browser Anda menampilkan peringatan "Allow multiple downloads / Izinkan unduhan ganda", mohon diklik IZINKAN.\n\nLanjutkan?')) {
-      return;
-    }
-
-    // Tampilkan animasi Loading agar layar terblokir selama proses generate
-    el.loading.style.display = 'flex';
-    var loadingText = el.loading.querySelector('span');
+    // ... (KODE ANDA TETAP SAMA) ...
 
     for (var i = 0; i < pmlList.length; i++) {
       var pmlRealName = getRealName(pmlList[i]);
@@ -1901,6 +1886,8 @@
     el.loading.style.display = 'none';
     loadingText.innerHTML = 'Memuat data&hellip;'; 
   };
+
+})(); // <--- PINDAHKAN PENUTUPNYA KE SINI
   </script>
 </body>
 </html>
