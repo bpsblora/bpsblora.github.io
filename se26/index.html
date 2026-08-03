@@ -12,7 +12,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
   <!-- TAMBAHAN LIBRARY UNTUK EXCEL DAN IMAGE DOWNLOAD -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -917,21 +916,21 @@
     renderUsernameCharts();
 
     document.querySelectorAll('input[name="targetMode"], input[name="displayMode"], input[name="viewMode"]').forEach(function(radio) {
-      radio.addEventListener('change', function() {
+      radio.onchange = function() {
         if (dashboardData) {
           renderProgressCard(dashboardData); 
           renderKecamatanCharts(); // Ikut terupdate saat slider digeser
           renderUsernameCharts();
         }
-      });
+      };
     });
 
-    window.addEventListener('resize', function () {
+    window.onresize = function () {
       if (donutChart) donutChart.resize();
       if (kecChart) kecChart.resize();
       if (pplChart) pplChart.resize();
       if (pmlChart) pmlChart.resize();
-    });
+    };
   }
 
   function onDataError(err) {
@@ -1062,10 +1061,10 @@
     });
     el.kecamatanFilter.innerHTML = opts.join('');
     
-    el.kecamatanFilter.addEventListener('change', function () {
+    el.kecamatanFilter.onchange = function () {
       populatePmlFilter(dashboardData);
       renderUsernameCharts();
-    });
+    };
   }
 
   function populatePmlFilter(data) {
@@ -1084,9 +1083,9 @@
     el.pmlFilter.innerHTML = opts.join('');
     el.pmlFilter.value = 'ALL'; 
     
-    el.pmlFilter.addEventListener('change', function () {
+    el.pmlFilter.onchange = function () {
       renderUsernameCharts();
-    });
+    };
   }
 
   // ---- FUNGSI BARU: Agregasi per Kecamatan (Makro) ---------------------
@@ -1260,48 +1259,35 @@
     }
 
     // ---- LOGIKA AREA BACKGROUND PER PML ----
+    // Ditulis ulang: dulu memakai koordinat pecahan (index-0.5) di sumbu kategori,
+    // yang ternyata bisa dibulatkan/di-snap tidak presisi oleh ECharts sehingga
+    // batasnya geser beberapa baris. Sekarang: kelompokkan dulu jadi blok-blok
+    // {pml, start, end} dalam satu pass, lalu pakai NILAI KATEGORI ASLI (username
+    // baris pertama & terakhir tiap blok) sebagai batas markArea -- ECharts akan
+    // otomatis mengisi penuh dari tepi kategori awal sampai tepi kategori akhir,
+    // jadi tidak ada lagi risiko off-by-one dari perhitungan index manual.
     var markAreaData = [];
     if (agg.pmlMapping && agg.usernames.length > 0) {
-      var currentPml = null;
-      var groupStartIndex = 0;
-      var isEvenGroup = false;
-      var totalUser = agg.usernames.length;
-
-      for (var i = 0; i < totalUser; i++) {
-        var u = agg.usernames[i];
+      var groups = [];
+      agg.usernames.forEach(function (u, i) {
         var pmlOfU = agg.pmlMapping[u] || 'Z_Tanpa_PML';
-
-        if (i === 0) {
-          currentPml = pmlOfU;
-        } else if (pmlOfU !== currentPml) {
-          // KONVERSI INDEKS: ECharts merender array secara terbalik (0 di bawah)
-          var splitY = (totalUser - i) - 0.5;
-
-          // Hitung posisi batas area background kelompok PML (Garis putus-putus dihapus)
-          var yStart = (totalUser - groupStartIndex) - 0.5;
-          var yEnd = splitY;
-
-          if (isEvenGroup) {
-            markAreaData.push([
-              { yAxis: yStart, itemStyle: { color: 'rgba(254, 189, 37, 0.20)' } },
-              { yAxis: yEnd }
-            ]);
-          }
-
-          currentPml = pmlOfU;
-          groupStartIndex = i;
-          isEvenGroup = !isEvenGroup;
+        var last = groups.length ? groups[groups.length - 1] : null;
+        if (last && last.pml === pmlOfU) {
+          last.end = i;
+        } else {
+          groups.push({ pml: pmlOfU, start: i, end: i });
         }
-      }
+      });
 
-      // Tutup blok area PML terakhir (di bagian paling bawah grafik)
-      if (isEvenGroup) {
-        var yStartLast = (totalUser - groupStartIndex) - 0.5;
-        markAreaData.push([
-          { yAxis: yStartLast, itemStyle: { color: 'rgba(254, 189, 37, 0.20)' } },
-          { yAxis: -0.5 }
-        ]);
-      }
+      // Highlight selang-seling: grup ke-2, ke-4, dst (index ganjil dalam array groups)
+      groups.forEach(function (g, gi) {
+        if (gi % 2 === 1) {
+          markAreaData.push([
+            { yAxis: agg.usernames[g.start], itemStyle: { color: 'rgba(254, 189, 37, 0.20)' } },
+            { yAxis: agg.usernames[g.end] }
+          ]);
+        }
+      });
     }
 
     var markLineObj = {
@@ -1446,20 +1432,28 @@
     var kecFilter = el.kecamatanFilter.value;
     var viewMode = document.querySelector('input[name="viewMode"]:checked').value; 
     var pmlFilterValue = el.pmlFilter ? el.pmlFilter.value : 'ALL';
+    
+    var btnSplit = document.getElementById('btnDownloadPmlSplit'); // <-- Ambil elemen tombol pecah
 
     if (!kecFilter || kecFilter === "") {
       el.filterHint.textContent = 'Silakan pilih kecamatan dari dropdown di atas.';
       el.pplChart.style.display = 'none'; el.pplTable.style.display = 'none'; el.pplEmpty.style.display = 'block';
       el.pmlChart.style.display = 'none'; el.pmlTable.style.display = 'none'; el.pmlEmpty.style.display = 'block';
-      btnToggleGroupPml.style.display = 'none'; // Sembunyikan tombol
+      btnToggleGroupPml.style.display = 'none'; 
+      btnSplit.style.display = 'none'; // <-- Sembunyikan juga di sini
       return; 
     }
     
-    // Tampilkan tombol "Sort by PML" HANYA jika filter Semua PML aktif
+    // Tampilkan tombol HANYA jika filter Semua PML aktif
     if (pmlFilterValue === 'ALL') {
       btnToggleGroupPml.style.display = 'inline-flex';
+      // Tampilkan tombol pecah jika fitur sort sedang menyala
+      if (isGroupPmlActive) {
+        btnSplit.style.display = 'inline-flex';
+      }
     } else {
       btnToggleGroupPml.style.display = 'none';
+      btnSplit.style.display = 'none'; // <-- Sembunyikan saat 1 PML terpilih
     }
 
     el.filterHint.textContent = 'Kode kecamatan: ' + kecFilter;
@@ -1912,7 +1906,3 @@
   </script>
 </body>
 </html>
-
-
-
-
