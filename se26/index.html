@@ -1204,42 +1204,72 @@
       };
     });
 
-    // ---- LOGIKA GARIS PROGRES IDEAL (HANYA DI MODE PERSEN) ----
-    var markLineObj = null;
+    // ---- LOGIKA GARIS PROGRES IDEAL (MODE PERSEN) ----
+    var markLineData = [];
     if (isPersen) {
-      // 1. Tetapkan tanggal mulai (15 Juni 2026)
-      var startDate = new Date(2026, 5, 15); // Bulan ke-5 karena array bulan di JS dimulai dari 0 (Jan = 0, Jun = 5)
-      var today = new Date();
-      
-      // 2. Hitung selisih hari
-      var diffTime = today.getTime() - startDate.getTime();
-      var diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
-      // 3. Kunci rentang hari agar tidak minus atau lebih dari 75
-      if (diffDays < 0) diffDays = 0;
-      if (diffDays > 75) diffDays = 75;
-      
-      // 4. Hitung persentase ideal
-      var idealVal = (diffDays / 75) * 100;
-
-      markLineObj = {
-        symbol: ['none', 'none'],
-        silent: true,
-        label: {
-          // Label ECharts dibiarkan samar di pojok atas khusus untuk ditangkap gambar download
-          show: false, position: 'insideEndTop', 
-          formatter: 'Ideal (Hari Ke-' + IDEAL_DIFF_DAYS + ')',
-          color: 'rgba(154, 52, 18, 0.3)', // Dibuat jauh lebih samar
-          fontSize: 10, fontFamily: 'Inter', fontWeight: 800, rotate: -90, offset: [-8, 20]
-        },
-        lineStyle: {
-          type: 'solid', color: 'rgba(234, 88, 12, 0.55)', width: 2.5
-        },
-        data: [ { xAxis: IDEAL_PCT } ] 
-      };
+      markLineData.push({ xAxis: IDEAL_PCT });
     }
 
-    // Masukkan data seri bayangan (untuk menampilkan angka total di ujung bar)
+    // ---- LOGIKA PEMISAH & AREA BACKGROUND PER PML (SORT BY PML) ----
+    var markAreaData = [];
+    if (agg.pmlMapping && agg.usernames.length > 0) {
+      var currentPml = null;
+      var groupStartIndex = 0;
+      var isEvenGroup = false;
+
+      // Iterasi dari bawah ke atas sesuai urutan bar di ECharts (0 adalah bar terbawah)
+      for (var i = 0; i < agg.usernames.length; i++) {
+        var u = agg.usernames[i];
+        var pmlOfU = agg.pmlMapping[u] || 'Z_Tanpa_PML';
+
+        if (i === 0) {
+          currentPml = pmlOfU;
+        } else if (pmlOfU !== currentPml) {
+          // 1. Tambahkan garis batas antar PML
+          markLineData.push({
+            yAxis: i - 0.5,
+            lineStyle: { type: 'dashed', color: 'rgba(84, 68, 43, 0.4)', width: 1.5 }
+          });
+
+          // 2. Beri warna latar selang-seling untuk grup PML yang genap
+          if (isEvenGroup) {
+            markAreaData.push([
+              { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.06)' } },
+              { yAxis: i - 0.5 }
+            ]);
+          }
+
+          currentPml = pmlOfU;
+          groupStartIndex = i;
+          isEvenGroup = !isEvenGroup;
+        }
+      }
+
+      // Tutup blok area PML terakhir
+      if (isEvenGroup) {
+        markAreaData.push([
+          { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.06)' } },
+          { yAxis: agg.usernames.length - 0.5 }
+        ]);
+      }
+    }
+
+    // Konfigurasi MarkLine gabungan (Line Ideal + Line Pemisah PML)
+    var markLineObj = {
+      symbol: ['none', 'none'],
+      silent: true,
+      label: { show: false },
+      lineStyle: { type: 'solid', color: 'rgba(234, 88, 12, 0.55)', width: 2.5 },
+      data: markLineData
+    };
+
+    // Konfigurasi MarkArea
+    var markAreaObj = {
+      silent: true,
+      data: markAreaData
+    };
+
+    // Masukkan data seri bayangan (untuk angka total & visual pembatas)
     series.push({
       name: '__total__', type: 'bar', stack: 'total', barMaxWidth: 22, silent: true, itemStyle: { color: 'transparent' },
       label: {
@@ -1253,7 +1283,8 @@
         }
       },
       data: agg.usernames.map(function () { return 0; }),
-      markLine: markLineObj // Sisipkan garis batas ideal ke grafik ini
+      markLine: markLineObj,
+      markArea: markAreaObj
     });
 
     return {
@@ -1297,6 +1328,10 @@
       series: series
     };
   }
+
+
+
+  
 
   // TINGGIKAN CHART JIKA ADA LABEL PML MULTILINE
   function chartHeight(n, isMultiline) { return Math.max(220, (n * (isMultiline ? 46 : 32)) + 90); }
@@ -1613,7 +1648,7 @@
       XLSX.writeFile(wb, fileName + '.xlsx');
     }
 
-    // B. DOWNLOAD GAMBAR PNG (Digambar penuh dengan Header Judul & Ideal Badge)
+    // B. DOWNLOAD GAMBAR PNG (Digambar penuh dengan Header Judul & Garis Tegas)
     else if (format === 'image') {
       var tempDiv = document.createElement('div');
       tempDiv.style.width = '1000px';
@@ -1625,6 +1660,19 @@
       var tempChart = echarts.init(tempDiv);
       var chartOption = buildStackedBarOption(agg, statusCols);
       chartOption.animation = false; 
+
+      // PERTEGAS GARIS IDEAL PADA HASIL DOWNLOAD GAMBAR
+      if (agg.displayMode === 'persen' && chartOption.series) {
+        var totalSeries = chartOption.series.find(s => s.name === '__total__');
+        if (totalSeries && totalSeries.markLine) {
+          totalSeries.markLine.lineStyle = {
+            type: 'solid',
+            color: '#e8580c', // Oranye tua yang lebih kontras
+            width: 3.5          // Garis dibuat lebih tebal agar makin jelas
+          };
+        }
+      }
+
       tempChart.setOption(chartOption, true);
 
       // Ambil Data URL Gambar Chart
@@ -1640,7 +1688,7 @@
         canvas.width = img.width;
         canvas.height = img.height + headerHeight;
         
-        // Background Putih
+        // Latar Belakang Putih
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
@@ -1668,51 +1716,7 @@
         // Tempelkan Grafik Utama
         ctx.drawImage(img, 0, headerHeight);
 
-        // ---- TAMBAHAN: LUKIS IDEAL BADGE (VERTIKAL) PADA GAMBAR ----
-        if (agg.displayMode === 'persen' && agg.usernames.length > 0) {
-          var px = tempChart.convertToPixel({xAxisIndex: 0}, IDEAL_PCT);
-          if (!isNaN(px)) {
-            // Hitung posisi tengah vertikal grafik
-            var centerY = headerHeight + (img.height / 2);
-            var badgeText = 'Ideal (Hari Ke-' + IDEAL_DIFF_DAYS + '): ' + IDEAL_PCT.toFixed(1) + '%';
-
-            ctx.save();
-            ctx.translate(px, centerY);
-            ctx.rotate(Math.PI / 2); // Putar 90 derajat searah jarum jam
-
-            // Ukur dimensi teks untuk latar belakang kotak
-            ctx.font = '800 11px "IBM Plex Mono", monospace';
-            var textMetrics = ctx.measureText(badgeText);
-            var paddingX = 14;
-            var paddingY = 6;
-            var boxWidth = textMetrics.width + (paddingX * 2);
-            var boxHeight = 22;
-
-            // Gambar Kotak Latar Badge
-            ctx.fillStyle = 'rgba(255, 251, 240, 0.95)';
-            ctx.strokeStyle = '#f59e0b';
-            ctx.lineWidth = 1;
-            
-            ctx.beginPath();
-            if (ctx.roundRect) {
-              ctx.roundRect(-boxWidth / 2, -boxHeight / 2, boxWidth, boxHeight, 8);
-            } else {
-              ctx.rect(-boxWidth / 2, -boxHeight / 2, boxWidth, boxHeight);
-            }
-            ctx.fill();
-            ctx.stroke();
-
-            // Tulis Teks Badge
-            ctx.fillStyle = '#b45309';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(badgeText, 0, 1);
-
-            ctx.restore();
-          }
-        }
-
-        // Simpan & Download Gambar
+        // Download File
         var a = document.createElement('a');
         a.href = canvas.toDataURL('image/png');
         a.download = fileName + '.png';
