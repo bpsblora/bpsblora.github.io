@@ -1224,21 +1224,25 @@
         if (i === 0) {
           currentPml = pmlOfU;
         } else if (pmlOfU !== currentPml) {
-          // 1. Garis pembatas horizontal antar PML (Memanjang dari area nama sampai ujung kanan)
+          // PERBAIKAN: Posisi sela antar-baris persis ada di selisih indeks
+          // Karena ECharts dirender dari bawah, batas antar bar (i-1) dan (i) adalah (i - 0.5)
+          var splitY = i - 0.5;
+
+          // 1. Garis pembatas tepat di celah kosong antar-petugas
           markLineData.push({
-            yAxis: i - 0.5,
+            yAxis: splitY,
             lineStyle: { 
               type: 'dashed', 
-              color: 'rgba(84, 68, 43, 0.45)', // Warna garis putus-putus lebih dipertegas
+              color: '#8c7a5c', // Warna cokelat tegas agar pemisah terlihat jelas
               width: 1.5 
             }
           });
 
-          // 2. Area oranye dipergelap sedikit (dari 0.06 menjadi 0.12 agar lebih kontras)
+          // 2. Area blok background melingkupi dari celah awal hingga celah akhir
           if (isEvenGroup) {
             markAreaData.push([
-              { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.12)' } },
-              { yAxis: i - 0.5 }
+              { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.14)' } },
+              { yAxis: splitY }
             ]);
           }
 
