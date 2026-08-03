@@ -1613,11 +1613,10 @@
       XLSX.writeFile(wb, fileName + '.xlsx');
     }
 
-    // B. DOWNLOAD GAMBAR PNG (Digambar penuh dengan Header Judul)
+    // B. DOWNLOAD GAMBAR PNG (Digambar penuh dengan Header Judul & Ideal Badge)
     else if (format === 'image') {
       var tempDiv = document.createElement('div');
       tempDiv.style.width = '1000px';
-      // MENDUKUNG TINGGI LEBIH BESAR JIKA MULTILINE
       tempDiv.style.height = chartHeight(agg.usernames.length, !!agg.pmlMapping) + 'px';
       tempDiv.style.position = 'absolute';
       tempDiv.style.left = '-9999px';
@@ -1627,9 +1626,6 @@
       var chartOption = buildStackedBarOption(agg, statusCols);
       chartOption.animation = false; 
       tempChart.setOption(chartOption, true);
-
-
-      
 
       // Ambil Data URL Gambar Chart
       var chartUrl = tempChart.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#ffffff' });
@@ -1661,7 +1657,7 @@
         ctx.font = '14px "Inter", sans-serif';
         ctx.fillText('Filter: ' + kecText + pmlText + '  |  Diunduh: ' + new Date().toLocaleString('id-ID'), 30, 90);
 
-        // Garis Pembatas
+        // Garis Pembatas Header
         ctx.strokeStyle = '#F0E8D5';
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -1669,10 +1665,54 @@
         ctx.lineTo(canvas.width - 30, 98);
         ctx.stroke();
 
-        // Tempelkan Grafik
+        // Tempelkan Grafik Utama
         ctx.drawImage(img, 0, headerHeight);
 
-        // Download
+        // ---- TAMBAHAN: LUKIS IDEAL BADGE (VERTIKAL) PADA GAMBAR ----
+        if (agg.displayMode === 'persen' && agg.usernames.length > 0) {
+          var px = tempChart.convertToPixel({xAxisIndex: 0}, IDEAL_PCT);
+          if (!isNaN(px)) {
+            // Hitung posisi tengah vertikal grafik
+            var centerY = headerHeight + (img.height / 2);
+            var badgeText = 'Ideal (Hari Ke-' + IDEAL_DIFF_DAYS + '): ' + IDEAL_PCT.toFixed(1) + '%';
+
+            ctx.save();
+            ctx.translate(px, centerY);
+            ctx.rotate(Math.PI / 2); // Putar 90 derajat searah jarum jam
+
+            // Ukur dimensi teks untuk latar belakang kotak
+            ctx.font = '800 11px "IBM Plex Mono", monospace';
+            var textMetrics = ctx.measureText(badgeText);
+            var paddingX = 14;
+            var paddingY = 6;
+            var boxWidth = textMetrics.width + (paddingX * 2);
+            var boxHeight = 22;
+
+            // Gambar Kotak Latar Badge
+            ctx.fillStyle = 'rgba(255, 251, 240, 0.95)';
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 1;
+            
+            ctx.beginPath();
+            if (ctx.roundRect) {
+              ctx.roundRect(-boxWidth / 2, -boxHeight / 2, boxWidth, boxHeight, 8);
+            } else {
+              ctx.rect(-boxWidth / 2, -boxHeight / 2, boxWidth, boxHeight);
+            }
+            ctx.fill();
+            ctx.stroke();
+
+            // Tulis Teks Badge
+            ctx.fillStyle = '#b45309';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(badgeText, 0, 1);
+
+            ctx.restore();
+          }
+        }
+
+        // Simpan & Download Gambar
         var a = document.createElement('a');
         a.href = canvas.toDataURL('image/png');
         a.download = fileName + '.png';
