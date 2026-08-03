@@ -943,6 +943,7 @@
   }
 
   // Helper untuk mengubah format "03-08-2026 07:42:41 WIB" / ISO menjadi "3 Agustus 2026 07:42:41 WIB"
+  // Helper untuk mengubah format "03-08-2026 07:42:41 WIB" / ISO menjadi "3 Agustus 2026" (baris atas) dan jam (baris bawah)
   function formatDateToIndonesian(dateStr) {
     if (!dateStr) return 'Tidak tersedia';
 
@@ -959,10 +960,12 @@
       var day = parseInt(match[1], 10);
       var monthIdx = parseInt(match[2], 10) - 1;
       var year = match[3];
-      var timePart = match[4] || ''; // Mengambil bagian jam jika ada (misal: " 07:42:41 WIB")
+      var timePart = match[4] ? match[4].trim() : ''; 
 
       if (monthIdx >= 0 && monthIdx < 12) {
-        return day + ' ' + MONTH_NAMES[monthIdx] + ' ' + year + timePart;
+        // Sisipkan tag <br> dan span untuk menurunkan jam serta mengecilkan ukurannya
+        var timeHtml = timePart ? '<br><span style="font-size: 20px; color: var(--ink-soft); display: inline-block; margin-top: 4px;">' + timePart + '</span>' : '';
+        return day + ' ' + MONTH_NAMES[monthIdx] + ' ' + year + timeHtml;
       }
     }
 
@@ -973,7 +976,7 @@
       var m = MONTH_NAMES[parsedDate.getMonth()];
       var y = parsedDate.getFullYear();
       var timeStr = parsedDate.toTimeString().split(' ')[0];
-      return d + ' ' + m + ' ' + y + ' ' + timeStr + ' WIB';
+      return d + ' ' + m + ' ' + y + '<br><span style="font-size: 20px; color: var(--ink-soft); display: inline-block; margin-top: 4px;">' + timeStr + ' WIB</span>';
     }
 
     // Jika sudah berupa format teks biasa, kembalikan apa adanya
@@ -981,7 +984,8 @@
   }
 
   function renderLastUpdated(data) { 
-    el.lastUpdatedValue.textContent = formatDateToIndonesian(data.lastUpdated); 
+    // PENTING: Ganti textContent menjadi innerHTML agar tag <br> dapat dirender
+    el.lastUpdatedValue.innerHTML = formatDateToIndonesian(data.lastUpdated); 
   }
 
 
