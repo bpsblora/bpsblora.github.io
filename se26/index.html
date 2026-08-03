@@ -1210,14 +1210,13 @@
       markLineData.push({ xAxis: IDEAL_PCT });
     }
 
-    // ---- LOGIKA PEMISAH & AREA BACKGROUND PER PML (SORT BY PML) ----
+    // ---- LOGIKA PEMISAH & AREA BACKGROUND PER PML ----
     var markAreaData = [];
     if (agg.pmlMapping && agg.usernames.length > 0) {
       var currentPml = null;
       var groupStartIndex = 0;
       var isEvenGroup = false;
 
-      // Iterasi dari bawah ke atas sesuai urutan bar di ECharts (0 adalah bar terbawah)
       for (var i = 0; i < agg.usernames.length; i++) {
         var u = agg.usernames[i];
         var pmlOfU = agg.pmlMapping[u] || 'Z_Tanpa_PML';
@@ -1225,16 +1224,20 @@
         if (i === 0) {
           currentPml = pmlOfU;
         } else if (pmlOfU !== currentPml) {
-          // 1. Tambahkan garis batas antar PML
+          // 1. Garis pembatas horizontal antar PML (Memanjang dari area nama sampai ujung kanan)
           markLineData.push({
             yAxis: i - 0.5,
-            lineStyle: { type: 'dashed', color: 'rgba(84, 68, 43, 0.4)', width: 1.5 }
+            lineStyle: { 
+              type: 'dashed', 
+              color: 'rgba(84, 68, 43, 0.45)', // Warna garis putus-putus lebih dipertegas
+              width: 1.5 
+            }
           });
 
-          // 2. Beri warna latar selang-seling untuk grup PML yang genap
+          // 2. Area oranye dipergelap sedikit (dari 0.06 menjadi 0.12 agar lebih kontras)
           if (isEvenGroup) {
             markAreaData.push([
-              { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.06)' } },
+              { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.12)' } },
               { yAxis: i - 0.5 }
             ]);
           }
@@ -1248,13 +1251,12 @@
       // Tutup blok area PML terakhir
       if (isEvenGroup) {
         markAreaData.push([
-          { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.06)' } },
+          { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.12)' } },
           { yAxis: agg.usernames.length - 0.5 }
         ]);
       }
     }
 
-    // Konfigurasi MarkLine gabungan (Line Ideal + Line Pemisah PML)
     var markLineObj = {
       symbol: ['none', 'none'],
       silent: true,
@@ -1263,13 +1265,11 @@
       data: markLineData
     };
 
-    // Konfigurasi MarkArea
     var markAreaObj = {
       silent: true,
       data: markAreaData
     };
 
-    // Masukkan data seri bayangan (untuk angka total & visual pembatas)
     series.push({
       name: '__total__', type: 'bar', stack: 'total', barMaxWidth: 22, silent: true, itemStyle: { color: 'transparent' },
       label: {
@@ -1311,7 +1311,11 @@
       grid: { left: 8, right: isPersen ? 80 : 60, top: 40, bottom: 8, containLabel: true },
       xAxis: { type: 'value', splitLine: { lineStyle: { color: '#F0E8D5' } }, axisLabel: { fontFamily: 'IBM Plex Mono', fontSize: 11, color: '#54442B', formatter: function(v) { return isPersen ? v + '%' : v; } } },
       yAxis: { 
-        type: 'category', data: agg.usernames, 
+        type: 'category', 
+        data: agg.usernames, 
+        // PENTING: Memastikan batas garis memotong penuh dari paling kiri
+        axisLine: { onZero: false, lineStyle: { color: '#E8DECA' } }, 
+        axisTick: { show: false },
         axisLabel: { 
           fontFamily: 'IBM Plex Mono', fontSize: 11.5, color: '#211909', fontWeight: 500, 
           formatter: function (value) { 
@@ -1322,8 +1326,7 @@
             return name; 
           },
           rich: { pml: { fontSize: 10, color: '#968972', padding: [2, 0, 0, 0] } }
-        }, 
-        axisLine: { lineStyle: { color: '#E8DECA' } }, axisTick: { show: false } 
+        }
       },
       series: series
     };
