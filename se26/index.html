@@ -940,7 +940,50 @@
     el.errorMessage.textContent = (err && err.message) ? err.message : 'Gagal memuat data. Periksa akses spreadsheet atau coba muat ulang.';
   }
 
-  function renderLastUpdated(data) { el.lastUpdatedValue.textContent = data.lastUpdated || 'Tidak tersedia'; }
+  // Helper untuk mengubah format "03-08-2026 07:42:41 WIB" / ISO menjadi "3 Agustus 2026 07:42:41 WIB"
+  function formatDateToIndonesian(dateStr) {
+    if (!dateStr) return 'Tidak tersedia';
+
+    var MONTH_NAMES = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    // Cek jika formatnya mengandung pola tanggal angka "DD-MM-YYYY" atau "YYYY-MM-DD"
+    var regexDDMMYYYY = /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(.*)$/;
+    var match = dateStr.trim().match(regexDDMMYYYY);
+
+    if (match) {
+      var day = parseInt(match[1], 10);
+      var monthIdx = parseInt(match[2], 10) - 1;
+      var year = match[3];
+      var timePart = match[4] || ''; // Mengambil bagian jam jika ada (misal: " 07:42:41 WIB")
+
+      if (monthIdx >= 0 && monthIdx < 12) {
+        return day + ' ' + MONTH_NAMES[monthIdx] + ' ' + year + timePart;
+      }
+    }
+
+    // Jika datang dalam format Date string standar JS/ISO
+    var parsedDate = new Date(dateStr);
+    if (!isNaN(parsedDate.getTime())) {
+      var d = parsedDate.getDate();
+      var m = MONTH_NAMES[parsedDate.getMonth()];
+      var y = parsedDate.getFullYear();
+      var timeStr = parsedDate.toTimeString().split(' ')[0];
+      return d + ' ' + m + ' ' + y + ' ' + timeStr + ' WIB';
+    }
+
+    // Jika sudah berupa format teks biasa, kembalikan apa adanya
+    return dateStr;
+  }
+
+  function renderLastUpdated(data) { 
+    el.lastUpdatedValue.textContent = formatDateToIndonesian(data.lastUpdated); 
+  }
+
+
+  
   function sumCols(totals, cols) { var sum = 0; cols.forEach(function (c) { sum += (totals[c] || 0); }); return sum; }
 
   function renderProgressCard(data) {
@@ -1216,33 +1259,37 @@
       var currentPml = null;
       var groupStartIndex = 0;
       var isEvenGroup = false;
+      var totalUser = agg.usernames.length;
 
-      for (var i = 0; i < agg.usernames.length; i++) {
+      for (var i = 0; i < totalUser; i++) {
         var u = agg.usernames[i];
         var pmlOfU = agg.pmlMapping[u] || 'Z_Tanpa_PML';
 
         if (i === 0) {
           currentPml = pmlOfU;
         } else if (pmlOfU !== currentPml) {
-          // PERBAIKAN: Posisi sela antar-baris persis ada di selisih indeks
-          // Karena ECharts dirender dari bawah, batas antar bar (i-1) dan (i) adalah (i - 0.5)
-          var splitY = i - 0.5;
+          // KONVERSI INDEKS: ECharts merender array secara terbalik (0 di bawah)
+          // Koordinat sela antar-baris yang presisi = (totalData - indeks_sekarang) - 0.5
+          var splitY = (totalUser - i) - 0.5;
 
-          // 1. Garis pembatas tepat di celah kosong antar-petugas
+          // 1. Garis pemisah horizontal tepat berada di sela-sela antar kelompok PML
           markLineData.push({
             yAxis: splitY,
             lineStyle: { 
               type: 'dashed', 
-              color: '#8c7a5c', // Warna cokelat tegas agar pemisah terlihat jelas
+              color: '#7c6847', // Warna cokelat tegas agar jelas memisahkan kelompok
               width: 1.5 
             }
           });
 
-          // 2. Area blok background melingkupi dari celah awal hingga celah akhir
+          // 2. Hitung posisi batas area background kelompok PML
+          var yStart = (totalUser - groupStartIndex) - 0.5;
+          var yEnd = splitY;
+
           if (isEvenGroup) {
             markAreaData.push([
-              { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.14)' } },
-              { yAxis: splitY }
+              { yAxis: yStart, itemStyle: { color: 'rgba(254, 189, 37, 0.12)' } },
+              { yAxis: yEnd }
             ]);
           }
 
@@ -1252,11 +1299,12 @@
         }
       }
 
-      // Tutup blok area PML terakhir
+      // Tutup blok area PML terakhir (di bagian paling bawah grafik)
       if (isEvenGroup) {
+        var yStartLast = (totalUser - groupStartIndex) - 0.5;
         markAreaData.push([
-          { yAxis: groupStartIndex - 0.5, itemStyle: { color: 'rgba(254, 189, 37, 0.12)' } },
-          { yAxis: agg.usernames.length - 0.5 }
+          { yAxis: yStartLast, itemStyle: { color: 'rgba(254, 189, 37, 0.12)' } },
+          { yAxis: -0.5 }
         ]);
       }
     }
