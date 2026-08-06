@@ -132,37 +132,66 @@
   }
   .state-banner--error { border-color: #F3C6B8; background: #FFF6F2; color: #9A3412; }
 
-  /* ---- Cards ---- */
+  /* =====================================================
+     HERO STAT CARDS
+     ===================================================== */
   .cards {
     display: grid;
     grid-template-columns: 1fr 1.6fr;
     gap: 16px;
-    margin-top: 24px;
   }
   .card {
+    position: relative;
     background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
-    padding: 20px 22px;
+    padding: 22px 24px;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--orange) 0%, var(--orange-deep) 100%);
+    opacity: 0.9;
+  }
+
+  .card__icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--orange-50);
+    color: var(--orange-deep);
+    margin-bottom: 14px;
+  }
+  .card--progress .card__icon { background: var(--blue-accent-soft); color: var(--blue-accent); }
+
+  .card__top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+
   .card__label {
-    font-size: 12.5px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+    color: var(--slate);
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .card__value {
     font-family: var(--font-display);
-    font-size: 26px;
+    font-size: 25px;
     font-weight: 700;
     margin-top: 8px;
     color: var(--ink);
+    line-height: 1.25;
   }
   .card__value--mono { font-family: var(--font-mono); }
-  .card__value--big { font-size: 34px; color: var(--orange-deep); }
+  .card__value--big { font-size: 38px; color: var(--navy-950); }
   .card__caption { margin-top: 4px; font-size: 12.5px; color: var(--slate); }
+
 
   .progress-row {
     display: flex;
