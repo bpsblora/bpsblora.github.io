@@ -724,8 +724,8 @@
     var startDate = new Date(2026, 5, 15); // 15 Juni 2026
     var today = new Date();
     var diffTime = today.getTime() - startDate.getTime();
-    IDEAL_DIFF_DAYS = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    if (IDEAL_DIFF_DAYS < 0) IDEAL_DIFF_DAYS = 0;
+    IDEAL_DIFF_DAYS = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    if (IDEAL_DIFF_DAYS < 0) IDEAL_DIFF_DAYS = 1;
     if (IDEAL_DIFF_DAYS > 75) IDEAL_DIFF_DAYS = 75;
     IDEAL_PCT = (IDEAL_DIFF_DAYS / 75) * 100;
   })();
