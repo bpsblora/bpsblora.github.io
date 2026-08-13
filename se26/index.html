@@ -1761,12 +1761,18 @@
       wsData.push(['Waktu Unduh: ' + new Date().toLocaleString('id-ID')]);
       wsData.push([]); 
 
+      // --- TAMBAHAN BARU: Deteksi Mode Target ---
+      var targetMode = document.querySelector('input[name="targetMode"]:checked').value;
+      var targetLabel = targetMode === 'berjalan' ? 'Target (Prelist Berjalan)' : 'Target (Prelist Awal)';
+
       var colHeader = [];
       if (type === 'ppl' && agg.pmlMapping) { colHeader.push('Pengawas (PML)'); }
       colHeader.push(type === 'kec' ? 'Nama Kecamatan' : 'Nama Petugas');
       statusCols.forEach(function(c) { colHeader.push(c); });
-      colHeader.push('Target Alokasi', 'Total Capaian', 'Persentase Capaian (%)');
-      wsData.push(colHeader);
+      
+      // --- UBAH HEADER DI SINI ---
+      colHeader.push(targetLabel, 'Total Capaian', 'Persentase Capaian (%)'); 
+      wsData.push(colHeader);;
 
       // LOOP MUNDUR agar Excel juga mengurutkan tertinggi di atas
       for (var i = agg.usernames.length - 1; i >= 0; i--) {
@@ -1906,9 +1912,11 @@
     wsData.push(['Seluruh Kecamatan · Target: ' + (targetMode === 'berjalan' ? 'Prelist Berjalan' : 'Prelist Awal') + ' · Waktu Unduh: ' + new Date().toLocaleString('id-ID')]);
     wsData.push([]);
 
+    var targetLabel = targetMode === 'berjalan' ? 'Target (Prelist Berjalan)' : 'Target (Prelist Awal)';
+    
     var header = ['Kode Kecamatan', 'Nama Kecamatan', 'Petugas ' + roleLabel];
     statusCols.forEach(function(c) { header.push(c); });
-    header.push('Target Alokasi', 'Total Capaian', 'Persentase (%)');
+    header.push(targetLabel, 'Total Capaian', 'Persentase (%)');
     wsData.push(header);
 
     var rowCount = 0;
@@ -1967,9 +1975,13 @@
       return;
     }
 
+    var targetMode = document.querySelector('input[name="targetMode"]:checked').value;
+    var targetLabelInfo = targetMode === 'berjalan' ? 'Prelist Berjalan' : 'Prelist Awal';
+
     var wsData = [];
     wsData.push(['PROGRES PER SLS - SE2026 BPS KABUPATEN BLORA']);
-    wsData.push(['Seluruh Kecamatan (data Pencacah/PPL) · Waktu Unduh: ' + new Date().toLocaleString('id-ID')]);
+    // --- UBAH SUB-JUDUL DI SINI ---
+    wsData.push(['Seluruh Kecamatan (data Pencacah/PPL) · Mode Target Aktif: ' + targetLabelInfo + ' · Waktu Unduh: ' + new Date().toLocaleString('id-ID')]);
     wsData.push([]);
 
     var header = ['Kode Wilayah (regionCode)', 'Kode Kecamatan', 'Nama Kecamatan', 'Kode Desa', 'Kode SLS', 'Kode SubSLS', 'Petugas Pencacah'];
