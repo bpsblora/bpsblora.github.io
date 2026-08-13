@@ -711,7 +711,6 @@
               <button class="btn-download dropdown__toggle" type="button" onclick="toggleDropdown('dropdownExcelKec', event)">📊 Unduh Excel</button>
               <div class="dropdown__menu">
                 <button class="dropdown__item" onclick="closeAllDropdowns(); downloadPanel('kec', 'excel');">🏘️ Progres per Kecamatan</button>
-                <button class="dropdown__item" onclick="closeAllDropdowns(); downloadKecamatanExcelBySls();">📍 Progres per SLS</button>
                 <button class="dropdown__item" onclick="closeAllDropdowns(); downloadKecamatanExcelByRole('ppl');">🧑‍💼 Progres per Pencacah (PPL)</button>
                 <button class="dropdown__item" onclick="closeAllDropdowns(); downloadKecamatanExcelByRole('pml');">🧑‍🏫 Progres per Pengawas (PML)</button>
               </div>
@@ -1963,61 +1962,8 @@
     XLSX.writeFile(wb, 'Progres_' + (isPpl ? 'PPL' : 'PML') + '_Semua_Kecamatan_SE2026.xlsx');
   };
 
-  // ---- EXCEL: PROGRES PER SLS — se-Kabupaten -----------------------------
-  // Memakai dashboardData.pencacah.slsRows, yaitu data mentah per baris
-  // regionCode yang dikirim backend KHUSUS untuk fitur ini. Jika backend
-  // belum diperbarui (belum ada slsRows), tampilkan pesan yang jelas.
-  window.downloadKecamatanExcelBySls = function() {
-    var slsRows = dashboardData.pencacah && dashboardData.pencacah.slsRows;
 
-    if (!slsRows || slsRows.length === 0) {
-      alert('Data per SLS belum tersedia dari server.\n\nBackend (Google Apps Script) perlu diperbarui terlebih dahulu agar mengirim data level SLS ke dashboard.');
-      return;
-    }
-
-    var targetMode = document.querySelector('input[name="targetMode"]:checked').value;
-    var targetLabelInfo = targetMode === 'berjalan' ? 'Prelist Berjalan' : 'Prelist Awal';
-
-    var wsData = [];
-    wsData.push(['PROGRES PER SLS - SE2026 BPS KABUPATEN BLORA']);
-    // --- UBAH SUB-JUDUL DI SINI ---
-    wsData.push(['Seluruh Kecamatan (data Pencacah/PPL) · Mode Target Aktif: ' + targetLabelInfo + ' · Waktu Unduh: ' + new Date().toLocaleString('id-ID')]);
-    wsData.push([]);
-
-    var header = ['Kode Wilayah (regionCode)', 'Kode Kecamatan', 'Nama Kecamatan', 'Kode Desa', 'Kode SLS', 'Kode SubSLS', 'Petugas Pencacah'];
-    ALL_COLS.forEach(function(c) { header.push(c); });
-    header.push('Total Dokumen');
-    wsData.push(header);
-
-    // Urutkan berdasarkan regionCode agar rapi per kecamatan -> desa -> SLS
-    var sorted = slsRows.slice().sort(function(a, b) { return a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0); });
-
-    sorted.forEach(function(r) {
-      var regionCode = r[0];
-      var username = r[1];
-      var values = r.slice(2); // urutan nilai mengikuti ALL_COLS (sama seperti backend ALL_STATUS_COLS)
-
-      var kecCode = regionCode.substring(0, 7);
-      var subKec = regionCode.length >= 7 ? regionCode.substring(4, 7) : kecCode;
-      var kecName = KECAMATAN_NAMES[subKec] || ('Kecamatan ' + subKec);
-      var desaCode = regionCode.length >= 10 ? regionCode.substring(7, 10) : '';
-      var slsCode = regionCode.length >= 14 ? regionCode.substring(10, 14) : '';
-      var subSlsCode = regionCode.length >= 16 ? regionCode.substring(14, 16) : '';
-
-      var total = values.reduce(function(s, v) { return s + (v || 0); }, 0);
-
-      var row = [regionCode, kecCode, kecName, desaCode, slsCode, subSlsCode, getRealName(username)];
-      values.forEach(function(v) { row.push(v); });
-      row.push(total);
-      wsData.push(row);
-    });
-
-    var wb = XLSX.utils.book_new();
-    var ws = XLSX.utils.aoa_to_sheet(wsData);
-    ws['!cols'] = [{ wch: 20 }, { wch: 12 }, { wch: 18 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 30 }];
-    XLSX.utils.book_append_sheet(wb, ws, 'Progres SLS');
-    XLSX.writeFile(wb, 'Progres_SLS_Semua_Kecamatan_SE2026.xlsx');
-  };
+  
 
   // ---- FUNGSI DOWNLOAD PECAH PER PML (MULTIPLE DOWNLOADS) ----
   
