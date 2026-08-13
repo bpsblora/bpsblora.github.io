@@ -548,6 +548,41 @@
     border-color: var(--ink);
   }
 
+  /* ---- Dropdown Ekspor Excel (4 opsi) ---- */
+  .dropdown { position: relative; display: inline-flex; }
+  .dropdown__toggle::after { content: ' \25BE'; font-size: 10px; margin-left: 2px; }
+  .dropdown__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 240px;
+    background: #FFFBF0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(33,25,9,0.14);
+    padding: 6px;
+    z-index: 300;
+    display: none;
+  }
+  .dropdown.is-open .dropdown__menu { display: block; }
+  .dropdown__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--orange-deep);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease;
+  }
+  .dropdown__item:hover { background: var(--orange); color: var(--ink); }
+
     
 </style>
 </head>
@@ -672,7 +707,15 @@
           </div>
           <div class="panel__action">
             <button class="btn-download" onclick="downloadPanel('kec', 'image')">📷 Unduh Gambar</button>
-            <button class="btn-download" onclick="downloadPanel('kec', 'excel')">📊 Unduh Excel</button>
+            <div class="dropdown" id="dropdownExcelKec">
+              <button class="btn-download dropdown__toggle" type="button" onclick="toggleDropdown('dropdownExcelKec', event)">📊 Unduh Excel</button>
+              <div class="dropdown__menu">
+                <button class="dropdown__item" onclick="closeAllDropdowns(); downloadPanel('kec', 'excel');">🏘️ Progres per Kecamatan</button>
+                <button class="dropdown__item" onclick="closeAllDropdowns(); downloadKecamatanExcelBySls();">📍 Progres per SLS</button>
+                <button class="dropdown__item" onclick="closeAllDropdowns(); downloadKecamatanExcelByRole('ppl');">🧑‍💼 Progres per Pencacah (PPL)</button>
+                <button class="dropdown__item" onclick="closeAllDropdowns(); downloadKecamatanExcelByRole('pml');">🧑‍🏫 Progres per Pengawas (PML)</button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="chart-scroll-wrapper" id="wrapper-kec">
@@ -912,7 +955,7 @@
     return username;
   }
 
-  const API_URL = "https://script.google.com/macros/s/AKfycbyyo0jdmBCucGf8bRu6v8JA3GHAL8zLZJw8fmKm94plXH8oIxNDrHS6s3hH2UebxybY/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbyGBU58o_Ty5GKGrBIvwXJCy_2kevOioMho0x7AWNcaMiTgB1S02D8pweMXLFbbg_8Q/exec";
 
   function loadData(forceRefresh) {
     el.refreshIcon.classList.add('is-spinning');
@@ -1822,6 +1865,138 @@
         document.body.removeChild(tempDiv);
       };
     }
+  };
+
+  // ---- DROPDOWN "UNDUH EXCEL" DI PANEL PROGRES PER KECAMATAN -------------
+  window.toggleDropdown = function(id, evt) {
+    if (evt) evt.stopPropagation();
+    var dd = document.getElementById(id);
+    var wasOpen = dd.classList.contains('is-open');
+    closeAllDropdowns();
+    if (!wasOpen) dd.classList.add('is-open');
+  };
+  window.closeAllDropdowns = function() {
+    document.querySelectorAll('.dropdown.is-open').forEach(function(dd) { dd.classList.remove('is-open'); });
+  };
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.dropdown')) closeAllDropdowns();
+  });
+
+  // ---- EXCEL: PROGRES PER PENCACAH (PPL) / PER PENGAWAS (PML) — se-Kabupaten ----
+  // Tidak tergantung filter kecamatan/PML yang sedang aktif; merekap SELURUH
+  // kecamatan sekaligus, memakai data yang sudah ada (tidak perlu ubah backend).
+  window.downloadKecamatanExcelByRole = function(role) {
+    var isPpl = role === 'ppl';
+    var sheetObj = isPpl ? dashboardData.pencacah : dashboardData.pengawas;
+    var statusCols = isPpl ? PPL_COLS : PML_COLS;
+    var kecCodes = dashboardData.kecamatanList;
+    var targetMode = document.querySelector('input[name="targetMode"]:checked').value;
+    var roleLabel = isPpl ? 'Pencacah (PPL)' : 'Pengawas (PML)';
+
+    var wsData = [];
+    wsData.push(['PROGRES PER PETUGAS ' + roleLabel.toUpperCase() + ' - SE2026 BPS KABUPATEN BLORA']);
+    wsData.push(['Seluruh Kecamatan · Target: ' + (targetMode === 'berjalan' ? 'Prelist Berjalan' : 'Prelist Awal') + ' · Waktu Unduh: ' + new Date().toLocaleString('id-ID')]);
+    wsData.push([]);
+
+    var header = ['Kode Kecamatan', 'Nama Kecamatan', 'Petugas ' + roleLabel];
+    statusCols.forEach(function(c) { header.push(c); });
+    header.push('Target Alokasi', 'Total Capaian', 'Persentase (%)');
+    wsData.push(header);
+
+    var rowCount = 0;
+    kecCodes.forEach(function(kecCode) {
+      var bucket = sheetObj.byKecamatan[kecCode];
+      if (!bucket) return;
+
+      var subCode = kecCode.length >= 7 ? kecCode.substring(4, 7) : kecCode;
+      var kecName = KECAMATAN_NAMES[subCode] || ('Kecamatan ' + subCode);
+      var prelistKec = dashboardData.prelistAwal ? dashboardData.prelistAwal.byKecamatan[kecCode] : null;
+
+      Object.keys(bucket.byUsername).sort().forEach(function(username) {
+        var row = [kecCode, kecName, getRealName(username)];
+        var total = 0;
+        statusCols.forEach(function(c) {
+          var v = bucket.byUsername[username][c] || 0;
+          row.push(v);
+          total += v;
+        });
+
+        var target = 0;
+        if (targetMode === 'berjalan') {
+          ALL_COLS.forEach(function(c) { target += (bucket.byUsername[username][c] || 0); });
+        } else if (prelistKec) {
+          target = (isPpl ? prelistKec.byPpl[username] : prelistKec.byPml[username]) || 0;
+        }
+
+        var pct = target > 0 ? Number(((total / target) * 100).toFixed(2)) : 0;
+        row.push(target, total, pct);
+        wsData.push(row);
+        rowCount++;
+      });
+    });
+
+    if (rowCount === 0) {
+      alert('Tidak ada data ' + roleLabel + ' untuk diunduh.');
+      return;
+    }
+
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(wsData);
+    ws['!cols'] = [{ wch: 14 }, { wch: 20 }, { wch: 32 }];
+    XLSX.utils.book_append_sheet(wb, ws, 'Progres ' + (isPpl ? 'PPL' : 'PML'));
+    XLSX.writeFile(wb, 'Progres_' + (isPpl ? 'PPL' : 'PML') + '_Semua_Kecamatan_SE2026.xlsx');
+  };
+
+  // ---- EXCEL: PROGRES PER SLS — se-Kabupaten -----------------------------
+  // Memakai dashboardData.pencacah.slsRows, yaitu data mentah per baris
+  // regionCode yang dikirim backend KHUSUS untuk fitur ini. Jika backend
+  // belum diperbarui (belum ada slsRows), tampilkan pesan yang jelas.
+  window.downloadKecamatanExcelBySls = function() {
+    var slsRows = dashboardData.pencacah && dashboardData.pencacah.slsRows;
+
+    if (!slsRows || slsRows.length === 0) {
+      alert('Data per SLS belum tersedia dari server.\n\nBackend (Google Apps Script) perlu diperbarui terlebih dahulu agar mengirim data level SLS ke dashboard.');
+      return;
+    }
+
+    var wsData = [];
+    wsData.push(['PROGRES PER SLS - SE2026 BPS KABUPATEN BLORA']);
+    wsData.push(['Seluruh Kecamatan (data Pencacah/PPL) · Waktu Unduh: ' + new Date().toLocaleString('id-ID')]);
+    wsData.push([]);
+
+    var header = ['Kode Wilayah (regionCode)', 'Kode Kecamatan', 'Nama Kecamatan', 'Kode Desa', 'Kode SLS', 'Kode SubSLS', 'Petugas Pencacah'];
+    ALL_COLS.forEach(function(c) { header.push(c); });
+    header.push('Total Dokumen');
+    wsData.push(header);
+
+    // Urutkan berdasarkan regionCode agar rapi per kecamatan -> desa -> SLS
+    var sorted = slsRows.slice().sort(function(a, b) { return a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0); });
+
+    sorted.forEach(function(r) {
+      var regionCode = r[0];
+      var username = r[1];
+      var values = r.slice(2); // urutan nilai mengikuti ALL_COLS (sama seperti backend ALL_STATUS_COLS)
+
+      var kecCode = regionCode.substring(0, 7);
+      var subKec = regionCode.length >= 7 ? regionCode.substring(4, 7) : kecCode;
+      var kecName = KECAMATAN_NAMES[subKec] || ('Kecamatan ' + subKec);
+      var desaCode = regionCode.length >= 10 ? regionCode.substring(7, 10) : '';
+      var slsCode = regionCode.length >= 14 ? regionCode.substring(10, 14) : '';
+      var subSlsCode = regionCode.length >= 16 ? regionCode.substring(14, 16) : '';
+
+      var total = values.reduce(function(s, v) { return s + (v || 0); }, 0);
+
+      var row = [regionCode, kecCode, kecName, desaCode, slsCode, subSlsCode, getRealName(username)];
+      values.forEach(function(v) { row.push(v); });
+      row.push(total);
+      wsData.push(row);
+    });
+
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.aoa_to_sheet(wsData);
+    ws['!cols'] = [{ wch: 20 }, { wch: 12 }, { wch: 18 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 30 }];
+    XLSX.utils.book_append_sheet(wb, ws, 'Progres SLS');
+    XLSX.writeFile(wb, 'Progres_SLS_Semua_Kecamatan_SE2026.xlsx');
   };
 
   // ---- FUNGSI DOWNLOAD PECAH PER PML (MULTIPLE DOWNLOADS) ----
