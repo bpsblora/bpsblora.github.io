@@ -955,37 +955,45 @@
     return username;
   }
 
-  const API_URL = "https://script.google.com/macros/s/AKfycbx17wRMfbfkYa17I476horvp3SriJfhMPj88AEZ4LC44pvaeX0PORFmsEJSFFO1CEv_/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbz0g9R-3r5prj3gBBbMeimbIsRnd2djqXnpcuO6gAiEycpU54IVd2lRiuGmJj8vj0yX/exec";
 
   function loadData(forceRefresh) {
-    el.refreshIcon.classList.add('is-spinning');
-    el.refreshBtn.style.display = 'none';
+  el.refreshIcon.classList.add('is-spinning');
+  el.refreshBtn.style.display = 'none';
 
-    if (!dashboardData) {
-      el.loading.style.display = 'flex';
-      el.error.style.display = 'none';
-      el.content.style.display = 'none';
-    } else if (forceRefresh) {
-      el.loading.style.display = 'flex'; 
-    }
-
-    let targetUrl = API_URL;
-    if (forceRefresh) {
-      targetUrl += (targetUrl.indexOf('?') > -1 ? '&' : '?') + 'refresh=true';
-    }
-
-    fetch(targetUrl)
-      .then(function(response) {
-        if (!response.ok) throw new Error('Gagal terhubung ke server Google Apps Script');
-        return response.json();
-      })
-      .then(function(data) {
-        onDataLoaded(data);
-      })
-      .catch(function(err) {
-        onDataError(err);
-      });
+  if (!dashboardData) {
+    el.loading.style.display = 'flex';
+    el.error.style.display = 'none';
+    el.content.style.display = 'none';
+  } else if (forceRefresh) {
+    el.loading.style.display = 'flex'; 
   }
+
+  let targetUrl = API_URL;
+  if (forceRefresh) {
+    targetUrl += (targetUrl.indexOf('?') > -1 ? '&' : '?') + 'refresh=true';
+  }
+
+  // PERBAIKAN DI SINI: Tambahkan konfigurasi parameter fetch
+  fetch(targetUrl, {
+    method: 'GET',
+    redirect: 'follow' 
+  })
+    .then(function(response) {
+      if (!response.ok) throw new Error('Gagal terhubung ke server Google Apps Script. Kode: ' + response.status);
+      return response.json();
+    })
+    .then(function(data) {
+      // PERBAIKAN: Tangkap error khusus dari backend (jika ada)
+      if (data.error) {
+        throw new Error(data.message);
+      }
+      onDataLoaded(data);
+    })
+    .catch(function(err) {
+      onDataError(err);
+    });
+}
 
   function onDataLoaded(data) {
     dashboardData = data;
