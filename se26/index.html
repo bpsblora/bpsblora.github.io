@@ -818,8 +818,8 @@
     var diffTime = today.getTime() - startDate.getTime();
     IDEAL_DIFF_DAYS = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
     if (IDEAL_DIFF_DAYS < 0) IDEAL_DIFF_DAYS = 1;
-    if (IDEAL_DIFF_DAYS > 75) IDEAL_DIFF_DAYS = 75;
-    IDEAL_PCT = (IDEAL_DIFF_DAYS / 75) * 100;
+    if (IDEAL_DIFF_DAYS > 78) IDEAL_DIFF_DAYS = 78;
+    IDEAL_PCT = (IDEAL_DIFF_DAYS / 78) * 100;
   })();
 
   function syncIdealBadge(chartObj, agg, badgeId, textId) {
