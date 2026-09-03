@@ -9,7 +9,7 @@ $(function() {
                     } else {
                         $('body').addClass('show-sidebar'); 
                         $this.addClass('active');
-                    }
+                    }f
                     e.preventDefault();
                 });
 
@@ -227,11 +227,10 @@ var markerongeojsonsls = null;
                                         <div>
                                             <h5>Informasi Koordinat yang Dicari</h5>
                                             <p>Koordinat: <strong>${lat}, ${lon}</strong></p>
-                                            <p>Nama RT: <strong>${layer.feature.properties.nmsls}</strong></p>
-                                            <p>Nama Desa: <strong>${layer.feature.properties.nmdesa}</strong></p>
                                             <p>Nama Kecamatan: <strong>${layer.feature.properties.nmkec}</strong></p>
-                                        
-                                            
+                                            <p>Nama Desa: <strong>${layer.feature.properties.nmdesa}</strong></p>
+                                            <p>Nama SLS: <strong>${layer.feature.properties.nmsls}</strong></p>
+                                            <p>IDSubSLS: <strong>${layer.feature.properties.idsubsls}</strong></p>
 
                                             
                                             <a href="https://www.google.com/maps/dir/?api=1&destination=${lat} , ${lon} +
