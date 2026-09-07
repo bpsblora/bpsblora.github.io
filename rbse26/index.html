@@ -328,6 +328,9 @@
     transition: width 0.4s ease, background-color 0.4s ease; 
     display: block; /* Tambahan wajib agar width bisa berjalan */
   }
+  .row-leaf.is-incomplete {
+    background-color: var(--danger-tint); /* Memakai warna merah muda dari tema Anda */
+  }
 
   [hidden]{ display:none !important; }
 </style>
@@ -644,7 +647,17 @@ function createNodeElement(node, depth, forceOpen){
   const isLeaf = !node.children || node.children.length === 0;
 
   const row = document.createElement('div');
-  row.className = 'row ' + (isLeaf ? 'row-leaf' : 'row-branch');
+  
+  // Penentuan class baris: tambahkan 'is-incomplete' jika SLS belum terkumpul
+  let rowClasses = 'row ';
+  if (isLeaf) {
+    rowClasses += 'row-leaf';
+    if (!node.status) rowClasses += ' is-incomplete';
+  } else {
+    rowClasses += 'row-branch';
+  }
+  row.className = rowClasses;
+
   row.style.setProperty('--depth', depth);
 
   if(isLeaf){
@@ -689,6 +702,8 @@ function createNodeElement(node, depth, forceOpen){
   li.appendChild(childList);
   return li;
 }
+
+  
 
 function branchRowHTML(node, depth, open){
   const label = shouldTitleCase(depth) ? titleCaseID(node.label) : node.label;
