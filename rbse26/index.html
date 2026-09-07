@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receiving Batching — Dokumen SE2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ Token dasar ============ */
+  :root{
+    --paper:#EFF1EA;
+    --panel:#F8F9F5;
+    --ink:#1B2E2A;
+    --ink-muted:#5C6B63;
+    --ink-faint:#8C978F;
+    --line:#D9DED2;
+    --line-strong:#C3CBBB;
+    --done:#2F6F5E;
+    --done-tint:#DCEAE3;
+    --pending:#B8752E;
+    --pending-tint:#F3E3CC;
+    --danger:#A6432D;
+    --danger-tint:#F3DCD3;
+    --radius:6px;
+    --font-display:'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-body:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-variant-numeric:tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+  }
+
+  a{ color:var(--done); }
+
+  /* ============ Header ============ */
+  .topbar{
+    border-bottom:1px solid var(--line-strong);
+    background:var(--paper);
+  }
+  .topbar-inner{
+    max-width:920px; margin:0 auto;
+    padding:28px 20px 20px;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+    flex-wrap:wrap;
+  }
+  .title-block h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(22px, 4vw, 30px);
+    margin:0 0 6px;
+    line-height:1.15;
+  }
+  .title-block .loc{
+    margin:0; font-size:15px; color:var(--ink-muted);
+  }
+  .title-block .synced{
+    margin:2px 0 0; font-size:13px; color:var(--ink-faint);
+  }
+  .btn-refresh{
+    font-family:var(--font-body);
+    font-size:14px; font-weight:500;
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    color:var(--ink);
+    border-radius:var(--radius);
+    padding:8px 14px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .btn-refresh:hover{ border-color:var(--ink-muted); }
+  .btn-refresh:focus-visible, button:focus-visible, [tabindex]:focus-visible, input:focus-visible{
+    outline:2px solid var(--done); outline-offset:2px;
+  }
+  .btn-refresh[disabled]{ opacity:0.55; cursor:default; }
+
+  /* ============ Tab bar (gaya map dokumen) ============ */
+  .tabbar{
+    max-width:920px; margin:0 auto;
+    display:flex; gap:4px;
+    padding:14px 20px 0;
+    overflow-x:auto;
+  }
+  .tab{
+    font-family:var(--font-body);
+    font-size:14px; font-weight:500;
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    border-bottom:none;
+    color:var(--ink-muted);
+    padding:10px 16px 9px;
+    border-radius:8px 8px 0 0;
+    cursor:pointer;
+    display:flex; align-items:baseline; gap:8px;
+    white-space:nowrap;
+    position:relative; top:1px;
+  }
+  .tab .tab-pct{
+    font-size:12px; color:var(--ink-faint);
+  }
+  .tab[aria-selected="true"]{
+    background:var(--panel);
+    color:var(--ink);
+    border-color:var(--line-strong);
+    border-bottom:1px solid var(--panel);
+    font-weight:600;
+  }
+  .tab[aria-selected="true"] .tab-pct{ color:var(--done); }
+  .tab:hover{ color:var(--ink); }
+
+  /* ============ Konten ============ */
+  .content{
+    max-width:920px; margin:0 auto;
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    border-top:none;
+    padding:24px 20px 40px;
+  }
+
+  .summary-panel{
+    display:flex; align-items:center; gap:24px;
+    padding-bottom:20px;
+    margin-bottom:18px;
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .summary-figure{ min-width:120px; }
+  .summary-figure .num{
+    font-family:var(--font-display);
+    font-size:44px; font-weight:600; line-height:1;
+    color:var(--ink);
+  }
+  .summary-figure .num small{ font-size:22px; font-weight:400; color:var(--ink-muted); }
+  .summary-body{ flex:1; min-width:220px; }
+  .summary-bar{
+    height:8px; border-radius:4px; background:var(--pending-tint);
+    overflow:hidden; margin-bottom:8px;
+  }
+  .summary-bar-fill{ height:100%; background:var(--done); border-radius:4px; }
+  .summary-text{ font-size:14px; color:var(--ink-muted); margin:0; }
+  .summary-text strong{ color:var(--ink); font-weight:600; }
+
+  /* ============ Kontrol pencarian ============ */
+  .controls{
+    display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .search-wrap{ flex:1; min-width:220px; position:relative; }
+  .search-wrap input[type="search"]{
+    width:100%;
+    font-family:var(--font-body); font-size:14px;
+    padding:9px 12px;
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius);
+    background:#fff;
+    color:var(--ink);
+  }
+  .search-wrap input::placeholder{ color:var(--ink-faint); }
+  .toggle{
+    display:flex; align-items:center; gap:7px;
+    font-size:14px; color:var(--ink-muted);
+    cursor:pointer; user-select:none;
+    white-space:nowrap;
+  }
+  .toggle input{ accent-color:var(--done); width:15px; height:15px; }
+  .btn-text{
+    font-family:var(--font-body); font-size:13px;
+    background:none; border:none; color:var(--done);
+    cursor:pointer; padding:0; text-decoration:underline;
+  }
+
+  /* ============ Pohon kecamatan/desa/sls ============ */
+  .tree-level{ list-style:none; margin:0; padding:0; }
+  .tree-level.depth-0{ border-top:1px solid var(--line); }
+
+  .node > .row{ display:flex; align-items:center; gap:10px; }
+
+  .row{
+    padding:10px 4px;
+    border-bottom:1px solid var(--line);
+    font-size:14px;
+  }
+  .row-branch{
+    cursor:pointer;
+  }
+  .row-branch:hover{ background:rgba(47,111,94,0.05); }
+
+  .row[style*="--depth: 1"]{ padding-left:22px; }
+  .row[style*="--depth: 2"]{ padding-left:44px; }
+  .row[style*="--depth: 3"]{ padding-left:66px; }
+
+  .chevron{
+    flex:0 0 auto;
+    width:9px; height:9px;
+    border-right:2px solid var(--ink-muted);
+    border-bottom:2px solid var(--ink-muted);
+    transform:rotate(-45deg);
+    transition:transform .15s ease;
+  }
+  .chevron.open{ transform:rotate(45deg); }
+
+  .row-label{
+    flex:1 1 auto;
+    min-width:0;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-weight:500;
+  }
+  .row-leaf .row-label{ font-weight:400; }
+  .row-code{
+    flex:0 0 auto;
+    font-size:12px; color:var(--ink-faint);
+  }
+  .row-extra{
+    flex:0 0 auto;
+    font-size:12px; color:var(--ink-faint);
+    margin-right:4px;
+  }
+  .row-bar{
+    flex:0 0 90px;
+    height:6px; border-radius:3px; background:var(--pending-tint);
+    overflow:hidden;
+  }
+  .row-bar-fill{ height:100%; background:var(--done); }
+  .row-pct{
+    flex:0 0 52px; text-align:right;
+    font-size:13px; font-weight:600; color:var(--ink);
+  }
+  .row-count{
+    flex:0 0 64px; text-align:right;
+    font-size:12px; color:var(--ink-faint);
+  }
+
+  .status-dot{
+    flex:0 0 auto;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--pending);
+  }
+  .status-dot.is-done{ background:var(--done); }
+  .row-status-text{
+    flex:0 0 auto;
+    font-size:12px;
+    color:var(--ink-faint);
+    min-width:44px;
+  }
+  .row-leaf .status-dot.is-done + .row-label + * + .row-status-text,
+  .row-leaf .row-status-text{ color:var(--ink-faint); }
+
+  @media (max-width:640px){
+    .row-bar{ display:none; }
+    .row-code{ display:none; }
+    .row-extra{ display:none; }
+  }
+
+  /* ============ Status kosong / memuat / error ============ */
+  .state-block{
+    padding:48px 20px; text-align:center; color:var(--ink-muted);
+  }
+  .state-block p{ margin:0 auto 6px; max-width:440px; font-size:14px; }
+  .state-block .state-title{
+    font-family:var(--font-display); font-size:18px; color:var(--ink);
+    margin-bottom:8px;
+  }
+  .state-block.is-error .state-title{ color:var(--danger); }
+  .state-block code{
+    background:var(--paper); border:1px solid var(--line-strong);
+    border-radius:4px; padding:1px 6px; font-size:13px;
+  }
+  .state-block .btn-refresh{ margin-top:14px; }
+
+  .foot{
+    max-width:920px; margin:0 auto; padding:16px 20px 40px;
+    font-size:12px; color:var(--ink-faint);
+  }
+
+  [hidden]{ display:none !important; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="title-block">
+      <h1>Receiving Batching Dokumen SE2026</h1>
+      <p class="loc" id="locText">Memuat lokasi…</p>
+      <p class="synced" id="syncedText">Belum tersinkron</p>
+    </div>
+    <button class="btn-refresh" id="refreshBtn" type="button">Muat ulang</button>
+  </div>
+</header>
+
+<nav class="tabbar" id="tabbar" role="tablist" aria-label="Jenis dokumen" hidden></nav>
+
+<main class="content" id="content">
+  <div id="loadingState" class="state-block">
+    <p class="state-title">Memuat data…</p>
+    <p>Mengambil data dari Apps Script.</p>
+  </div>
+
+  <div id="errorState" class="state-block is-error" hidden>
+    <p class="state-title">Data tidak bisa dimuat</p>
+    <p id="errorMessage">Terjadi kesalahan saat memuat data.</p>
+    <button class="btn-refresh" id="retryBtn" type="button">Coba lagi</button>
+  </div>
+
+  <div id="dataView" hidden>
+    <div class="summary-panel" id="summaryPanel"></div>
+
+    <div class="controls">
+      <div class="search-wrap">
+        <label for="searchInput" class="visually-hidden" style="position:absolute;left:-9999px;">Cari kecamatan, desa, atau SLS</label>
+        <input type="search" id="searchInput" placeholder="Cari kecamatan, desa, atau SLS…" autocomplete="off">
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="onlyIncompleteToggle">
+        Hanya yang belum
+      </label>
+    </div>
+
+    <div id="emptyState" class="state-block" hidden>
+      <p class="state-title">Tidak ada hasil</p>
+      <p>Tidak ada kecamatan, desa, atau SLS yang cocok dengan pencarian ini.</p>
+      <button class="btn-text" id="clearSearchBtn" type="button">Bersihkan pencarian</button>
+    </div>
+
+    <ul class="tree-level depth-0" id="treeRoot"></ul>
+  </div>
+</main>
+
+<footer class="foot">
+  Data diambil langsung dari spreadsheet melalui Apps Script. Ketuk baris kecamatan atau desa untuk melihat rinciannya.
+</footer>
+
+<script>
+/* ================================================================
+ * KONFIGURASI — ganti APPSCRIPT_URL dengan URL Web App hasil deploy
+ * ("Deploy" > "New deployment" > "Web app" di editor Apps Script)
+ * ================================================================ */
+const CONFIG = {
+  APPSCRIPT_URL: 'PASTE_URL_WEB_APP_APPS_SCRIPT_DI_SINI',
+  LOKASI: 'Kabupaten Jepara'
+};
+
+/* Label satuan unit terkecil per tab, untuk teks ringkasan */
+const TAB_META = {
+  peta_ws:         { unitLabel: 'peta WS' },
+  psls:            { unitLabel: 'desa (PSLS)' },
+  ba_non_respon:   { unitLabel: 'SLS (BA Non Respon)' },
+  bukti_kunjungan: { unitLabel: 'petugas' }
+};
+
+/* ================================================================ */
+
+const els = {
+  locText: document.getElementById('locText'),
+  syncedText: document.getElementById('syncedText'),
+  refreshBtn: document.getElementById('refreshBtn'),
+  retryBtn: document.getElementById('retryBtn'),
+  tabbar: document.getElementById('tabbar'),
+  loadingState: document.getElementById('loadingState'),
+  errorState: document.getElementById('errorState'),
+  errorMessage: document.getElementById('errorMessage'),
+  dataView: document.getElementById('dataView'),
+  summaryPanel: document.getElementById('summaryPanel'),
+  searchInput: document.getElementById('searchInput'),
+  onlyIncompleteToggle: document.getElementById('onlyIncompleteToggle'),
+  emptyState: document.getElementById('emptyState'),
+  clearSearchBtn: document.getElementById('clearSearchBtn'),
+  treeRoot: document.getElementById('treeRoot')
+};
+
+let appPayload = null;   // hasil fetch tab=all
+let currentTabKey = null;
+let searchQuery = '';
+let onlyIncomplete = false;
+let searchDebounce = null;
+
+els.locText.textContent = CONFIG.LOKASI;
+
+/* ================== Ambil data ================== */
+
+async function loadData(useCache){
+  if(!CONFIG.APPSCRIPT_URL || CONFIG.APPSCRIPT_URL.indexOf('PASTE_URL_WEB_APP') === 0){
+    throw new Error('SETUP');
+  }
+  const sep = CONFIG.APPSCRIPT_URL.indexOf('?') === -1 ? '?' : '&';
+  const url = CONFIG.APPSCRIPT_URL + sep + 'tab=all' + (useCache ? '' : '&nocache=1');
+
+  try{
+    const res = await fetch(url, { method:'GET' });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if(json.error) throw new Error(json.error);
+    return json;
+  }catch(err){
+    return await loadJSONP(url);
+  }
+}
+
+function loadJSONP(url){
+  return new Promise((resolve, reject) => {
+    const cbName = 'rb_cb_' + Date.now();
+    const script = document.createElement('script');
+    const timer = setTimeout(() => { cleanup(); reject(new Error('Waktu permintaan habis')); }, 15000);
+    function cleanup(){ delete window[cbName]; script.remove(); clearTimeout(timer); }
+    window[cbName] = (data) => {
+      cleanup();
+      if(data && data.error) reject(new Error(data.error));
+      else resolve(data);
+    };
+    const sep = url.indexOf('?') === -1 ? '?' : '&';
+    script.src = url + sep + 'format=jsonp&callback=' + cbName;
+    script.onerror = () => { cleanup(); reject(new Error('Gagal memuat data (JSONP)')); };
+    document.head.appendChild(script);
+  });
+}
+
+async function init(useCache){
+  showLoading();
+  try{
+    const payload = await loadData(useCache);
+    appPayload = payload;
+    onDataLoaded();
+  }catch(err){
+    showError(err);
+  }
+}
+
+function showLoading(){
+  els.loadingState.hidden = false;
+  els.errorState.hidden = true;
+  els.dataView.hidden = true;
+  els.tabbar.hidden = true;
+  els.refreshBtn.disabled = true;
+}
+
+function showError(err){
+  els.loadingState.hidden = true;
+  els.dataView.hidden = true;
+  els.errorState.hidden = false;
+  els.refreshBtn.disabled = false;
+
+  if(err && err.message === 'SETUP'){
+    els.errorMessage.innerHTML = 'URL Apps Script belum diisi. Buka kode HTML ini, cari <code>CONFIG.APPSCRIPT_URL</code> di bagian atas <code>&lt;script&gt;</code>, lalu isi dengan URL Web App hasil deploy Apps Script.';
+  }else{
+    els.errorMessage.textContent = 'Gagal memuat data' + (err && err.message ? (': ' + err.message) : '.') + ' Pastikan deployment Apps Script sudah aktif dan aksesnya diatur ke "Anyone", lalu coba lagi.';
+  }
+}
+
+function onDataLoaded(){
+  els.loadingState.hidden = true;
+  els.errorState.hidden = true;
+  els.dataView.hidden = false;
+  els.tabbar.hidden = false;
+  els.refreshBtn.disabled = false;
+
+  if(appPayload.generatedAt){
+    const d = new Date(appPayload.generatedAt);
+    els.syncedText.textContent = 'Diperbarui ' + d.toLocaleString('id-ID', { dateStyle:'medium', timeStyle:'short' });
+  }
+
+  renderTabs();
+  if(!currentTabKey || !appPayload.data[currentTabKey]){
+    currentTabKey = appPayload.tabs[0] ? appPayload.tabs[0].key : Object.keys(appPayload.data)[0];
+  }
+  setActiveTab(currentTabKey);
+}
+
+/* ================== Tab bar ================== */
+
+function renderTabs(){
+  els.tabbar.innerHTML = '';
+  appPayload.tabs.forEach(tabInfo => {
+    const root = appPayload.data[tabInfo.key];
+    const pct = root && root.summary ? root.summary.percent : 0;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tab';
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', tabInfo.key === currentTabKey ? 'true' : 'false');
+    btn.dataset.tabKey = tabInfo.key;
+    btn.innerHTML = '<span class="tab-name">' + escapeHtml(tabInfo.label) + '</span>' +
+                    '<span class="tab-pct">' + formatPct(pct) + '</span>';
+    btn.addEventListener('click', () => setActiveTab(tabInfo.key));
+    els.tabbar.appendChild(btn);
+  });
+}
+
+function setActiveTab(key){
+  currentTabKey = key;
+  Array.from(els.tabbar.children).forEach(btn => {
+    btn.setAttribute('aria-selected', btn.dataset.tabKey === key ? 'true' : 'false');
+  });
+  els.searchInput.value = '';
+  searchQuery = '';
+  renderSummary();
+  renderTree();
+}
+
+/* ================== Ringkasan atas ================== */
+
+function renderSummary(){
+  const root = appPayload.data[currentTabKey];
+  const s = root.summary;
+  const meta = TAB_META[currentTabKey] || { unitLabel: 'unit' };
+  const kecCount = root.children ? root.children.length : 0;
+
+  els.summaryPanel.innerHTML =
+    '<div class="summary-figure">' +
+      '<div class="num">' + formatPct(s.percent) + '<small>%</small></div>' +
+    '</div>' +
+    '<div class="summary-body">' +
+      '<div class="summary-bar"><div class="summary-bar-fill" style="width:' + s.percent + '%"></div></div>' +
+      '<p class="summary-text">' +
+        '<strong>' + formatNum(kecCount) + '</strong> kecamatan, ' +
+        '<strong>' + formatNum(s.done) + '</strong> dari ' +
+        '<strong>' + formatNum(s.total) + '</strong> ' + escapeHtml(meta.unitLabel) + ' terkumpul' +
+      '</p>' +
+    '</div>';
+}
+
+/* ================== Pohon: render + filter ================== */
+
+function renderTree(){
+  const root = appPayload.data[currentTabKey];
+  const activeFilter = !!searchQuery || onlyIncomplete;
+  const filtered = activeFilter
+    ? filterNode(root, searchQuery.toLowerCase(), onlyIncomplete)
+    : root;
+
+  els.treeRoot.innerHTML = '';
+
+  if(!filtered || !filtered.children || filtered.children.length === 0){
+    els.emptyState.hidden = false;
+    return;
+  }
+  els.emptyState.hidden = true;
+
+  filtered.children.forEach(node => {
+    els.treeRoot.appendChild(createNodeElement(node, 0, activeFilter));
+  });
+}
+
+/**
+ * Menyaring pohon data. Kalau node itu sendiri cocok dengan query,
+ * seluruh isinya ikut ditampilkan (hanya disaring status bila perlu).
+ * Kalau tidak cocok, hanya anak yang cocok yang diteruskan.
+ */
+function filterNode(node, query, onlyIncompleteFlag){
+  const isLeaf = !node.children || node.children.length === 0;
+  const selfMatch = !query || String(node.label).toLowerCase().indexOf(query) !== -1;
+
+  if(isLeaf){
+    if(onlyIncompleteFlag && node.status) return null;
+    if(query && !selfMatch) return null;
+    return node;
+  }
+
+  if(selfMatch){
+    if(!onlyIncompleteFlag) return node;
+    const kids = node.children.map(c => filterNode(c, '', true)).filter(Boolean);
+    if(kids.length === 0) return null;
+    return Object.assign({}, node, { children: kids });
+  }
+
+  const kids = node.children.map(c => filterNode(c, query, onlyIncompleteFlag)).filter(Boolean);
+  if(kids.length === 0) return null;
+  return Object.assign({}, node, { children: kids });
+}
+
+function createNodeElement(node, depth, forceOpen){
+  const li = document.createElement('li');
+  li.className = 'node';
+  const isLeaf = !node.children || node.children.length === 0;
+
+  const row = document.createElement('div');
+  row.className = 'row ' + (isLeaf ? 'row-leaf' : 'row-branch');
+  row.style.setProperty('--depth', depth);
+
+  if(isLeaf){
+    row.innerHTML = leafRowHTML(node);
+    li.appendChild(row);
+    return li;
+  }
+
+  row.tabIndex = 0;
+  row.setAttribute('role', 'button');
+  row.setAttribute('aria-expanded', forceOpen ? 'true' : 'false');
+  row.innerHTML = branchRowHTML(node, depth, forceOpen);
+
+  const childList = document.createElement('ul');
+  childList.className = 'tree-level';
+  childList.hidden = !forceOpen;
+
+  let built = false;
+  function buildChildren(){
+    if(built) return;
+    built = true;
+    node.children.forEach(child => {
+      childList.appendChild(createNodeElement(child, depth + 1, forceOpen));
+    });
+  }
+  if(forceOpen) buildChildren();
+
+  function toggle(){
+    const willOpen = childList.hidden;
+    if(willOpen) buildChildren();
+    childList.hidden = !willOpen;
+    row.setAttribute('aria-expanded', String(willOpen));
+    const chev = row.querySelector('.chevron');
+    if(chev) chev.classList.toggle('open', willOpen);
+  }
+  row.addEventListener('click', toggle);
+  row.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+  });
+
+  li.appendChild(row);
+  li.appendChild(childList);
+  return li;
+}
+
+function branchRowHTML(node, depth, open){
+  const label = shouldTitleCase(depth) ? titleCaseID(node.label) : node.label;
+  const pct = node.summary ? node.summary.percent : 0;
+  const done = node.summary ? node.summary.done : 0;
+  const total = node.summary ? node.summary.total : 0;
+  return (
+    '<span class="chevron' + (open ? ' open' : '') + '" aria-hidden="true"></span>' +
+    '<span class="row-label">' + escapeHtml(label) + '</span>' +
+    (node.code ? '<span class="row-code">' + escapeHtml(node.code) + '</span>' : '') +
+    '<span class="row-bar"><span class="row-bar-fill" style="width:' + pct + '%"></span></span>' +
+    '<span class="row-pct">' + formatPct(pct) + '</span>' +
+    '<span class="row-count">' + formatNum(done) + '/' + formatNum(total) + '</span>'
+  );
+}
+
+function leafRowHTML(node){
+  const extra = extraLine(node.extra);
+  return (
+    '<span class="status-dot ' + (node.status ? 'is-done' : 'is-pending') + '" aria-hidden="true"></span>' +
+    '<span class="row-label">' + escapeHtml(node.label) + '</span>' +
+    (extra ? '<span class="row-extra">' + escapeHtml(extra) + '</span>' : '') +
+    '<span class="row-status-text">' + (node.status ? 'Sudah' : 'Belum') + '</span>'
+  );
+}
+
+function extraLine(extra){
+  if(!extra) return null;
+  const parts = [];
+  if(extra.jmlKeluargaTidakDitemukan !== undefined && extra.jmlKeluargaTidakDitemukan !== null && extra.jmlKeluargaTidakDitemukan !== ''){
+    parts.push('KK belum ditemukan: ' + extra.jmlKeluargaTidakDitemukan);
+  }
+  if(extra.jmlSbrTidakDitemukan !== undefined && extra.jmlSbrTidakDitemukan !== null && extra.jmlSbrTidakDitemukan !== ''){
+    parts.push('SBR belum ditemukan: ' + extra.jmlSbrTidakDitemukan);
+  }
+  if(extra.adakahPerubahanBatas === true || String(extra.adakahPerubahanBatas).toUpperCase() === 'TRUE' || String(extra.adakahPerubahanBatas).toUpperCase() === 'YA'){
+    parts.push('Ada perubahan batas');
+  }
+  return parts.length ? parts.join(', ') : null;
+}
+
+/* Kecamatan (depth 0) selalu di-title-case. Depth 1 di-title-case
+   kecuali untuk tab "Bukti Kunjungan" karena isinya nama petugas. */
+function shouldTitleCase(depth){
+  if(depth === 0) return true;
+  if(depth === 1) return currentTabKey !== 'bukti_kunjungan';
+  return false;
+}
+
+/* ================== Util ================== */
+
+function titleCaseID(str){
+  return String(str || '').toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
+}
+function formatPct(n){
+  return Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits:1, maximumFractionDigits:1 }) + '%';
+}
+function formatNum(n){
+  return Number(n || 0).toLocaleString('id-ID');
+}
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+
+/* ================== Event listener ================== */
+
+els.refreshBtn.addEventListener('click', () => init(false));
+els.retryBtn.addEventListener('click', () => init(true));
+
+els.searchInput.addEventListener('input', (e) => {
+  const val = e.target.value;
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(() => {
+    searchQuery = val.trim();
+    renderTree();
+  }, 250);
+});
+
+els.onlyIncompleteToggle.addEventListener('change', (e) => {
+  onlyIncomplete = e.target.checked;
+  renderTree();
+});
+
+els.clearSearchBtn.addEventListener('click', () => {
+  els.searchInput.value = '';
+  searchQuery = '';
+  onlyIncomplete = false;
+  els.onlyIncompleteToggle.checked = false;
+  renderTree();
+});
+
+/* ================== Mulai ================== */
+init(true);
+</script>
+</body>
+</html>
