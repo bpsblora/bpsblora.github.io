@@ -323,6 +323,11 @@
     max-width:920px; margin:0 auto; padding:16px 20px 40px;
     font-size:12px; color:var(--ink-faint);
   }
+  .row-bar-fill { 
+    height: 100%; 
+    transition: width 0.4s ease, background-color 0.4s ease; 
+    display: block; /* Tambahan wajib agar width bisa berjalan */
+  }
 
   [hidden]{ display:none !important; }
 </style>
@@ -694,11 +699,14 @@ function branchRowHTML(node, depth, open){
   // Mengambil warna sesuai persentase untuk row ini
   const barColor = getProgressColor(pct);
   
+  // Memastikan format untuk CSS selalu menggunakan titik (bukan koma)
+  const cssPct = String(pct).replace(',', '.');
+  
   return (
     '<span class="chevron' + (open ? ' open' : '') + '" aria-hidden="true"></span>' +
     '<span class="row-label">' + escapeHtml(label) + '</span>' +
     (node.code ? '<span class="row-code">' + escapeHtml(node.code) + '</span>' : '') +
-    '<span class="row-bar"><span class="row-bar-fill" style="width:' + pct + '%; background-color:' + barColor + '"></span></span>' +
+    '<span class="row-bar"><span class="row-bar-fill" style="width:' + cssPct + '%; background-color:' + barColor + '"></span></span>' +
     '<span class="row-pct">' + formatPct(pct) + '</span>' +
     '<span class="row-count">' + formatNum(done) + '/' + formatNum(total) + '</span>'
   );
