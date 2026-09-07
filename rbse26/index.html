@@ -144,10 +144,10 @@
   .summary-figure .num small{ font-size:22px; font-weight:400; color:var(--ink-muted); }
   .summary-body{ flex:1; min-width:220px; }
   .summary-bar{
-    height:8px; border-radius:4px; background:var(--pending-tint);
+    height:8px; border-radius:4px; background:#e0e0e0; /* Latar bar diubah netral */
     overflow:hidden; margin-bottom:8px;
   }
-  .summary-bar-fill{ height:100%; background:var(--done); border-radius:4px; }
+  .summary-bar-fill{ height:100%; transition: width 0.4s ease, background-color 0.4s ease; border-radius:4px; }
   .summary-text{ font-size:14px; color:var(--ink-muted); margin:0; }
   .summary-text strong{ color:var(--ink); font-weight:600; }
 
@@ -191,6 +191,20 @@
     border-bottom:1px solid var(--line);
     font-size:14px;
   }
+  
+  /* PEMBEDA ANTAR KECAMATAN (Depth 0) */
+  .row[style*="--depth: 0"] {
+    background-color: #EAF0E8; /* Sedikit highlight */
+    border-top: 6px solid var(--line-strong); /* Jarak pemisah antar kecamatan */
+    margin-top: 6px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .tree-level.depth-0 > .node:first-child > .row[style*="--depth: 0"] {
+    border-top: none;
+    margin-top: 0;
+  }
+
   .row-branch{
     cursor:pointer;
   }
@@ -226,12 +240,15 @@
     font-size:12px; color:var(--ink-faint);
     margin-right:4px;
   }
+  
+  /* Bar Progress di tiap baris */
   .row-bar{
     flex:0 0 90px;
-    height:6px; border-radius:3px; background:var(--pending-tint);
+    height:6px; border-radius:3px; background:#e0e0e0;
     overflow:hidden;
   }
-  .row-bar-fill{ height:100%; background:var(--done); }
+  .row-bar-fill{ height:100%; transition: width 0.4s ease, background-color 0.4s ease; }
+  
   .row-pct{
     flex:0 0 52px; text-align:right;
     font-size:13px; font-weight:600; color:var(--ink);
@@ -278,6 +295,30 @@
   }
   .state-block .btn-refresh{ margin-top:14px; }
 
+  /* Animasi Loading Bar */
+  .loading-track {
+    width: 100%;
+    max-width: 240px;
+    height: 6px;
+    background: var(--line-strong);
+    border-radius: 4px;
+    margin: 20px auto 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .loading-indicator {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 30%;
+    background: var(--done);
+    border-radius: 4px;
+    animation: slideIndeterminate 1.2s infinite linear;
+  }
+  @keyframes slideIndeterminate {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(350%); }
+  }
+
   .foot{
     max-width:920px; margin:0 auto; padding:16px 20px 40px;
     font-size:12px; color:var(--ink-faint);
@@ -305,6 +346,10 @@
   <div id="loadingState" class="state-block">
     <p class="state-title">Memuat data…</p>
     <p>Mengambil data dari Apps Script.</p>
+    <!-- Komponen Loading Bar Ditambahkan di Sini -->
+    <div class="loading-track">
+      <div class="loading-indicator"></div>
+    </div>
   </div>
 
   <div id="errorState" class="state-block is-error" hidden>
@@ -347,8 +392,8 @@
  * ("Deploy" > "New deployment" > "Web app" di editor Apps Script)
  * ================================================================ */
 const CONFIG = {
-  APPSCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzSSqDZo5gppWrvza7YPQ96OFH_5HVTQUQLU__jYWhuVcFtWIdU_ICndqxA1mE-n6d7/exec',
-  LOKASI: 'Kabupaten Jepara'
+  APPSCRIPT_URL: 'PASTE_URL_WEB_APP_APPS_SCRIPT_DI_SINI',
+  LOKASI: 'Kabupaten Blora'
 };
 
 /* Label satuan unit terkecil per tab, untuk teks ringkasan */
@@ -386,6 +431,17 @@ let onlyIncomplete = false;
 let searchDebounce = null;
 
 els.locText.textContent = CONFIG.LOKASI;
+
+/* ================== Fungsi Logika Warna Progres ================== */
+// 0 = Merah, <50% = Oranye, <75% = Kuning, <100% = Kuning Kehijauan, 100 = Sangat Hijau
+function getProgressColor(pct) {
+  const val = Number(pct) || 0;
+  if (val === 0) return '#DC3545';       // Merah
+  if (val < 50) return '#FD7E14';        // Oranye (~25%)
+  if (val < 75) return '#FFC107';        // Kuning (~50%)
+  if (val < 100) return '#9ACD32';       // Kuning Kehijauan (~75%)
+  return '#198754';                      // Sangat Hijau (100%)
+}
 
 /* ================== Ambil data ================== */
 
@@ -515,13 +571,16 @@ function renderSummary(){
   const s = root.summary;
   const meta = TAB_META[currentTabKey] || { unitLabel: 'unit' };
   const kecCount = root.children ? root.children.length : 0;
+  
+  // Mengambil warna sesuai persentase
+  const barColor = getProgressColor(s.percent);
 
   els.summaryPanel.innerHTML =
     '<div class="summary-figure">' +
       '<div class="num">' + formatPct(s.percent) + '<small>%</small></div>' +
     '</div>' +
     '<div class="summary-body">' +
-      '<div class="summary-bar"><div class="summary-bar-fill" style="width:' + s.percent + '%"></div></div>' +
+      '<div class="summary-bar"><div class="summary-bar-fill" style="width:' + s.percent + '%; background-color:' + barColor + '"></div></div>' +
       '<p class="summary-text">' +
         '<strong>' + formatNum(kecCount) + '</strong> kecamatan, ' +
         '<strong>' + formatNum(s.done) + '</strong> dari ' +
@@ -552,11 +611,6 @@ function renderTree(){
   });
 }
 
-/**
- * Menyaring pohon data. Kalau node itu sendiri cocok dengan query,
- * seluruh isinya ikut ditampilkan (hanya disaring status bila perlu).
- * Kalau tidak cocok, hanya anak yang cocok yang diteruskan.
- */
 function filterNode(node, query, onlyIncompleteFlag){
   const isLeaf = !node.children || node.children.length === 0;
   const selfMatch = !query || String(node.label).toLowerCase().indexOf(query) !== -1;
@@ -636,11 +690,15 @@ function branchRowHTML(node, depth, open){
   const pct = node.summary ? node.summary.percent : 0;
   const done = node.summary ? node.summary.done : 0;
   const total = node.summary ? node.summary.total : 0;
+  
+  // Mengambil warna sesuai persentase untuk row ini
+  const barColor = getProgressColor(pct);
+  
   return (
     '<span class="chevron' + (open ? ' open' : '') + '" aria-hidden="true"></span>' +
     '<span class="row-label">' + escapeHtml(label) + '</span>' +
     (node.code ? '<span class="row-code">' + escapeHtml(node.code) + '</span>' : '') +
-    '<span class="row-bar"><span class="row-bar-fill" style="width:' + pct + '%"></span></span>' +
+    '<span class="row-bar"><span class="row-bar-fill" style="width:' + pct + '%; background-color:' + barColor + '"></span></span>' +
     '<span class="row-pct">' + formatPct(pct) + '</span>' +
     '<span class="row-count">' + formatNum(done) + '/' + formatNum(total) + '</span>'
   );
@@ -671,8 +729,6 @@ function extraLine(extra){
   return parts.length ? parts.join(', ') : null;
 }
 
-/* Kecamatan (depth 0) selalu di-title-case. Depth 1 di-title-case
-   kecuali untuk tab "Bukti Kunjungan" karena isinya nama petugas. */
 function shouldTitleCase(depth){
   if(depth === 0) return true;
   if(depth === 1) return currentTabKey !== 'bukti_kunjungan';
