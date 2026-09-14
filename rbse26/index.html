@@ -400,7 +400,7 @@
  * ("Deploy" > "New deployment" > "Web app" di editor Apps Script)
  * ================================================================ */
 const CONFIG = {
-  APPSCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzHs602XJ-yS0dhVLc_wzGM2VGH4zB2LzgAkyxJmF88r5_ELZyFu8PCknZTmbtPxmpd/exec',
+  APPSCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw7fMFyY_-mbdw_FOI8SAnWzayk9lTWQPvjdbgVUZ8G05y0oWKhFAJaN_BjCklglCbE/exec',
   LOKASI: 'Kabupaten Blora'
 };
 
@@ -706,7 +706,16 @@ function createNodeElement(node, depth, forceOpen){
   
 
 function branchRowHTML(node, depth, open){
-  const label = shouldTitleCase(depth) ? titleCaseID(node.label) : node.label;
+  const labelRaw = shouldTitleCase(depth) ? titleCaseID(node.label) : node.label;
+  let finalLabel = labelRaw;
+  
+  // Jika baris ini adalah Kecamatan (depth === 0) dan memiliki kode kecamatan
+  if (depth === 0 && node.code) {
+    // Format menjadi: [010] - Nama Kecamatan
+    const code3 = String(node.code).padStart(3, '0');
+    finalLabel = '[' + code3 + '] - ' + labelRaw;
+  }
+
   const pct = node.summary ? node.summary.percent : 0;
   const done = node.summary ? node.summary.done : 0;
   const total = node.summary ? node.summary.total : 0;
@@ -717,13 +726,17 @@ function branchRowHTML(node, depth, open){
   // Memastikan format untuk CSS selalu menggunakan titik (bukan koma)
   const cssPct = String(pct).replace(',', '.');
   
+  // Sembunyikan tulisan kode abu-abu di sebelah kanan KHUSUS untuk Kecamatan, 
+  // karena kodenya sudah kita pindahkan ke sebelah kiri nama.
+  const codeHtml = (depth !== 0 && node.code) ? '' + escapeHtml(node.code) + '' : '';
+  
   return (
-    '<span class="chevron' + (open ? ' open' : '') + '" aria-hidden="true"></span>' +
-    '<span class="row-label">' + escapeHtml(label) + '</span>' +
-    (node.code ? '<span class="row-code">' + escapeHtml(node.code) + '</span>' : '') +
-    '<span class="row-bar"><span class="row-bar-fill" style="width:' + cssPct + '%; background-color:' + barColor + '"></span></span>' +
-    '<span class="row-pct">' + formatPct(pct) + '</span>' +
-    '<span class="row-count">' + formatNum(done) + '/' + formatNum(total) + '</span>'
+    '' +
+    '' + escapeHtml(finalLabel) + '' +
+    codeHtml +
+    '' +
+    '' + formatPct(pct) + '' +
+    '' + formatNum(done) + '/' + formatNum(total) + ''
   );
 }
 
