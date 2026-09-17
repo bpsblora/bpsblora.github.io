@@ -430,6 +430,11 @@
     background:#FEFAF8;
   }
 
+  .row-leaf.is-complete{
+    box-shadow:inset 3px 0 0 #1E6B45;
+    background:#F4FAF6;
+  }
+
   @media (max-width:680px){
     .row{ padding-left:14px; padding-right:14px; gap:8px; }
     .row-desa{ padding-left:26px; }
@@ -936,7 +941,7 @@ function createNodeElement(node, depth, forceOpen){
   let rowClasses = 'row ';
   if(isLeaf){
     rowClasses += depth === 0 ? 'row-leaf row-kec' : (depth === 1 ? 'row-leaf row-desa' : 'row-leaf row-sls');
-    if(!node.status) rowClasses += ' is-incomplete';
+    rowClasses += node.status ? ' is-complete' : ' is-incomplete';
   }else{
     rowClasses += 'row-branch ' + (depth === 0 ? 'row-kec' : 'row-desa');
   }
