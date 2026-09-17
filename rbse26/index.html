@@ -3,225 +3,361 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
 <title>Receiving Batching — Dokumen SE2026</title>
-<link rel="icon" type="image/png" sizes="16x16" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   /* ============ Token dasar ============ */
   :root{
-    --paper:#EFF1EA;
-    --panel:#F8F9F5;
-    --ink:#1B2E2A;
-    --ink-muted:#5C6B63;
-    --ink-faint:#8C978F;
-    --line:#D9DED2;
-    --line-strong:#C3CBBB;
-    --done:#2F6F5E;
-    --done-tint:#DCEAE3;
-    --pending:#B8752E;
-    --pending-tint:#F3E3CC;
-    --danger:#A6432D;
-    --danger-tint:#F3DCD3;
-    --radius:6px;
-    --font-display:'Source Serif 4', Georgia, 'Times New Roman', serif;
-    --font-body:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --paper:#EDEFF2;
+    --panel:#FFFFFF;
+    --panel-alt:#F6F7F9;
+
+    --ink:#111820;
+    --ink-muted:#57616E;
+    --ink-faint:#8B939D;
+
+    --line:#E4E7EB;
+    --line-strong:#CBD1D8;
+
+    --accent:#1B4F72;
+    --accent-soft:#E8EFF6;
+
+    --warn:#B3421F;
+    --warn-soft:#FBF0EC;
+
+    --radius:7px;
+    --font:'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+    --tabbar-h:49px;
   }
 
   *{ box-sizing:border-box; }
 
+  html{ scroll-behavior:smooth; }
   html,body{
     margin:0; padding:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:var(--font-body);
+    font-family:var(--font);
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
     font-variant-numeric:tabular-nums;
   }
 
   @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
     *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
   }
 
-  a{ color:var(--done); }
+  a{ color:var(--accent); }
+
+  button, input, select{ font-family:inherit; font-variant-numeric:inherit; }
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-radius:3px;
+  }
+
+  .shell{ max-width:960px; margin:0 auto; }
 
   /* ============ Header ============ */
   .topbar{
-    border-bottom:1px solid var(--line-strong);
     background:var(--paper);
+    border-bottom:1px solid var(--line-strong);
   }
   .topbar-inner{
-    max-width:920px; margin:0 auto;
-    padding:28px 20px 20px;
+    padding:26px 20px 18px;
     display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
     flex-wrap:wrap;
   }
   .title-block h1{
-    font-family:var(--font-display);
-    font-weight:600;
-    font-size:clamp(22px, 4vw, 30px);
-    margin:0 0 6px;
+    font-size:clamp(21px, 3.6vw, 27px);
+    font-weight:700;
+    letter-spacing:-0.022em;
     line-height:1.15;
+    margin:0 0 5px;
   }
   .title-block .loc{
-    margin:0; font-size:15px; color:var(--ink-muted);
+    margin:0;
+    font-size:15px; font-weight:500;
+    color:var(--ink-muted);
   }
   .title-block .synced{
-    margin:2px 0 0; font-size:13px; color:var(--ink-faint);
+    margin:1px 0 0;
+    font-size:13px;
+    color:var(--ink-faint);
   }
-  .btn-refresh{
-    font-family:var(--font-body);
-    font-size:14px; font-weight:500;
+
+  .btn{
+    font-size:14px; font-weight:600;
     background:var(--panel);
     border:1px solid var(--line-strong);
     color:var(--ink);
     border-radius:var(--radius);
-    padding:8px 14px;
+    padding:9px 14px;
     cursor:pointer;
     white-space:nowrap;
+    transition:border-color .12s ease, background-color .12s ease;
   }
-  .btn-refresh:hover{ border-color:var(--ink-muted); }
-  .btn-refresh:focus-visible, button:focus-visible, [tabindex]:focus-visible, input:focus-visible{
-    outline:2px solid var(--done); outline-offset:2px;
-  }
-  .btn-refresh[disabled]{ opacity:0.55; cursor:default; }
-
-  /* ============ Tab bar (gaya map dokumen) ============ */
-  .tabbar{
-    max-width:920px; margin:0 auto;
-    display:flex; gap:4px;
-    padding:14px 20px 0;
-    overflow-x:auto;
-  }
-  .tab{
-    font-family:var(--font-body);
-    font-size:14px; font-weight:500;
-    background:var(--panel);
-    border:1px solid var(--line-strong);
-    border-bottom:none;
+  .btn:hover{ border-color:var(--ink-muted); }
+  .btn[disabled]{ opacity:.5; cursor:default; }
+  .btn-quiet{
+    background:transparent;
+    border-color:var(--line-strong);
     color:var(--ink-muted);
-    padding:10px 16px 9px;
-    border-radius:8px 8px 0 0;
+    font-weight:500;
+    padding:8px 12px;
+    font-size:13px;
+  }
+  .btn-quiet:hover{ color:var(--ink); background:var(--panel); }
+
+  /* ============ Tab bar ============ */
+  .tabbar-wrap{
+    position:sticky; top:0; z-index:20;
+    background:var(--paper);
+    border-bottom:1px solid var(--line-strong);
+  }
+  .tabbar{
+    display:flex; gap:2px;
+    padding:0 20px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .tabbar::-webkit-scrollbar{ display:none; }
+
+  .tab{
+    position:relative;
+    background:none;
+    border:none;
+    border-bottom:3px solid transparent;
+    color:var(--ink-muted);
+    font-size:14px; font-weight:600;
+    padding:14px 14px 11px;
     cursor:pointer;
     display:flex; align-items:baseline; gap:8px;
     white-space:nowrap;
-    position:relative; top:1px;
+    transition:color .12s ease, border-color .12s ease;
   }
   .tab .tab-pct{
-    font-size:12px; color:var(--ink-faint);
+    font-size:12.5px; font-weight:600;
+    color:var(--ink-faint);
+    letter-spacing:-0.01em;
   }
-  .tab[aria-selected="true"]{
-    background:var(--panel);
-    color:var(--ink);
-    border-color:var(--line-strong);
-    border-bottom:1px solid var(--panel);
-    font-weight:600;
-  }
-  .tab[aria-selected="true"] .tab-pct{ color:var(--done); }
   .tab:hover{ color:var(--ink); }
+  .tab[aria-selected="true"]{
+    color:var(--ink);
+    border-bottom-color:var(--accent);
+  }
+  .tab[aria-selected="true"] .tab-pct{ color:var(--accent); }
 
   /* ============ Konten ============ */
   .content{
-    max-width:920px; margin:0 auto;
     background:var(--panel);
-    border:1px solid var(--line-strong);
-    border-top:none;
-    padding:24px 20px 40px;
+    border-left:1px solid var(--line-strong);
+    border-right:1px solid var(--line-strong);
+    border-bottom:1px solid var(--line-strong);
+    padding:0 0 32px;
+    min-height:60vh;
   }
 
+  /* ============ Panel ringkasan (fokus utama halaman) ============ */
   .summary-panel{
-    display:flex; align-items:center; gap:24px;
-    padding-bottom:20px;
-    margin-bottom:18px;
+    padding:26px 20px 22px;
     border-bottom:1px solid var(--line);
-    flex-wrap:wrap;
+    background:var(--panel-alt);
   }
-  .summary-figure{ min-width:120px; }
+  .summary-top{
+    display:flex; align-items:flex-end; gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:16px;
+  }
+  .summary-figure{
+    display:flex; align-items:baseline; gap:3px;
+    line-height:1;
+  }
   .summary-figure .num{
-    font-family:var(--font-display);
-    font-size:44px; font-weight:600; line-height:1;
+    font-size:clamp(52px, 11vw, 76px);
+    font-weight:800;
+    letter-spacing:-0.045em;
+    line-height:.88;
+    color:var(--ink);
+    font-feature-settings:"tnum" 1;
+  }
+  .summary-figure .pct-sign{
+    font-size:clamp(22px, 4vw, 30px);
+    font-weight:700;
+    letter-spacing:-0.02em;
+    color:var(--ink-muted);
+  }
+  .summary-caption{
+    flex:1; min-width:200px;
+    font-size:14.5px;
+    color:var(--ink-muted);
+    padding-bottom:5px;
+  }
+  .summary-caption strong{
+    color:var(--ink);
+    font-weight:700;
+  }
+
+  .summary-bar{
+    height:10px;
+    border-radius:5px;
+    background:var(--line);
+    overflow:hidden;
+    margin-bottom:18px;
+  }
+  .summary-bar-fill{
+    height:100%;
+    border-radius:5px;
+    transition:width .5s cubic-bezier(.22,.61,.36,1), background-color .4s ease;
+  }
+
+  .stat-row{
+    display:flex; gap:0;
+    flex-wrap:wrap;
+    border-top:1px solid var(--line);
+  }
+  .stat{
+    flex:1 1 0; min-width:96px;
+    padding:12px 16px 2px 0;
+  }
+  .stat + .stat{
+    padding-left:16px;
+    border-left:1px solid var(--line);
+  }
+  .stat .stat-num{
+    font-size:23px; font-weight:700;
+    letter-spacing:-0.025em;
+    line-height:1.1;
     color:var(--ink);
   }
-  .summary-figure .num small{ font-size:22px; font-weight:400; color:var(--ink-muted); }
-  .summary-body{ flex:1; min-width:220px; }
-  .summary-bar{
-    height:8px; border-radius:4px; background:#e0e0e0; /* Latar bar diubah netral */
-    overflow:hidden; margin-bottom:8px;
+  .stat.is-pending .stat-num{ color:var(--warn); }
+  .stat .stat-label{
+    font-size:13px;
+    color:var(--ink-muted);
+    margin-top:1px;
   }
-  .summary-bar-fill{ height:100%; transition: width 0.4s ease, background-color 0.4s ease; border-radius:4px; }
-  .summary-text{ font-size:14px; color:var(--ink-muted); margin:0; }
-  .summary-text strong{ color:var(--ink); font-weight:600; }
 
-  /* ============ Kontrol pencarian ============ */
+  /* ============ Kontrol ============ */
   .controls{
-    display:flex; gap:14px; align-items:center; flex-wrap:wrap;
-    margin-bottom:14px;
+    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    padding:16px 20px 14px;
   }
-  .search-wrap{ flex:1; min-width:220px; position:relative; }
+  .search-wrap{ flex:1 1 240px; min-width:200px; }
   .search-wrap input[type="search"]{
     width:100%;
-    font-family:var(--font-body); font-size:14px;
-    padding:9px 12px;
+    font-size:15px;
+    padding:10px 13px;
     border:1px solid var(--line-strong);
     border-radius:var(--radius);
-    background:#fff;
+    background:var(--panel);
     color:var(--ink);
+    -webkit-appearance:none;
   }
   .search-wrap input::placeholder{ color:var(--ink-faint); }
+
   .toggle{
-    display:flex; align-items:center; gap:7px;
-    font-size:14px; color:var(--ink-muted);
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:14px; font-weight:500;
+    color:var(--ink-muted);
     cursor:pointer; user-select:none;
     white-space:nowrap;
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius);
+    padding:9px 13px;
+    background:var(--panel);
+    transition:border-color .12s ease, color .12s ease, background-color .12s ease;
   }
-  .toggle input{ accent-color:var(--done); width:15px; height:15px; }
-  .btn-text{
-    font-family:var(--font-body); font-size:13px;
-    background:none; border:none; color:var(--done);
-    cursor:pointer; padding:0; text-decoration:underline;
+  .toggle:hover{ color:var(--ink); }
+  .toggle:has(input:checked){
+    border-color:var(--accent);
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-weight:600;
+  }
+  .toggle input{ accent-color:var(--accent); width:15px; height:15px; margin:0; }
+
+  .select-wrap{ position:relative; }
+  .select-wrap select{
+    font-size:14px; font-weight:500;
+    color:var(--ink-muted);
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius);
+    padding:9px 30px 9px 13px;
+    cursor:pointer;
+    -webkit-appearance:none; appearance:none;
+  }
+  .select-wrap::after{
+    content:"";
+    position:absolute; right:12px; top:50%;
+    width:7px; height:7px;
+    margin-top:-5px;
+    border-right:2px solid var(--ink-faint);
+    border-bottom:2px solid var(--ink-faint);
+    transform:rotate(45deg);
+    pointer-events:none;
   }
 
-  /* ============ Pohon kecamatan/desa/sls ============ */
+  .toolbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    flex-wrap:wrap;
+    padding:0 20px 12px;
+    font-size:13.5px;
+    color:var(--ink-muted);
+  }
+  .toolbar-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  .result-note strong{ color:var(--ink); font-weight:700; }
+
+  /* ============ Pohon ============ */
   .tree-level{ list-style:none; margin:0; padding:0; }
   .tree-level.depth-0{ border-top:1px solid var(--line); }
 
-  .node > .row{ display:flex; align-items:center; gap:10px; }
-
   .row{
-    padding:10px 4px;
+    display:flex; align-items:center; gap:10px;
+    padding:10px 20px;
     border-bottom:1px solid var(--line);
-    font-size:14px;
+    font-size:14.5px;
+    min-height:44px;
   }
-  
-  /* PEMBEDA ANTAR KECAMATAN (Depth 0) */
-  .row[style*="--depth: 0"] {
-    background-color: #EAF0E8; /* Sedikit highlight */
-    border-top: 6px solid var(--line-strong); /* Jarak pemisah antar kecamatan */
-    margin-top: 6px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-  }
-  .tree-level.depth-0 > .node:first-child > .row[style*="--depth: 0"] {
-    border-top: none;
-    margin-top: 0;
-  }
+  .row-branch{ cursor:pointer; }
+  .row-branch:hover{ background:var(--accent-soft); }
 
-  .row-branch{
-    cursor:pointer;
+  /* Kecamatan — jangkar visual utama daftar */
+  .row-kec{
+    background:var(--panel-alt);
+    border-top:1px solid var(--line-strong);
+    border-bottom:1px solid var(--line-strong);
+    padding-top:13px; padding-bottom:13px;
+    font-size:15px;
   }
-  .row-branch:hover{ background:rgba(47,111,94,0.05); }
+  .row-kec .row-label{ font-weight:700; letter-spacing:-0.012em; }
+  .row-kec .row-kode{
+    font-weight:600;
+    color:var(--ink-faint);
+    font-size:13px;
+    flex:0 0 auto;
+  }
+  .tree-level.depth-0 > .node:first-child > .row-kec{ border-top:none; }
 
-  .row[style*="--depth: 1"]{ padding-left:22px; }
-  .row[style*="--depth: 2"]{ padding-left:44px; }
-  .row[style*="--depth: 3"]{ padding-left:66px; }
+  .row-desa{ padding-left:36px; }
+  .row-desa .row-label{ font-weight:600; }
+  .row-sls{ padding-left:56px; }
 
   .chevron{
     flex:0 0 auto;
-    width:9px; height:9px;
-    border-right:2px solid var(--ink-muted);
-    border-bottom:2px solid var(--ink-muted);
+    width:8px; height:8px;
+    border-right:2px solid var(--ink-faint);
+    border-bottom:2px solid var(--ink-faint);
     transform:rotate(-45deg);
     transition:transform .15s ease;
+    margin-right:2px;
   }
   .chevron.open{ transform:rotate(45deg); }
 
@@ -232,105 +368,146 @@
     font-weight:500;
   }
   .row-leaf .row-label{ font-weight:400; }
+
   .row-code{
     flex:0 0 auto;
-    font-size:12px; color:var(--ink-faint);
+    font-size:12.5px;
+    color:var(--ink-faint);
   }
   .row-extra{
-    flex:0 0 auto;
-    font-size:12px; color:var(--ink-faint);
-    margin-right:4px;
+    flex:0 1 auto;
+    min-width:0;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-size:12.5px;
+    color:var(--warn);
   }
-  
-  /* Bar Progress di tiap baris */
+
   .row-bar{
-    flex:0 0 90px;
-    height:6px; border-radius:3px; background:#e0e0e0;
+    flex:0 0 96px;
+    height:6px; border-radius:3px;
+    background:var(--line);
     overflow:hidden;
   }
-  .row-bar-fill{ height:100%; transition: width 0.4s ease, background-color 0.4s ease; }
-  
+  .row-bar-fill{
+    display:block;
+    height:100%;
+    border-radius:3px;
+    transition:width .4s ease, background-color .4s ease;
+  }
+
   .row-pct{
-    flex:0 0 52px; text-align:right;
-    font-size:13px; font-weight:600; color:var(--ink);
+    flex:0 0 54px; text-align:right;
+    font-size:14px; font-weight:700;
+    letter-spacing:-0.02em;
+    color:var(--ink);
   }
   .row-count{
-    flex:0 0 64px; text-align:right;
-    font-size:12px; color:var(--ink-faint);
-  }
-
-  .status-dot{
-    flex:0 0 auto;
-    width:9px; height:9px; border-radius:50%;
-    background:var(--pending);
-  }
-  .status-dot.is-done{ background:var(--done); }
-  .row-status-text{
-    flex:0 0 auto;
-    font-size:12px;
+    flex:0 0 78px; text-align:right;
+    font-size:12.5px;
     color:var(--ink-faint);
-    min-width:44px;
   }
-  .row-leaf .status-dot.is-done + .row-label + * + .row-status-text,
-  .row-leaf .row-status-text{ color:var(--ink-faint); }
 
-  @media (max-width:640px){
+  /* Status leaf */
+  .status-pill{
+    flex:0 0 auto;
+    font-size:12px; font-weight:600;
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .status-pill.is-done{
+    color:#1E6B45;
+    background:#E4F1E9;
+  }
+  .status-pill.is-pending{
+    color:var(--warn);
+    background:var(--warn-soft);
+    border:1px solid #EFD9D1;
+  }
+
+  .row-leaf.is-incomplete{
+    box-shadow:inset 3px 0 0 var(--warn);
+    background:#FEFAF8;
+  }
+
+  @media (max-width:680px){
+    .row{ padding-left:14px; padding-right:14px; gap:8px; }
+    .row-desa{ padding-left:26px; }
+    .row-sls{ padding-left:40px; }
     .row-bar{ display:none; }
     .row-code{ display:none; }
     .row-extra{ display:none; }
+    .row-count{ flex:0 0 66px; }
+    .controls, .toolbar{ padding-left:14px; padding-right:14px; }
+    .summary-panel{ padding-left:14px; padding-right:14px; }
+    .topbar-inner{ padding-left:14px; padding-right:14px; }
+    .tabbar{ padding-left:8px; padding-right:8px; }
+    .content{ border-left:none; border-right:none; }
+    .stat{ min-width:80px; }
   }
 
   /* ============ Status kosong / memuat / error ============ */
   .state-block{
-    padding:48px 20px; text-align:center; color:var(--ink-muted);
+    padding:56px 20px; text-align:center; color:var(--ink-muted);
   }
-  .state-block p{ margin:0 auto 6px; max-width:440px; font-size:14px; }
+  .state-block p{ margin:0 auto 6px; max-width:460px; font-size:14.5px; }
   .state-block .state-title{
-    font-family:var(--font-display); font-size:18px; color:var(--ink);
+    font-size:19px; font-weight:700; letter-spacing:-0.02em;
+    color:var(--ink);
     margin-bottom:8px;
   }
-  .state-block.is-error .state-title{ color:var(--danger); }
+  .state-block.is-error .state-title{ color:var(--warn); }
   .state-block code{
-    background:var(--paper); border:1px solid var(--line-strong);
+    background:var(--panel-alt); border:1px solid var(--line-strong);
     border-radius:4px; padding:1px 6px; font-size:13px;
   }
-  .state-block .btn-refresh{ margin-top:14px; }
+  .state-block .btn{ margin-top:16px; }
 
-  /* Animasi Loading Bar */
-  .loading-track {
-    width: 100%;
-    max-width: 240px;
-    height: 6px;
-    background: var(--line-strong);
-    border-radius: 4px;
-    margin: 20px auto 0;
-    overflow: hidden;
-    position: relative;
+  .loading-track{
+    width:100%; max-width:240px; height:6px;
+    background:var(--line);
+    border-radius:4px;
+    margin:22px auto 0;
+    overflow:hidden; position:relative;
   }
-  .loading-indicator {
-    position: absolute;
-    top: 0; left: 0; bottom: 0;
-    width: 30%;
-    background: var(--done);
-    border-radius: 4px;
-    animation: slideIndeterminate 1.2s infinite linear;
+  .loading-indicator{
+    position:absolute; top:0; left:0; bottom:0;
+    width:30%;
+    background:var(--accent);
+    border-radius:4px;
+    animation:slideIndeterminate 1.2s infinite linear;
   }
-  @keyframes slideIndeterminate {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(350%); }
+  @keyframes slideIndeterminate{
+    0%{ transform:translateX(-100%); }
+    100%{ transform:translateX(350%); }
   }
 
   .foot{
-    max-width:920px; margin:0 auto; padding:16px 20px 40px;
-    font-size:12px; color:var(--ink-faint);
+    padding:16px 20px 44px;
+    font-size:12.5px;
+    color:var(--ink-faint);
+    max-width:60ch;
   }
-  .row-bar-fill { 
-    height: 100%; 
-    transition: width 0.4s ease, background-color 0.4s ease; 
-    display: block; /* Tambahan wajib agar width bisa berjalan */
+
+  .toast{
+    position:fixed; left:50%; bottom:26px;
+    transform:translateX(-50%) translateY(8px);
+    background:var(--ink);
+    color:#fff;
+    font-size:14px; font-weight:500;
+    padding:11px 18px;
+    border-radius:var(--radius);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+    z-index:60;
   }
-  .row-leaf.is-incomplete {
-    background-color: var(--danger-tint); /* Memakai warna merah muda dari tema Anda */
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .visually-hidden{
+    position:absolute; width:1px; height:1px;
+    padding:0; margin:-1px; overflow:hidden;
+    clip:rect(0 0 0 0); white-space:nowrap; border:0;
   }
 
   [hidden]{ display:none !important; }
@@ -339,23 +516,24 @@
 <body>
 
 <header class="topbar">
-  <div class="topbar-inner">
+  <div class="topbar-inner shell">
     <div class="title-block">
       <h1>Receiving Batching Dokumen SE2026</h1>
       <p class="loc" id="locText">Memuat lokasi…</p>
       <p class="synced" id="syncedText"></p>
     </div>
-    <button class="btn-refresh" id="refreshBtn" type="button">Muat ulang</button>
+    <button class="btn" id="refreshBtn" type="button">Muat ulang</button>
   </div>
 </header>
 
-<nav class="tabbar" id="tabbar" role="tablist" aria-label="Jenis dokumen" hidden></nav>
+<div class="tabbar-wrap">
+  <nav class="tabbar shell" id="tabbar" role="tablist" aria-label="Jenis dokumen" hidden></nav>
+</div>
 
-<main class="content" id="content">
+<main class="content shell" id="content">
   <div id="loadingState" class="state-block">
-    <p class="state-title">Memuat data…</p>
-    <p>Mengambil data dari Apps Script.</p>
-    <!-- Komponen Loading Bar Ditambahkan di Sini -->
+    <p class="state-title">Memuat data</p>
+    <p>Mengambil data terbaru dari spreadsheet.</p>
     <div class="loading-track">
       <div class="loading-indicator"></div>
     </div>
@@ -364,36 +542,54 @@
   <div id="errorState" class="state-block is-error" hidden>
     <p class="state-title">Data tidak bisa dimuat</p>
     <p id="errorMessage">Terjadi kesalahan saat memuat data.</p>
-    <button class="btn-refresh" id="retryBtn" type="button">Coba lagi</button>
+    <button class="btn" id="retryBtn" type="button">Coba lagi</button>
   </div>
 
   <div id="dataView" hidden>
-    <div class="summary-panel" id="summaryPanel"></div>
+    <section class="summary-panel" id="summaryPanel" aria-live="polite"></section>
 
     <div class="controls">
       <div class="search-wrap">
-        <label for="searchInput" class="visually-hidden" style="position:absolute;left:-9999px;">Cari kecamatan, desa, atau SLS</label>
+        <label for="searchInput" class="visually-hidden">Cari kecamatan, desa, atau SLS</label>
         <input type="search" id="searchInput" placeholder="Cari kecamatan, desa, atau SLS…" autocomplete="off">
       </div>
       <label class="toggle">
         <input type="checkbox" id="onlyIncompleteToggle">
         Hanya yang belum
       </label>
+      <div class="select-wrap">
+        <label for="sortSelect" class="visually-hidden">Urutan daftar</label>
+        <select id="sortSelect">
+          <option value="code">Urut kode wilayah</option>
+          <option value="pending">Paling banyak belum</option>
+          <option value="percent">Persentase terendah</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <span class="result-note" id="resultNote"></span>
+      <span class="toolbar-actions">
+        <button class="btn btn-quiet" id="expandAllBtn" type="button">Buka semua</button>
+        <button class="btn btn-quiet" id="copyPendingBtn" type="button">Salin daftar yang belum</button>
+      </span>
     </div>
 
     <div id="emptyState" class="state-block" hidden>
-      <p class="state-title">Tidak ada hasil</p>
-      <p>Tidak ada kecamatan, desa, atau SLS yang cocok dengan pencarian ini.</p>
-      <button class="btn-text" id="clearSearchBtn" type="button">Bersihkan pencarian</button>
+      <p class="state-title">Tidak ada yang cocok</p>
+      <p id="emptyMessage">Ubah kata kunci pencarian atau matikan filter untuk melihat daftar lengkap.</p>
+      <button class="btn" id="clearSearchBtn" type="button">Bersihkan filter</button>
     </div>
 
     <ul class="tree-level depth-0" id="treeRoot"></ul>
   </div>
 </main>
 
-<footer class="foot">
-  Data diambil langsung dari spreadsheet melalui Apps Script. Ketuk baris kecamatan atau desa untuk melihat rinciannya.
+<footer class="foot shell">
+  Data dibaca langsung dari spreadsheet lewat Apps Script dan disimpan sementara selama 5 menit. Ketuk baris kecamatan atau desa untuk membuka rinciannya.
 </footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 /* ================================================================
@@ -407,10 +603,10 @@ const CONFIG = {
 
 /* Label satuan unit terkecil per tab, untuk teks ringkasan */
 const TAB_META = {
-  peta_ws:         { unitLabel: 'peta WSS' },
-  psls:            { unitLabel: 'desa (PSLS)' },
-  ba_non_respon:   { unitLabel: 'SLS (BA Non Respon)' },
-  bukti_kunjungan: { unitLabel: 'petugas' }
+  peta_ws:         { unitLabel: 'peta WS',             leafLabel: 'SLS' },
+  psls:            { unitLabel: 'desa (PSLS)',         leafLabel: 'desa' },
+  ba_non_respon:   { unitLabel: 'SLS (BA Non Respon)', leafLabel: 'SLS' },
+  bukti_kunjungan: { unitLabel: 'petugas',             leafLabel: 'petugas' }
 };
 
 /* ================================================================ */
@@ -428,28 +624,37 @@ const els = {
   summaryPanel: document.getElementById('summaryPanel'),
   searchInput: document.getElementById('searchInput'),
   onlyIncompleteToggle: document.getElementById('onlyIncompleteToggle'),
+  sortSelect: document.getElementById('sortSelect'),
+  expandAllBtn: document.getElementById('expandAllBtn'),
+  copyPendingBtn: document.getElementById('copyPendingBtn'),
+  resultNote: document.getElementById('resultNote'),
   emptyState: document.getElementById('emptyState'),
   clearSearchBtn: document.getElementById('clearSearchBtn'),
-  treeRoot: document.getElementById('treeRoot')
+  treeRoot: document.getElementById('treeRoot'),
+  toast: document.getElementById('toast')
 };
 
-let appPayload = null;   // hasil fetch tab=all
+let appPayload = null;
 let currentTabKey = null;
 let searchQuery = '';
 let onlyIncomplete = false;
+let sortMode = 'code';
+let expandAll = false;
 let searchDebounce = null;
+let toastTimer = null;
 
 els.locText.textContent = CONFIG.LOKASI;
 
-/* ================== Fungsi Logika Warna Progres ================== */
-// 0 = Merah, <50% = Oranye, <75% = Kuning, <100% = Kuning Kehijauan, 100 = Sangat Hijau
-function getProgressColor(pct) {
+/* ================== Warna progres ================== */
+/* Skala tunggal dipakai bar ringkasan dan bar tiap baris, supaya
+   pembacaan warnanya konsisten di seluruh halaman. */
+function getProgressColor(pct){
   const val = Number(pct) || 0;
-  if (val === 0) return '#DC3545';       // Merah
-  if (val < 50) return '#FD7E14';        // Oranye (~25%)
-  if (val < 75) return '#FFC107';        // Kuning (~50%)
-  if (val < 100) return '#9ACD32';       // Kuning Kehijauan (~75%)
-  return '#198754';                      // Sangat Hijau (100%)
+  if(val === 0)   return '#B3421F';  // belum ada sama sekali
+  if(val < 50)    return '#D9781F';
+  if(val < 75)    return '#D7A62A';
+  if(val < 100)   return '#7FA83C';
+  return '#1E6B45';                  // lengkap
 }
 
 /* ================== Ambil data ================== */
@@ -507,6 +712,7 @@ function showLoading(){
   els.dataView.hidden = true;
   els.tabbar.hidden = true;
   els.refreshBtn.disabled = true;
+  els.refreshBtn.textContent = 'Memuat…';
 }
 
 function showError(err){
@@ -514,11 +720,12 @@ function showError(err){
   els.dataView.hidden = true;
   els.errorState.hidden = false;
   els.refreshBtn.disabled = false;
+  els.refreshBtn.textContent = 'Muat ulang';
 
   if(err && err.message === 'SETUP'){
-    els.errorMessage.innerHTML = 'URL Apps Script belum diisi. Buka kode HTML ini, cari <code>CONFIG.APPSCRIPT_URL</code> di bagian atas <code>&lt;script&gt;</code>, lalu isi dengan URL Web App hasil deploy Apps Script.';
+    els.errorMessage.innerHTML = 'URL Apps Script belum diisi. Buka berkas HTML ini, cari <code>CONFIG.APPSCRIPT_URL</code> di bagian atas <code>&lt;script&gt;</code>, lalu isi dengan URL Web App hasil deploy.';
   }else{
-    els.errorMessage.textContent = 'Gagal memuat data' + (err && err.message ? (': ' + err.message) : '.') + ' Pastikan deployment Apps Script sudah aktif dan aksesnya diatur ke "Anyone", lalu coba lagi.';
+    els.errorMessage.textContent = 'Gagal memuat data' + (err && err.message ? (': ' + err.message) : '.') + ' Pastikan deployment Apps Script masih aktif dan aksesnya diatur ke "Anyone".';
   }
 }
 
@@ -528,17 +735,26 @@ function onDataLoaded(){
   els.dataView.hidden = false;
   els.tabbar.hidden = false;
   els.refreshBtn.disabled = false;
+  els.refreshBtn.textContent = 'Muat ulang';
 
   if(appPayload.generatedAt){
     const d = new Date(appPayload.generatedAt);
     els.syncedText.textContent = 'Diperbarui ' + d.toLocaleString('id-ID', { dateStyle:'medium', timeStyle:'short' });
   }
 
-  renderTabs();
   if(!currentTabKey || !appPayload.data[currentTabKey]){
-    currentTabKey = appPayload.tabs[0] ? appPayload.tabs[0].key : Object.keys(appPayload.data)[0];
+    currentTabKey = restoreTabKey() || (appPayload.tabs[0] ? appPayload.tabs[0].key : Object.keys(appPayload.data)[0]);
   }
+  renderTabs();
   setActiveTab(currentTabKey);
+}
+
+function restoreTabKey(){
+  try{
+    const saved = sessionStorage.getItem('rb_tab');
+    if(saved && appPayload.data[saved]) return saved;
+  }catch(e){}
+  return null;
 }
 
 /* ================== Tab bar ================== */
@@ -556,7 +772,7 @@ function renderTabs(){
     btn.setAttribute('aria-selected', tabInfo.key === currentTabKey ? 'true' : 'false');
     btn.dataset.tabKey = tabInfo.key;
     btn.innerHTML = '<span class="tab-name">' + escapeHtml(tabInfo.label) + '</span>' +
-                    '<span class="tab-pct">' + formatPct(pct) + '</span>';
+                    '<span class="tab-pct">' + fmtPct(pct) + '%</span>';
     btn.addEventListener('click', () => setActiveTab(tabInfo.key));
     els.tabbar.appendChild(btn);
   });
@@ -564,11 +780,19 @@ function renderTabs(){
 
 function setActiveTab(key){
   currentTabKey = key;
+  try{ sessionStorage.setItem('rb_tab', key); }catch(e){}
+
   Array.from(els.tabbar.children).forEach(btn => {
     btn.setAttribute('aria-selected', btn.dataset.tabKey === key ? 'true' : 'false');
   });
+
   els.searchInput.value = '';
   searchQuery = '';
+  onlyIncomplete = false;
+  els.onlyIncompleteToggle.checked = false;
+  expandAll = false;
+  els.expandAllBtn.textContent = 'Buka semua';
+
   renderSummary();
   renderTree();
 }
@@ -578,27 +802,45 @@ function setActiveTab(key){
 function renderSummary(){
   const root = appPayload.data[currentTabKey];
   const s = root.summary;
-  const meta = TAB_META[currentTabKey] || { unitLabel: 'unit' };
+  const meta = TAB_META[currentTabKey] || { unitLabel:'unit', leafLabel:'unit' };
   const kecCount = root.children ? root.children.length : 0;
-  
-  // Mengambil warna sesuai persentase
+  const pending = s.total - s.done;
   const barColor = getProgressColor(s.percent);
 
   els.summaryPanel.innerHTML =
-    '<div class="summary-figure">' +
-      '<div class="num">' + formatPct(s.percent).replace('%','') + '<small>%</small></div>' +
-    '</div>' +
-    '<div class="summary-body">' +
-      '<div class="summary-bar"><div class="summary-bar-fill" style="width:' + s.percent + '%; background-color:' + barColor + '"></div></div>' +
-      '<p class="summary-text">' +
-        '<strong>' + formatNum(kecCount) + '</strong> kecamatan, ' +
-        '<strong>' + formatNum(s.done) + '</strong> dari ' +
-        '<strong>' + formatNum(s.total) + '</strong> ' + escapeHtml(meta.unitLabel) + ' terkumpul' +
+    '<div class="summary-top">' +
+      '<div class="summary-figure">' +
+        '<span class="num">' + fmtPct(s.percent) + '</span>' +
+        '<span class="pct-sign">%</span>' +
+      '</div>' +
+      '<p class="summary-caption">' +
+        (pending === 0
+          ? 'Seluruh ' + escapeHtml(meta.unitLabel) + ' di Kabupaten Blora sudah terkumpul.'
+          : '<strong>' + fmtNum(pending) + '</strong> ' + escapeHtml(meta.unitLabel) + ' belum masuk, tersebar di <strong>' + fmtNum(kecWithPending(root)) + '</strong> kecamatan.') +
       '</p>' +
+    '</div>' +
+    '<div class="summary-bar"><div class="summary-bar-fill" style="width:' + cssPct(s.percent) + '%; background-color:' + barColor + '"></div></div>' +
+    '<div class="stat-row">' +
+      statBlock(fmtNum(s.done), 'Sudah masuk', false) +
+      statBlock(fmtNum(pending), 'Belum masuk', pending > 0) +
+      statBlock(fmtNum(s.total), 'Total ' + meta.leafLabel, false) +
+      statBlock(fmtNum(kecCount), 'Kecamatan', false) +
     '</div>';
 }
 
-/* ================== Pohon: render + filter ================== */
+function statBlock(num, label, isPending){
+  return '<div class="stat' + (isPending ? ' is-pending' : '') + '">' +
+           '<div class="stat-num">' + num + '</div>' +
+           '<div class="stat-label">' + escapeHtml(label) + '</div>' +
+         '</div>';
+}
+
+function kecWithPending(root){
+  if(!root.children) return 0;
+  return root.children.filter(c => c.summary && c.summary.done < c.summary.total).length;
+}
+
+/* ================== Pohon: render + filter + urutan ================== */
 
 function renderTree(){
   const root = appPayload.data[currentTabKey];
@@ -611,13 +853,56 @@ function renderTree(){
 
   if(!filtered || !filtered.children || filtered.children.length === 0){
     els.emptyState.hidden = false;
+    els.resultNote.innerHTML = '';
     return;
   }
   els.emptyState.hidden = true;
 
-  filtered.children.forEach(node => {
-    els.treeRoot.appendChild(createNodeElement(node, 0, activeFilter));
+  const openByDefault = activeFilter || expandAll;
+  const children = sortChildren(filtered.children);
+  children.forEach(node => {
+    els.treeRoot.appendChild(createNodeElement(node, 0, openByDefault));
   });
+
+  updateResultNote(filtered, root, activeFilter);
+}
+
+function updateResultNote(filtered, root, activeFilter){
+  const meta = TAB_META[currentTabKey] || { leafLabel:'unit' };
+  const shown = countLeaves(filtered);
+  const total = root.summary ? root.summary.total : shown;
+  els.resultNote.innerHTML = activeFilter
+    ? 'Menampilkan <strong>' + fmtNum(shown) + '</strong> dari ' + fmtNum(total) + ' ' + escapeHtml(meta.leafLabel)
+    : fmtNum(total) + ' ' + escapeHtml(meta.leafLabel) + ' dalam daftar';
+}
+
+function countLeaves(node){
+  if(!node) return 0;
+  if(!node.children || node.children.length === 0) return 1;
+  return node.children.reduce((sum, c) => sum + countLeaves(c), 0);
+}
+
+function sortChildren(children){
+  const arr = children.slice();
+  if(sortMode === 'pending'){
+    arr.sort((a, b) => pendingOf(b) - pendingOf(a) || compareCode(a, b));
+  }else if(sortMode === 'percent'){
+    arr.sort((a, b) => percentOf(a) - percentOf(b) || compareCode(a, b));
+  }
+  return arr;
+}
+
+function pendingOf(node){
+  if(node.summary) return node.summary.total - node.summary.done;
+  return node.status ? 0 : 1;
+}
+function percentOf(node){
+  if(node.summary) return node.summary.percent;
+  return node.status ? 100 : 0;
+}
+function compareCode(a, b){
+  if(a.code && b.code) return String(a.code).localeCompare(String(b.code), undefined, { numeric:true });
+  return String(a.label).localeCompare(String(b.label), 'id');
 }
 
 function filterNode(node, query, onlyIncompleteFlag){
@@ -648,18 +933,14 @@ function createNodeElement(node, depth, forceOpen){
   const isLeaf = !node.children || node.children.length === 0;
 
   const row = document.createElement('div');
-  
-  // Penentuan class baris: tambahkan 'is-incomplete' jika SLS belum terkumpul
   let rowClasses = 'row ';
-  if (isLeaf) {
-    rowClasses += 'row-leaf';
-    if (!node.status) rowClasses += ' is-incomplete';
-  } else {
-    rowClasses += 'row-branch';
+  if(isLeaf){
+    rowClasses += depth === 0 ? 'row-leaf row-kec' : (depth === 1 ? 'row-leaf row-desa' : 'row-leaf row-sls');
+    if(!node.status) rowClasses += ' is-incomplete';
+  }else{
+    rowClasses += 'row-branch ' + (depth === 0 ? 'row-kec' : 'row-desa');
   }
   row.className = rowClasses;
-
-  row.style.setProperty('--depth', depth);
 
   if(isLeaf){
     row.innerHTML = leafRowHTML(node);
@@ -680,7 +961,7 @@ function createNodeElement(node, depth, forceOpen){
   function buildChildren(){
     if(built) return;
     built = true;
-    node.children.forEach(child => {
+    sortChildren(node.children).forEach(child => {
       childList.appendChild(createNodeElement(child, depth + 1, forceOpen));
     });
   }
@@ -704,52 +985,43 @@ function createNodeElement(node, depth, forceOpen){
   return li;
 }
 
-  
-
 function branchRowHTML(node, depth, open){
-  const labelRaw = shouldTitleCase(depth) ? titleCaseID(node.label) : node.label;
-  let finalLabel = labelRaw;
-  
-  // Jika baris ini adalah Kecamatan (depth === 0) dan memiliki kode kecamatan
-  if (depth === 0 && node.code) {
-    // Format menjadi: [010] - Nama Kecamatan
-    const code3 = String(node.code).padStart(3, '0');
-    finalLabel = '[' + code3 + '] - ' + labelRaw;
-  }
+  const label = shouldTitleCase(depth) ? titleCaseID(node.label) : node.label;
 
   const pct = node.summary ? node.summary.percent : 0;
   const done = node.summary ? node.summary.done : 0;
   const total = node.summary ? node.summary.total : 0;
-  
-  // Mengambil warna sesuai persentase untuk row ini
   const barColor = getProgressColor(pct);
-  
-  // Memastikan format untuk CSS selalu menggunakan titik (bukan koma)
-  const cssPct = String(pct).replace(',', '.');
-  
-  // Sembunyikan tulisan kode abu-abu di sebelah kanan KHUSUS untuk Kecamatan, 
-  // karena kodenya sudah kita pindahkan ke sebelah kiri nama.
-  const codeHtml = (depth !== 0 && node.code)
-    ? '<span class="row-code">' + escapeHtml(node.code) + '</span>'
-    : '';
+
+  // Kode kecamatan tampil di kiri nama; kode desa tetap di kanan supaya
+  // kolom angka di sisi kanan tidak ramai.
+  let kodeHtml = '';
+  let codeHtml = '';
+  if(depth === 0 && node.code){
+    kodeHtml = '<span class="row-kode">' + escapeHtml(String(node.code).padStart(3, '0')) + '</span>';
+  }else if(node.code){
+    codeHtml = '<span class="row-code">' + escapeHtml(node.code) + '</span>';
+  }
 
   return (
     '<span class="chevron' + (open ? ' open' : '') + '" aria-hidden="true"></span>' +
-    '<span class="row-label">' + escapeHtml(finalLabel) + '</span>' +
+    kodeHtml +
+    '<span class="row-label">' + escapeHtml(label) + '</span>' +
     codeHtml +
-    '<span class="row-bar"><span class="row-bar-fill" style="width:' + cssPct + '%; background-color:' + barColor + '"></span></span>' +
-    '<span class="row-pct">' + formatPct(pct) + '</span>' +
-    '<span class="row-count">' + formatNum(done) + '/' + formatNum(total) + '</span>'
+    '<span class="row-bar"><span class="row-bar-fill" style="width:' + cssPct(pct) + '%; background-color:' + barColor + '"></span></span>' +
+    '<span class="row-pct">' + fmtPct(pct) + '%</span>' +
+    '<span class="row-count">' + fmtNum(done) + '/' + fmtNum(total) + '</span>'
   );
 }
 
 function leafRowHTML(node){
   const extra = extraLine(node.extra);
   return (
-    '<span class="status-dot ' + (node.status ? 'is-done' : 'is-pending') + '" aria-hidden="true"></span>' +
     '<span class="row-label">' + escapeHtml(node.label) + '</span>' +
     (extra ? '<span class="row-extra">' + escapeHtml(extra) + '</span>' : '') +
-    '<span class="row-status-text">' + (node.status ? 'Sudah' : 'Belum') + '</span>'
+    '<span class="status-pill ' + (node.status ? 'is-done' : 'is-pending') + '">' +
+      (node.status ? 'Sudah' : 'Belum') +
+    '</span>'
   );
 }
 
@@ -757,15 +1029,15 @@ function extraLine(extra){
   if(!extra) return null;
   const parts = [];
   if(extra.jmlKeluargaTidakDitemukan !== undefined && extra.jmlKeluargaTidakDitemukan !== null && extra.jmlKeluargaTidakDitemukan !== ''){
-    parts.push('KK belum ditemukan: ' + extra.jmlKeluargaTidakDitemukan);
+    parts.push(extra.jmlKeluargaTidakDitemukan + ' KK tidak ditemukan');
   }
   if(extra.jmlSbrTidakDitemukan !== undefined && extra.jmlSbrTidakDitemukan !== null && extra.jmlSbrTidakDitemukan !== ''){
-    parts.push('SBR belum ditemukan: ' + extra.jmlSbrTidakDitemukan);
+    parts.push(extra.jmlSbrTidakDitemukan + ' SBR tidak ditemukan');
   }
   if(extra.adakahPerubahanBatas === true || String(extra.adakahPerubahanBatas).toUpperCase() === 'TRUE' || String(extra.adakahPerubahanBatas).toUpperCase() === 'YA'){
     parts.push('Ada perubahan batas');
   }
-  return parts.length ? parts.join(', ') : null;
+  return parts.length ? parts.join(' · ') : null;
 }
 
 function shouldTitleCase(depth){
@@ -774,15 +1046,76 @@ function shouldTitleCase(depth){
   return false;
 }
 
+/* ================== Salin daftar yang belum ================== */
+
+function collectPending(node, trail, out){
+  const isLeaf = !node.children || node.children.length === 0;
+  if(isLeaf){
+    if(!node.status) out.push(trail.concat(node.label).join(' / '));
+    return out;
+  }
+  node.children.forEach(child => collectPending(child, trail.concat(node.label), out));
+  return out;
+}
+
+function copyPending(){
+  const root = appPayload.data[currentTabKey];
+  const lines = [];
+  sortChildren(root.children || []).forEach(kec => collectPending(kec, [], lines));
+
+  if(lines.length === 0){
+    showToast('Semua sudah masuk, tidak ada yang perlu disalin.');
+    return;
+  }
+
+  const meta = TAB_META[currentTabKey] || { leafLabel:'unit' };
+  const header = (appPayload.tabs.find(t => t.key === currentTabKey) || {}).label || currentTabKey;
+  const text = header + ' — belum masuk (' + lines.length + ' ' + meta.leafLabel + ')\n' + lines.join('\n');
+
+  copyText(text).then(
+    () => showToast(lines.length + ' baris disalin ke papan klip.'),
+    () => showToast('Browser menolak akses papan klip.')
+  );
+}
+
+function copyText(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text);
+  }
+  return new Promise((resolve, reject) => {
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      ok ? resolve() : reject();
+    }catch(e){ reject(e); }
+  });
+}
+
+function showToast(msg){
+  els.toast.textContent = msg;
+  els.toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => els.toast.classList.remove('show'), 2800);
+}
+
 /* ================== Util ================== */
 
 function titleCaseID(str){
   return String(str || '').toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
 }
-function formatPct(n){
-  return Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits:1, maximumFractionDigits:1 }) + '%';
+function fmtPct(n){
+  return Number(n || 0).toLocaleString('id-ID', { minimumFractionDigits:1, maximumFractionDigits:1 });
 }
-function formatNum(n){
+function cssPct(n){
+  return String(Number(n) || 0);
+}
+function fmtNum(n){
   return Number(n || 0).toLocaleString('id-ID');
 }
 function escapeHtml(str){
@@ -802,13 +1135,26 @@ els.searchInput.addEventListener('input', (e) => {
   searchDebounce = setTimeout(() => {
     searchQuery = val.trim();
     renderTree();
-  }, 250);
+  }, 220);
 });
 
 els.onlyIncompleteToggle.addEventListener('change', (e) => {
   onlyIncomplete = e.target.checked;
   renderTree();
 });
+
+els.sortSelect.addEventListener('change', (e) => {
+  sortMode = e.target.value;
+  renderTree();
+});
+
+els.expandAllBtn.addEventListener('click', () => {
+  expandAll = !expandAll;
+  els.expandAllBtn.textContent = expandAll ? 'Tutup semua' : 'Buka semua';
+  renderTree();
+});
+
+els.copyPendingBtn.addEventListener('click', copyPending);
 
 els.clearSearchBtn.addEventListener('click', () => {
   els.searchInput.value = '';
