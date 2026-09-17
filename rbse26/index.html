@@ -585,7 +585,7 @@ function renderSummary(){
 
   els.summaryPanel.innerHTML =
     '<div class="summary-figure">' +
-      '<div class="num">' + formatPct(s.percent) + '<small>%</small></div>' +
+      '<div class="num">' + formatPct(s.percent).replace('%','') + '<small>%</small></div>' +
     '</div>' +
     '<div class="summary-body">' +
       '<div class="summary-bar"><div class="summary-bar-fill" style="width:' + s.percent + '%; background-color:' + barColor + '"></div></div>' +
@@ -728,15 +728,17 @@ function branchRowHTML(node, depth, open){
   
   // Sembunyikan tulisan kode abu-abu di sebelah kanan KHUSUS untuk Kecamatan, 
   // karena kodenya sudah kita pindahkan ke sebelah kiri nama.
-  const codeHtml = (depth !== 0 && node.code) ? '' + escapeHtml(node.code) + '' : '';
-  
+  const codeHtml = (depth !== 0 && node.code)
+    ? '<span class="row-code">' + escapeHtml(node.code) + '</span>'
+    : '';
+
   return (
-    '' +
-    '' + escapeHtml(finalLabel) + '' +
+    '<span class="chevron' + (open ? ' open' : '') + '" aria-hidden="true"></span>' +
+    '<span class="row-label">' + escapeHtml(finalLabel) + '</span>' +
     codeHtml +
-    '' +
-    '' + formatPct(pct) + '' +
-    '' + formatNum(done) + '/' + formatNum(total) + ''
+    '<span class="row-bar"><span class="row-bar-fill" style="width:' + cssPct + '%; background-color:' + barColor + '"></span></span>' +
+    '<span class="row-pct">' + formatPct(pct) + '</span>' +
+    '<span class="row-count">' + formatNum(done) + '/' + formatNum(total) + '</span>'
   );
 }
 
