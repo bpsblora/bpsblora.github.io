@@ -63,7 +63,7 @@ pelayanan_json = [
 				"nama": "SateBlora",
 				"desc": "",
 				"ikon": "https://imgur.com/UXO59Bf.png",
-			  	"url": "https://satudatablora.vercel.app/"
+			  	"url": "https://sateblora.web.bps.go.id/"
 			},
 			{
 				"nama": "Bahan Infografis",
